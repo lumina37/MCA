@@ -1,0 +1,15 @@
+*
+
+!.gitattributes
+!.gitignore
+!README.md
+
+!.clang-format
+!CMakeLists.txt
+
+!apps
+!apps/**
+!include
+!include/**
+!src
+!src/**
