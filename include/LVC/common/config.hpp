@@ -11,7 +11,8 @@ class LVC_EXPORT Config
 {
 public:
     Config(float diameter, int width, int height, float start_x, float start_y, bool is_right_shift = true,
-           bool is_horizontal = true, float interval_x = 0.0, float interval_y = 0.0) noexcept;
+           bool is_horizontal = true, float interval_x = 0.0, float interval_y = 0.0,
+           float square_width_diam_ratio = f1_SQRT2) noexcept;
 
     float getDiameter() const noexcept { return diameter_; };
     int getWidth() const noexcept { return width_; };
@@ -20,6 +21,7 @@ public:
     float getStartY() const noexcept { return start_y_; };
     float getIntervalX() const noexcept { return interval_x_; };
     float getIntervalY() const noexcept { return interval_y_; };
+    float getSquareWidthRatio() const noexcept { return square_width_diam_ratio_; };
     bool getIsRightShift() const noexcept { return is_right_shift_; };
     bool getIsHorizontal() const noexcept { return is_horizontal_; };
 
@@ -31,6 +33,7 @@ private:
     float start_y_;
     float interval_x_;
     float interval_y_;
+    float square_width_diam_ratio_;
     bool is_horizontal_;
     bool is_right_shift_;
 };

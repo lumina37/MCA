@@ -1,4 +1,4 @@
-add_executable(main "draw_used_area.cpp")
+add_executable(main "main_forward.cpp")
 
 target_link_libraries(main PUBLIC libLVC_preprocess)
 

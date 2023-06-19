@@ -5,11 +5,11 @@
 namespace lvc {
 
 Config::Config(float diameter, int width, int height, float start_x, float start_y, bool is_right_shift,
-               bool is_horizontal, float interval_x, float interval_y) noexcept
+               bool is_horizontal, float interval_x, float interval_y, float square_width_diam_ratio) noexcept
     : diameter_(diameter), width_(width), height_(height), start_x_(start_x), start_y_(start_y),
-      is_horizontal_(is_horizontal), is_right_shift_(is_right_shift)
+      is_horizontal_(is_horizontal), is_right_shift_(is_right_shift), square_width_diam_ratio_(square_width_diam_ratio)
 {
-    if (0.0 == (interval_x + interval_y)) {
+    if (!(interval_x > 0.0 && interval_y > 0.0)) {
         if (is_horizontal) {
             interval_x_ = calcDefaultIntervalHorizontal(diameter);
             interval_y_ = calcDefaultIntervalVertical(diameter);

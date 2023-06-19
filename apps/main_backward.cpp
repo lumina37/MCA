@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    lvc::Config cfg(34.976657867432f, 3840, 2160, 26.7233f, 27.65f, true);
+    lvc::Config cfg(23.202295303345f, 2048, 2048, 12.2f, 12.125f, true, false, 0.0, 0.0, 0.99);
     auto src = cv::imread("forward.png");
     cv::Mat dst;
     lvc::preprocessBackward(cfg, src, dst);

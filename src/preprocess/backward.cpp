@@ -24,7 +24,7 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     dst.create(cfg.getHeight(), cfg.getWidth(), src.type());
 
-    float inscribed_square_width = cfg.getDiameter() / fSQRT2;
+    float inscribed_square_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
     int inscribed_square_width_i = static_cast<int>(round(inscribed_square_width));
     int diameter_i = static_cast<int>(round(cfg.getDiameter()));
     int lefttop_border_width = (diameter_i - inscribed_square_width_i) / 2;

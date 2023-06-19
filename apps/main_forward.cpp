@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    lvc::Config cfg(23.202295303345f, 2048, 2048, 12.2f, 12.125f, true, false);
+    lvc::Config cfg(23.202295303345f, 2048, 2048, 12.2f, 12.125f, true, false, 0.0, 0.0, 0.99);
     auto src = cv::imread("square_raw.png");
     cv::Mat dst;
     lvc::preprocessForward(cfg, src, dst);
