@@ -1,4 +1,5 @@
-add_executable(main "main_forward.cpp")
+# add_executable(main "main_forward.cpp")
+add_executable(main "process.cpp")
 
 target_link_libraries(main PUBLIC libLVC_preprocess)
 
