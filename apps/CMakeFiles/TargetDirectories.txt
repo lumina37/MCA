@@ -1,0 +1,3 @@
+/mnt/e/Projects/task2-raytrix/libLVC/apps/CMakeFiles/main.dir
+/mnt/e/Projects/task2-raytrix/libLVC/apps/CMakeFiles/edit_cache.dir
+/mnt/e/Projects/task2-raytrix/libLVC/apps/CMakeFiles/rebuild_cache.dir

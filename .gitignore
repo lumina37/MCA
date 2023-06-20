@@ -12,7 +12,10 @@
 !include
 !include/**
 !src
-!src/**
+!src/common
+!src/preprocess
+!src/CMakeLists.txt
+
 
 !data
 !data/**
