@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/e/Projects/task2-raytrix/libLVC/apps
+# Install script for directory: /mnt/e/Projects/task2-raytrix/libLVC/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

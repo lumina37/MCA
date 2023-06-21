@@ -9,13 +9,16 @@
 
 !apps
 !apps/**
+
 !include
 !include/**
+
 !src
-!src/common
-!src/preprocess
-!src/CMakeLists.txt
+!src/**
 
+**/cmake_install.cmake/
+**/CMakeFiles
+**/CMakeCache.txt
 
-!data
-!data/**
+!compare
+!compare/**
