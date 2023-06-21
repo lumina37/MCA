@@ -1,22 +1,10 @@
-*
+.vscode
 
-!.gitattributes
-!.gitignore
-!README.md
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
 
-!.clang-format
-!CMakeLists.txt
+build 
 
-!apps
-!apps/**
-
-!include
-!include/**
-
-!src
-!src/**
-
-**/cmake_install.cmake/
-**/CMakeFiles
-**/CMakeCache.txt
+Makefile
 
