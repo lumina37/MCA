@@ -30,11 +30,11 @@ int main(int argc, char* argv[])
     string imageName = argv[1];
     int sizeType = stoi(argv[2]);
 
-    string rawImagePath = "/mnt/e/Projects/task2-raytrix/libLVC/data/RawImages/" + imageName + ".png";
-    string preprocessedImagePath = "/mnt/e/Projects/task2-raytrix/libLVC/data/PreprocessedImages/" + imageName + ".png";
-    string inverseTransedImagePath = "/mnt/e/Projects/task2-raytrix/libLVC/data/InverseTransedImages/" + imageName + ".png";
+    string rawImagePath = "/mnt/e/Projects/task2-raytrix/experiment/data/RawImages/" + imageName + ".png";
+    string preprocessedImagePath = "/mnt/e/Projects/task2-raytrix/experiment/data/PreprocessedImages/" + imageName + ".png";
+    string inverseTransedImagePath = "/mnt/e/Projects/task2-raytrix/experiment/data/InverseTransedImages/" + imageName + ".png";
     string calibrationFile =
-        "/mnt/e/Projects/task2-raytrix/libLVC/data/CalibrationFiles/" + imageName + "_Calibration.xml";
+        "/mnt/e/Projects/task2-raytrix/experiment/data/CalibrationFiles/" + imageName + "_Calibration.xml";
 
     cv::Mat rawImage, preprocessedImage, inverseTransedImage;
     rawImage = cv::imread(rawImagePath);
