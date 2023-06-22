@@ -28,7 +28,7 @@ MicroImage::MicroImage(float x, float y, int index_x, int index_y) noexcept
 {}
 
 MicroImageRanges::MicroImageRanges(float start_x, float start_y, float interval_x, float interval_y, int num_x,
-                                   int num_y, bool is_horizontal = true, bool is_right_shift = true) noexcept
+                                   int num_y, bool is_right_shift = true, bool is_horizontal = true) noexcept
     : start_x_(start_x), start_y_(start_y), interval_x_(interval_x), interval_y_(interval_y), num_x_(num_x),
       num_y_(num_y), is_horizontal_(is_horizontal), is_right_shift_(is_right_shift)
 {}
@@ -52,7 +52,7 @@ MicroImageRanges MicroImageRanges::fromConfig(const Config& cfg) noexcept
     }
 
     return {cfg.getStartX(), cfg.getStartY(), cfg.getIntervalX(),    cfg.getIntervalY(),
-            num_x,           num_y,           cfg.getIsHorizontal(), cfg.getIsRightShift()};
+            num_x,           num_y,           cfg.getIsRightShift(), cfg.getIsHorizontal()};
 }
 
 MicroImageRanges::iterator MicroImageRanges::begin() const noexcept
