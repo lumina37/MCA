@@ -9,7 +9,7 @@ using namespace std;
 int main()
 {
     lvc::Config cfg(23.202295303345f, 2048, 2048, 12.2f, 12.125f, true, false);
-    auto src = cv::imread("raw.png");
+    auto src = cv::imread("square_raw.png");
     cv::Mat dst;
     lvc::dbgDrawMicroImageEdges(cfg, src, dst);
     cv::imwrite("debug.png", dst);

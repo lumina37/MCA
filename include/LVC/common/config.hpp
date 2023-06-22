@@ -82,16 +82,18 @@ private:
 class MicroImageRanges::iterator
 {
 public:
-    iterator(float x, float y, float interval_x, float interval_y, int index_x, int index_y, int num_x, int num_y,
-             bool is_horizontal, bool is_right_shift) noexcept;
+    iterator(float start_x, float start_y, float interval_x, float interval_y, int index_x, int index_y, int num_x,
+             int num_y, bool is_horizontal, bool is_right_shift) noexcept;
+
+    MicroImage fromIndex(int index_x, int index_y) const noexcept;
 
     iterator& operator++() noexcept;
     bool operator!=(const iterator& rhs) const noexcept { return index_x_ != rhs.index_x_ || index_y_ != rhs.index_y_; }
-    MicroImage operator*() const noexcept { return {x_, y_, index_x_, index_y_}; }
+    MicroImage operator*() const noexcept { return fromIndex(index_x_, index_y_); }
 
 private:
-    float x_;
-    float y_;
+    float start_x_;
+    float start_y_;
     float interval_x_;
     float interval_y_;
     int index_x_;
