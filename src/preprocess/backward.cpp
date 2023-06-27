@@ -1,10 +1,7 @@
-#include <iostream>
-
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include "LVC/common/config.hpp"
-#include "LVC/common/const.hpp"
 #include "LVC/common/defines.h"
 #include "LVC/common/helper.hpp"
 
@@ -14,9 +11,7 @@ namespace lvc {
 
 static LVC_FORCE_INLINE void genCircleMask(cv::Mat& dst, float diameter)
 {
-    cv::Point2f size = static_cast<cv::Point2f>(dst.size());
-    cv::Point2f center = size / 2.0f;
-    cv::circle(dst, static_cast<cv::Point2i>(center), static_cast<int>(diameter / 2.0f), cv::Scalar::all(255.0),
+    cv::circle(dst, {dst.cols / 2, dst.rows / 2}, static_cast<int>(diameter / 2.0f), cv::Scalar::all(255.0),
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
