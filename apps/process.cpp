@@ -9,6 +9,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+#include "LVC/common/const.hpp"
 #include "LVC/common/config.hpp"
 #include "LVC/preprocess/backward.hpp"
 #include "LVC/preprocess/forward.hpp"
@@ -56,8 +57,8 @@ int main(int argc, char* argv[])
     center.y = rows * 0.5 - tree.get<double>("RayCalibData.offset.y");
     BOOST_FOREACH (const ptree::value_type& child, tree.get_child("RayCalibData"))
         if (child.first == "lens_type") {
-            offset[child.second.get<int>("<xmlattr>.id")].x = child.second.get<float>("offset.x");
-            offset[child.second.get<int>("<xmlattr>.id")].y = child.second.get<float>("offset.y");
+            offset[child.second.get<int>("<xmlattr>.id")].x = child.second.get<double>("offset.x");
+            offset[child.second.get<int>("<xmlattr>.id")].y = child.second.get<double>("offset.y");
         }
 
     // transpose each matrix
@@ -107,8 +108,8 @@ int main(int argc, char* argv[])
 	shift[0].y = min(subGridRefPos[0][0].y, min(subGridRefPos[0][1].y, subGridRefPos[0][2].y));
 	shift[1].x = min(subGridRefPos[1][0].x, min(subGridRefPos[1][1].x, subGridRefPos[1][2].x));
 	shift[1].y = min(subGridRefPos[1][0].y, min(subGridRefPos[1][1].y, subGridRefPos[1][2].y));
-    float start_x = shift[0].x;
-    float start_y = shift[0].y;
+    double start_x = shift[0].x;
+    double start_y = shift[0].y;
     bool is_right_shift = shift[0].x < shift[1].x;
     bool is_horizontal = rotation <= PI / 4.0;
 
@@ -117,7 +118,7 @@ int main(int argc, char* argv[])
         transpose(rawImage, tempImage);
         tempImage.copyTo(rawImage);
         center = Point2d(center.y, center.x);
-        float tmp = start_x;
+        double tmp = start_x;
         start_x = start_y;
         start_y = tmp;
 	}

@@ -4,8 +4,8 @@
 
 namespace lvc {
 
-Config::Config(float diameter, int width, int height, float start_x, float start_y, bool is_right_shift,
-               bool is_horizontal, float interval_x, float interval_y, float square_width_diam_ratio) noexcept
+Config::Config(double diameter, int width, int height, double start_x, double start_y, bool is_right_shift,
+               bool is_horizontal, double interval_x, double interval_y, double square_width_diam_ratio) noexcept
     : diameter_(diameter), width_(width), height_(height), start_x_(start_x), start_y_(start_y),
       is_horizontal_(is_horizontal), is_right_shift_(is_right_shift), square_width_diam_ratio_(square_width_diam_ratio)
 {
@@ -23,17 +23,17 @@ Config::Config(float diameter, int width, int height, float start_x, float start
     }
 }
 
-MicroImage::MicroImage(float x, float y, int index_x, int index_y) noexcept
+MicroImage::MicroImage(double x, double y, int index_x, int index_y) noexcept
     : x_(x), y_(y), index_x_(index_x), index_y_(index_y)
 {}
 
-MicroImageRanges::MicroImageRanges(float start_x, float start_y, float interval_x, float interval_y, int num_x,
+MicroImageRanges::MicroImageRanges(double start_x, double start_y, double interval_x, double interval_y, int num_x,
                                    int num_y, bool is_right_shift = true, bool is_horizontal = true) noexcept
     : start_x_(start_x), start_y_(start_y), interval_x_(interval_x), interval_y_(interval_y), num_x_(num_x),
       num_y_(num_y), is_horizontal_(is_horizontal), is_right_shift_(is_right_shift)
 {}
 
-MicroImageRanges::iterator::iterator(float start_x, float start_y, float interval_x, float interval_y, int index_x,
+MicroImageRanges::iterator::iterator(double start_x, double start_y, double interval_x, double interval_y, int index_x,
                                      int index_y, int num_x, int num_y, bool is_horizontal,
                                      bool is_right_shift) noexcept
     : start_x_(start_x), start_y_(start_y), interval_x_(interval_x), interval_y_(interval_y), index_x_(index_x),
@@ -86,9 +86,9 @@ MicroImage MicroImageRanges::iterator::fromIndex(int index_x, int index_y) const
         // | 0      | 1              | no shift         |
         // | 0      | 0              | no shift         |
         int shift_flag = static_cast<int>(is_right_shift_) * 2 - 1;
-        float x_shift = static_cast<float>(is_odd * shift_flag) * interval_x_ / 2.0f;
-        float x = start_x_ + static_cast<float>(index_x) * interval_x_ + x_shift;
-        float y = start_y_ + static_cast<float>(index_y) * interval_y_;
+        double x_shift = static_cast<double>(is_odd * shift_flag) * interval_x_ / 2.0f;
+        double x = start_x_ + static_cast<double>(index_x) * interval_x_ + x_shift;
+        double y = start_y_ + static_cast<double>(index_y) * interval_y_;
         return {x, y, index_x, index_y};
     } else {
         // just swap x and y
@@ -100,9 +100,9 @@ MicroImage MicroImageRanges::iterator::fromIndex(int index_x, int index_y) const
         // | 0      | 1              | no shift       |
         // | 0      | 0              | no shift       |
         int shift_flag = static_cast<int>(is_right_shift_) * 2 - 1;
-        float y_shift = static_cast<float>(is_odd * shift_flag) * interval_y_ / 2.0f;
-        float y = start_y_ + static_cast<float>(index_y) * interval_y_ + y_shift;
-        float x = start_x_ + static_cast<float>(index_x) * interval_x_;
+        double y_shift = static_cast<double>(is_odd * shift_flag) * interval_y_ / 2.0f;
+        double y = start_y_ + static_cast<double>(index_y) * interval_y_ + y_shift;
+        double x = start_x_ + static_cast<double>(index_x) * interval_x_;
         return {x, y, index_x, index_y};
     }
 }

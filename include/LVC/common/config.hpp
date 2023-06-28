@@ -10,7 +10,6 @@ namespace lvc {
 class LVC_EXPORT Config
 {
 public:
-
     /**
      * @brief 存储一切配置参数
      *
@@ -37,30 +36,30 @@ public:
      *
      * @note x对应width对应columns y对应height对应rows
      */
-    Config(float diameter, int width, int height, float start_x, float start_y, bool is_right_shift = true,
-           bool is_horizontal = true, float interval_x = 0.0, float interval_y = 0.0,
-           float square_width_diam_ratio = f1_SQRT2) noexcept;
+    Config(double diameter, int width, int height, double start_x, double start_y, bool is_right_shift = true,
+           bool is_horizontal = true, double interval_x = 0.0, double interval_y = 0.0,
+           double square_width_diam_ratio = d1_SQRT2) noexcept;
 
-    float getDiameter() const noexcept { return diameter_; };
+    double getDiameter() const noexcept { return diameter_; };
     int getWidth() const noexcept { return width_; };
     int getHeight() const noexcept { return height_; };
-    float getStartX() const noexcept { return start_x_; };
-    float getStartY() const noexcept { return start_y_; };
-    float getIntervalX() const noexcept { return interval_x_; };
-    float getIntervalY() const noexcept { return interval_y_; };
-    float getSquareWidthRatio() const noexcept { return square_width_diam_ratio_; };
+    double getStartX() const noexcept { return start_x_; };
+    double getStartY() const noexcept { return start_y_; };
+    double getIntervalX() const noexcept { return interval_x_; };
+    double getIntervalY() const noexcept { return interval_y_; };
+    double getSquareWidthRatio() const noexcept { return square_width_diam_ratio_; };
     bool getIsRightShift() const noexcept { return is_right_shift_; };
     bool getIsHorizontal() const noexcept { return is_horizontal_; };
 
 private:
-    float diameter_;
+    double diameter_;
     int width_;
     int height_;
-    float start_x_;
-    float start_y_;
-    float interval_x_;
-    float interval_y_;
-    float square_width_diam_ratio_;
+    double start_x_;
+    double start_y_;
+    double interval_x_;
+    double interval_y_;
+    double square_width_diam_ratio_;
     bool is_horizontal_;
     bool is_right_shift_;
 };
@@ -68,7 +67,6 @@ private:
 class LVC_EXPORT MicroImage
 {
 public:
-
     /**
      * @brief 用于对MI定位
      *
@@ -79,13 +77,13 @@ public:
      *
      * @note x对应width对应columns y对应height对应rows
      */
-    MicroImage(float x, float y, int index_x, int index_y) noexcept;
+    MicroImage(double x, double y, int index_x, int index_y) noexcept;
 
-    cv::Point2f getCenter() const noexcept { return {x_, y_}; };
+    cv::Point2d getCenter() const noexcept { return {x_, y_}; };
     cv::Point2i getIndex() const noexcept { return {index_x_, index_y_}; };
 
-    const float x_;
-    const float y_;
+    const double x_;
+    const double y_;
     const int index_x_;
     const int index_y_;
 };
@@ -93,7 +91,6 @@ public:
 class LVC_EXPORT MicroImageRanges
 {
 public:
-
     /**
      * @brief 用于遍历MI 支持标准`for range`语法
      *
@@ -110,7 +107,7 @@ public:
      * 默认为`true`
      * }
      */
-    MicroImageRanges(float start_x, float start_y, float interval_x, float interval_y, int num_x, int num_y,
+    MicroImageRanges(double start_x, double start_y, double interval_x, double interval_y, int num_x, int num_y,
                      bool is_right_shift, bool is_horizontal) noexcept;
 
     class iterator;
@@ -129,10 +126,10 @@ public:
     int getNumY() const noexcept { return num_y_; }
 
 private:
-    float start_x_;
-    float start_y_;
-    float interval_x_;
-    float interval_y_;
+    double start_x_;
+    double start_y_;
+    double interval_x_;
+    double interval_y_;
     int num_x_;
     int num_y_;
     bool is_horizontal_;
@@ -142,7 +139,7 @@ private:
 class MicroImageRanges::iterator
 {
 public:
-    iterator(float start_x, float start_y, float interval_x, float interval_y, int index_x, int index_y, int num_x,
+    iterator(double start_x, double start_y, double interval_x, double interval_y, int index_x, int index_y, int num_x,
              int num_y, bool is_horizontal, bool is_right_shift) noexcept;
 
     MicroImage fromIndex(int index_x, int index_y) const noexcept;
@@ -152,10 +149,10 @@ public:
     MicroImage operator*() const noexcept { return fromIndex(index_x_, index_y_); }
 
 private:
-    float start_x_;
-    float start_y_;
-    float interval_x_;
-    float interval_y_;
+    double start_x_;
+    double start_y_;
+    double interval_x_;
+    double interval_y_;
     int index_x_;
     int index_y_;
     int num_x_;

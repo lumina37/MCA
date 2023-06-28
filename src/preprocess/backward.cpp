@@ -9,7 +9,7 @@
 
 namespace lvc {
 
-static LVC_FORCE_INLINE void genCircleMask(cv::Mat& dst, float diameter)
+static LVC_FORCE_INLINE void genCircleMask(cv::Mat& dst, double diameter)
 {
     cv::circle(dst, {dst.cols / 2, dst.rows / 2}, static_cast<int>(diameter / 2.0f), cv::Scalar::all(255.0),
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
@@ -19,7 +19,7 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     dst.create(cfg.getHeight(), cfg.getWidth(), src.type());
 
-    float inscribed_square_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
+    double inscribed_square_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
     int inscribed_square_width_i = static_cast<int>(round(inscribed_square_width));
     int diameter_i = static_cast<int>(round(cfg.getDiameter()));
     int lefttop_border_width = (diameter_i - inscribed_square_width_i) / 2;

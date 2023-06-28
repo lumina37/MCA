@@ -11,7 +11,7 @@ namespace lvc {
 
 void preprocessForward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
-    float inscribed_square_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
+    double inscribed_square_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
     int inscribed_square_width_i = static_cast<int>(round(inscribed_square_width));
 
     MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
