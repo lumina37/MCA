@@ -4,11 +4,11 @@
 #include "LVC/common/config.hpp"
 #include "LVC/preprocess/forward.hpp"
 
-using namespace std;
+#include "__rlc_config.hpp"
 
 int main()
 {
-    lvc::Config cfg(23.202295303345f, 2048, 2048, 12.2f, 12.125f, true, false);
+    auto cfg= fromRlcCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\NagoyaFujita\param_pre.cfg)");
     auto src = cv::imread("square_raw.png");
     cv::Mat dst;
     lvc::preprocessForward(cfg, src, dst);

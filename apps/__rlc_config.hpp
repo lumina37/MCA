@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdio>
+#include <iostream>
 #include <string>
 
 #include <boost/foreach.hpp>
@@ -10,8 +11,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "LVC/common/const.hpp"
 #include "LVC/common/config.hpp"
+#include "LVC/common/const.hpp"
 #include "LVC/preprocess/backward.hpp"
 #include "LVC/preprocess/forward.hpp"
 
@@ -24,7 +25,7 @@ static lvc::Config fromRlcCfgFilePath(const std::string& cfg_file_path)
     char Output_Path[128];
     int viewNum, skipped_number_of_pixel_around_ML, pmode, mmode, lmode, debayer_model, isfiltering, isCLAHE,
         input_model, output_model, start_frame, end_frame, height, width;
-    double gamma, lambda, sigma;
+    double gamma, lambda, sigma, square_width_diam_ratio;
 
     char s[256];
     FILE* fp = fopen(cfg_file_path.c_str(), "r");
@@ -44,15 +45,16 @@ static lvc::Config fromRlcCfgFilePath(const std::string& cfg_file_path)
     fscanf(fp, "%s\t%d", s, &debayer_model);
     fscanf(fp, "%s\t%d", s, &isfiltering);
     fscanf(fp, "%s\t%d", s, &isCLAHE);
-    fscanf(fp, "%s\t%f", s, &gamma);
-    fscanf(fp, "%s\t%f", s, &lambda);
-    fscanf(fp, "%s\t%f", s, &sigma);
+    fscanf(fp, "%s\t%lf", s, &gamma);
+    fscanf(fp, "%s\t%lf", s, &lambda);
+    fscanf(fp, "%s\t%lf", s, &sigma);
     fscanf(fp, "%s\t%d", s, &input_model);
     fscanf(fp, "%s\t%d", s, &output_model);
     fscanf(fp, "%s\t%d", s, &start_frame);
     fscanf(fp, "%s\t%d", s, &end_frame);
     fscanf(fp, "%s\t%d", s, &height);
     fscanf(fp, "%s\t%d", s, &width);
+    fscanf(fp, "%s\t%lf", s, &square_width_diam_ratio);
 
     fclose(fp);
 
@@ -132,5 +134,5 @@ static lvc::Config fromRlcCfgFilePath(const std::string& cfg_file_path)
         start_y = tmp;
     }
 
-    return {diameter, width, height, start_x, start_y, is_right_shift, is_horizontal};
+    return {diameter, width, height, start_x, start_y, is_right_shift, is_horizontal,0.0,0.0, square_width_diam_ratio};
 }

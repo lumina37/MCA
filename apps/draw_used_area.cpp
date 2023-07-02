@@ -23,7 +23,7 @@ static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std:
 
 int main()
 {
-    lvc::Config cfg(23.202295303345f, 2048, 2048, 12.2f, 12.125f, true, false);
+    lvc::Config cfg(23.202295303345, 2048, 2048, 12.2, 12.125, true, false);
     std::vector<cv::Mat> maps = {cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
                                  cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
                                  cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};

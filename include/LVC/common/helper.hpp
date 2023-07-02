@@ -34,8 +34,8 @@ static LVC_CONSTFUNC LVC_FORCE_INLINE int calcNumVertical(int height, double dia
 static LVC_FORCE_INLINE void getRoiImageByCenter(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& center,
                                                  double width) noexcept
 {
-    int leftup_corner_x = static_cast<int>(round(center.x - width / 2.0f));
-    int leftup_corner_y = static_cast<int>(round(center.y - width / 2.0f));
+    int leftup_corner_x = static_cast<int>(round(center.x - width / 2.0));
+    int leftup_corner_y = static_cast<int>(round(center.y - width / 2.0));
     int width_i = static_cast<int>(round(width));
     cv::Rect roi(leftup_corner_x, leftup_corner_y, width_i, width_i);
     dst = src(roi);

@@ -86,7 +86,7 @@ MicroImage MicroImageRanges::iterator::fromIndex(int index_x, int index_y) const
         // | 0      | 1              | no shift         |
         // | 0      | 0              | no shift         |
         int shift_flag = static_cast<int>(is_right_shift_) * 2 - 1;
-        double x_shift = static_cast<double>(is_odd * shift_flag) * interval_x_ / 2.0f;
+        double x_shift = static_cast<double>(is_odd * shift_flag) * interval_x_ / 2.0;
         double x = start_x_ + static_cast<double>(index_x) * interval_x_ + x_shift;
         double y = start_y_ + static_cast<double>(index_y) * interval_y_;
         return {x, y, index_x, index_y};
@@ -100,7 +100,7 @@ MicroImage MicroImageRanges::iterator::fromIndex(int index_x, int index_y) const
         // | 0      | 1              | no shift       |
         // | 0      | 0              | no shift       |
         int shift_flag = static_cast<int>(is_right_shift_) * 2 - 1;
-        double y_shift = static_cast<double>(is_odd * shift_flag) * interval_y_ / 2.0f;
+        double y_shift = static_cast<double>(is_odd * shift_flag) * interval_y_ / 2.0;
         double y = start_y_ + static_cast<double>(index_y) * interval_y_ + y_shift;
         double x = start_x_ + static_cast<double>(index_x) * interval_x_;
         return {x, y, index_x, index_y};
