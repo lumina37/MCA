@@ -1,4 +1,4 @@
-add_executable(main "process.cpp")
+add_executable(main "draw_used_area.cpp")
 
 find_package(Boost REQUIRED)
 

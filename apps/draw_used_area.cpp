@@ -6,6 +6,8 @@
 #include "LVC/common/config.hpp"
 #include "LVC/preprocess/debug.hpp"
 
+#include "__rlc_config.hpp"
+
 static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std::vector<int>> types, cv::Mat& dst)
 {
     assert(maps[0].type() == CV_8UC1);
@@ -23,7 +25,7 @@ static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std:
 
 int main()
 {
-    lvc::Config cfg(23.202295303345, 2048, 2048, 12.2, 12.125, true, false);
+    auto cfg = fromRlcCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\ChessPieces\param_pre.cfg)");
     std::vector<cv::Mat> maps = {cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
                                  cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
                                  cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};
@@ -31,14 +33,16 @@ int main()
     cv::Mat patch_size_map;
     mergePatchSizeMap(maps, {{1, 0, 2}, {2, 1, 0}}, patch_size_map);
 
-    if (!cfg.getIsHorizontal()) {
+    if (false) {
         cv::Mat temp = patch_size_map;
         cv::transpose(temp, patch_size_map);
     }
 
-    cv::Mat dst;
-    lvc::dbgDrawUsedArea(cfg, patch_size_map, 3, dst);
-    cv::imwrite("used_area.png", dst);
+    cv::Mat dst_3, dst_5;
+    lvc::dbgDrawUsedArea(cfg, patch_size_map, 3, dst_3);
+    cv::imwrite("used_area_3.png", dst_3);
+    lvc::dbgDrawUsedArea(cfg, patch_size_map, 5, dst_5);
+    cv::imwrite("used_area_5.png", dst_5);
 
     return 0;
 }

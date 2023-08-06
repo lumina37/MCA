@@ -8,8 +8,8 @@
 
 int main()
 {
-    auto cfg= fromRlcCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\NagoyaFujita\param_pre.cfg)");
-    auto src = cv::imread("square_raw.png");
+    auto cfg= fromRlcCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\ChessPieces\param_pre.cfg)");
+    auto src = cv::imread("raw.png");
     cv::Mat dst;
     lvc::preprocessForward(cfg, src, dst);
     cv::imwrite("forward.png", dst);

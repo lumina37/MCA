@@ -45,7 +45,8 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
         int right_border_width = diameter_i - inscribed_square_width_i - left_border_width;
         int bot_border_width = diameter_i - inscribed_square_width_i - top_border_width;
         cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
-                           left_border_width, right_border_width, cv::BorderTypes::BORDER_REFLECT);
+                           left_border_width, right_border_width,
+                           cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
 
         src_roi_image_with_border.copyTo(dst_roi_image, mask_image);
     }
