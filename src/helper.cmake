@@ -1,0 +1,7 @@
+function(lvc_linkage tg)
+    message(STATUS "lvc_linkage call: ${tg}")
+    target_link_libraries(${tg} PUBLIC libLVC_preprocess)
+    if (BUILD_SHARED_LIBS)
+        add_custom_command(TARGET ${tg} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:libLVC_preprocess> $<TARGET_FILE_DIR:${tg}>)
+    endif ()
+endfunction()

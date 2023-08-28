@@ -4,7 +4,7 @@
 
 #include <opencv2/core.hpp>
 
-#include "LVC/common/const.hpp"
+#include "LVC/common/const.h"
 #include "LVC/common/defines.h"
 
 namespace lvc {

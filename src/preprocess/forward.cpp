@@ -1,11 +1,11 @@
 #include <opencv2/core.hpp>
 
 #include "LVC/common/config.hpp"
-#include "LVC/common/const.hpp"
+#include "LVC/common/const.h"
 #include "LVC/common/defines.h"
 #include "LVC/common/helper.hpp"
 
-#include "LVC/preprocess/forward.hpp"
+#include "LVC/preprocess/forward.h"
 
 namespace lvc {
 

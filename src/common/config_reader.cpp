@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cstdio>
 #include <iostream>
 #include <string>
@@ -9,16 +7,14 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
 
 #include "LVC/common/config.hpp"
-#include "LVC/common/const.hpp"
-#include "LVC/preprocess/backward.hpp"
-#include "LVC/preprocess/forward.hpp"
+#include "LVC/common/config_reader.h"
+#include "LVC/common/const.h"
 
 namespace bst_ptree = boost::property_tree;
 
-static lvc::Config fromRlcCfgFilePath(const std::string& cfg_file_path)
+lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 {
     char Calibration_xml[128];
     char RawImage_Path[128];

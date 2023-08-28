@@ -11,3 +11,4 @@ configure_file("${libLVC_CONFIG_DIR}/cmake.h.in" "${libLVC_CONFIG_DIR}/cmake.h")
 
 add_subdirectory("src")
 add_subdirectory("apps")
+add_subdirectory("tests")

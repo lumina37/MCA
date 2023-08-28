@@ -4,9 +4,8 @@
 #include <opencv2/imgcodecs.hpp>
 
 #include "LVC/common/config.hpp"
-#include "LVC/preprocess/debug.hpp"
-
-#include "__rlc_config.hpp"
+#include "LVC/common/config_reader.h"
+#include "LVC/preprocess/debug.h"
 
 static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std::vector<int>> types, cv::Mat& dst)
 {
@@ -25,7 +24,8 @@ static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std:
 
 int main()
 {
-    auto cfg = fromRlcCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\ChessPieces\param_pre.cfg)");
+    auto cfg =
+        fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\ChessPieces\param_pre.cfg)");
     std::vector<cv::Mat> maps = {cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
                                  cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
                                  cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};

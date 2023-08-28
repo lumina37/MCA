@@ -13,3 +13,7 @@
 !include/**
 !src
 !src/**
+!thirdparty
+!thirdparty/**
+!tests
+!tests/**

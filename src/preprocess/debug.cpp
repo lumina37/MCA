@@ -5,7 +5,7 @@
 #include "LVC/common/defines.h"
 #include "LVC/common/helper.hpp"
 
-#include "LVC/preprocess/debug.hpp"
+#include "LVC/preprocess/debug.h"
 
 namespace lvc {
 

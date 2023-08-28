@@ -1,10 +1,15 @@
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-#include "__rlc_config.hpp"
+#include <opencv2/imgcodecs.hpp>
 
 #include "LVC/common/config.hpp"
+#include "LVC/common/config_reader.h"
+
+#include "LVC/preprocess/backward.h"
+#include "LVC/preprocess/forward.h"
 
 int main(int argc, char* argv[])
 {
@@ -12,7 +17,7 @@ int main(int argc, char* argv[])
     std::string src_dir = root + "/src/";
     std::string dst_dir = root + "/src_pre/";
 
-    auto cfg = fromRlcCfgFilePath(root + "/param_pre.cfg");
+    auto cfg = fromRaytrixCfgFilePath(root + "/param_pre.cfg");
     for (int i = 1; i < 31; i++) {
         cv::Mat src, dst, backward_src;
         std::stringstream s_filename;
