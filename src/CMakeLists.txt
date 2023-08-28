@@ -10,6 +10,7 @@ if (BUILD_SHARED_LIBS)
 else ()
     add_library(libLVC_preprocess STATIC ${libLVC_preprocess_SRCS} ${common_SRCS})
 endif ()
+
 target_include_directories(libLVC_preprocess PUBLIC "${PROJECT_SOURCE_DIR}/include" ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 target_link_libraries(libLVC_preprocess PUBLIC ${OpenCV_LIBS} ${Boost_LIBRARIES})
 target_compile_features(libLVC_preprocess PUBLIC cxx_std_11)

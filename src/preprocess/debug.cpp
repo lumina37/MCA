@@ -3,7 +3,6 @@
 
 #include "LVC/common/config.hpp"
 #include "LVC/common/defines.h"
-#include "LVC/common/helper.hpp"
 
 #include "LVC/preprocess/debug.h"
 
