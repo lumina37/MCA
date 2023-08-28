@@ -2,17 +2,12 @@
 #include <iostream>
 #include <string>
 
-#include <boost/foreach.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+#include <pugixml.hpp>
 #include <opencv2/core.hpp>
 
 #include "LVC/common/config.hpp"
 #include "LVC/common/config_reader.h"
 #include "LVC/common/const.h"
-
-namespace bst_ptree = boost::property_tree;
 
 lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 {
@@ -54,24 +49,25 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     fclose(fp);
 
-    bst_ptree::ptree tree;
-    read_xml(Calibration_xml, tree);
+    pugi::xml_document doc;
+    doc.load_file(Calibration_xml);
 
-    double diameter = tree.get<double>("RayCalibData.diameter");
-    double rotation = tree.get<double>("RayCalibData.rotation");
+    double diameter = doc.child("RayCalibData").child("diameter").text().as_double();
+    double rotation = doc.child("RayCalibData").child("rotation").text().as_double();
     double radius = diameter * 0.5;
     cv::Point2d offset[3];
     cv::Point num;
     cv::Point2d center;
     cv::Point2d subGridRefPos[2][3];
 
-    center.x = width * 0.5 + tree.get<double>("RayCalibData.offset.x");
-    center.y = height * 0.5 - tree.get<double>("RayCalibData.offset.y");
-    BOOST_FOREACH (const bst_ptree::ptree::value_type& child, tree.get_child("RayCalibData"))
-        if (child.first == "lens_type") {
-            offset[child.second.get<int>("<xmlattr>.id")].x = child.second.get<double>("offset.x");
-            offset[child.second.get<int>("<xmlattr>.id")].y = child.second.get<double>("offset.y");
-        }
+    center.x = width * 0.5 + doc.child("RayCalibData").child("offset").child("x").text().as_double();
+    center.y = height * 0.5 - doc.child("RayCalibData").child("offset").child("y").text().as_double();
+
+    for (const auto& lenstype : doc.child("RayCalibData").children("lens_type")) {
+        int id = lenstype.attribute("id").as_int();
+        offset[id].x = lenstype.child("offset").child("x").text().as_double();
+        offset[id].y = lenstype.child("offset").child("y").text().as_double();
+    }
 
     // transpose each matrix
     if (rotation > lvc::PI / 4.0) {
@@ -130,5 +126,6 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
         start_y = tmp;
     }
 
-    return {diameter, width, height, start_x, start_y, is_right_shift, is_horizontal,0.0,0.0, square_width_diam_ratio};
+    return {diameter,       width,         height, start_x, start_y,
+            is_right_shift, is_horizontal, 0.0,    0.0,     square_width_diam_ratio};
 }
