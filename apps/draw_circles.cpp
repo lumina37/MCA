@@ -1,7 +1,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "LVC/common/config_reader.h"
+#include "LVC/common/config_parser.h"
 #include "LVC/preprocess/debug.h"
 
 using namespace std;

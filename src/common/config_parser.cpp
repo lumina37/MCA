@@ -2,11 +2,11 @@
 #include <iostream>
 #include <string>
 
-#include <pugixml.hpp>
 #include <opencv2/core.hpp>
+#include <pugixml.hpp>
 
 #include "LVC/common/config.hpp"
-#include "LVC/common/config_reader.h"
+#include "LVC/common/config_parser.h"
 #include "LVC/common/const.h"
 
 lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
@@ -17,6 +17,8 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     int viewNum, skipped_number_of_pixel_around_ML, pmode, mmode, lmode, debayer_model, isfiltering, isCLAHE,
         input_model, output_model, start_frame, end_frame, height, width;
     double gamma, lambda, sigma, square_width_diam_ratio;
+
+    /* Read param.cfg */
 
     char s[256];
     FILE* fp = fopen(cfg_file_path.c_str(), "r");
@@ -49,6 +51,8 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     fclose(fp);
 
+    /* Read XML */
+
     pugi::xml_document doc;
     doc.load_file(Calibration_xml);
 
@@ -68,6 +72,8 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
         offset[id].x = lenstype.child("offset").child("x").text().as_double();
         offset[id].y = lenstype.child("offset").child("y").text().as_double();
     }
+
+    /* Post Processing */
 
     // transpose each matrix
     if (rotation > lvc::PI / 4.0) {
