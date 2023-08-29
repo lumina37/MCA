@@ -5,7 +5,7 @@
 
 #include <opencv2/imgcodecs.hpp>
 
-#include "LVC/common/config_parser.h"
+#include "LVC/config/parser.h"
 
 #include "LVC/preprocess/backward.h"
 #include "LVC/preprocess/forward.h"

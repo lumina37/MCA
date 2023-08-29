@@ -7,9 +7,9 @@
 #include <opencv2/core.hpp>
 #include <pugixml.hpp>
 
-#include "LVC/common/config.hpp"
-#include "LVC/common/config_parser.h"
 #include "LVC/common/const.h"
+#include "LVC/config/config.h"
+#include "LVC/config/parser.h"
 
 lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 {

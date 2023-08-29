@@ -2,6 +2,6 @@
 
 #include <string>
 
-#include "LVC/common/config.hpp"
+#include "config.h"
 
 LVC_EXPORT lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path);

@@ -2,8 +2,8 @@
 
 #include <opencv2/core.hpp>
 
-#include "LVC/common/config.hpp"
 #include "LVC/common/defines.h"
+#include "LVC/config/config.h"
 
 namespace lvc {
 

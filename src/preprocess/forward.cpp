@@ -1,7 +1,7 @@
 #include <opencv2/core.hpp>
 
-#include "LVC/common/config.hpp"
 #include "LVC/common/helper.hpp"
+#include "LVC/config/config.h"
 
 #include "LVC/preprocess/forward.h"
 

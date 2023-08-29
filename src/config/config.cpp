@@ -1,6 +1,6 @@
 #include "LVC/common/helper.hpp"
 
-#include "LVC/common/config.hpp"
+#include "LVC/config/config.h"
 
 namespace lvc {
 

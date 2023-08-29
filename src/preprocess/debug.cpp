@@ -1,8 +1,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "LVC/common/config.hpp"
 #include "LVC/common/defines.h"
+#include "LVC/config/config.h"
 
 #include "LVC/preprocess/debug.h"
 

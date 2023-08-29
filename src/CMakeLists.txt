@@ -1,7 +1,7 @@
 find_package(OpenCV REQUIRED core imgcodecs imgproc highgui)
 
 set(libLVC_preprocess_SRCS "preprocess/forward.cpp" "preprocess/backward.cpp" "preprocess/debug.cpp")
-set(common_SRCS "common/config.cpp" "common/config_parser.cpp")
+set(common_SRCS "config/config.cpp" "config/parser.cpp")
 
 set(pugixml_SRC_DIR "${PROJECT_SOURCE_DIR}/thirdparty/pugixml/src")
 set(pugixml_SRCS "${pugixml_SRC_DIR}/pugixml.cpp")

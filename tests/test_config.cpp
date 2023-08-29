@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "LVC/common/config_parser.h"
+#include "LVC/config/parser.h"
 
 TEST_CASE("Read config from param.cfg", "[config]")
 {
