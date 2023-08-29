@@ -1,5 +1,7 @@
-#include <cstdio>
+#include <fstream>
 #include <iostream>
+#include <map>
+#include <sstream>
 #include <string>
 
 #include <opencv2/core.hpp>
@@ -11,50 +13,51 @@
 
 lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 {
-    char Calibration_xml[128];
-    char RawImage_Path[128];
-    char Output_Path[128];
-    int viewNum, skipped_number_of_pixel_around_ML, pmode, mmode, lmode, debayer_model, isfiltering, isCLAHE,
-        input_model, output_model, start_frame, end_frame, height, width;
-    double gamma, lambda, sigma, square_width_diam_ratio;
-
     /* Read param.cfg */
 
-    char s[256];
-    FILE* fp = fopen(cfg_file_path.c_str(), "r");
-    if (!fp) {
-        std::cerr << "cannot open config file" << std::endl;
-        exit(-1);
+    std::ifstream file(cfg_file_path);
+    std::map<std::string, std::string> cfg_map;
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream row(line);
+        std::string key;
+        if (std::getline(row, key, '\t')) {
+            std::string value;
+            if (std::getline(row, value)) {
+                cfg_map[key] = value;
+            }
+        }
     }
 
-    fscanf(fp, "%s\t%d", s, &viewNum);
-    fscanf(fp, "%s\t%d", s, &skipped_number_of_pixel_around_ML);
-    fscanf(fp, "%s\t%d", s, &pmode);
-    fscanf(fp, "%s\t%d", s, &mmode);
-    fscanf(fp, "%s\t%d", s, &lmode);
-    fscanf(fp, "%s\t%s", s, Calibration_xml);
-    fscanf(fp, "%s\t%s", s, RawImage_Path);
-    fscanf(fp, "%s\t%s", s, Output_Path);
-    fscanf(fp, "%s\t%d", s, &debayer_model);
-    fscanf(fp, "%s\t%d", s, &isfiltering);
-    fscanf(fp, "%s\t%d", s, &isCLAHE);
-    fscanf(fp, "%s\t%lf", s, &gamma);
-    fscanf(fp, "%s\t%lf", s, &lambda);
-    fscanf(fp, "%s\t%lf", s, &sigma);
-    fscanf(fp, "%s\t%d", s, &input_model);
-    fscanf(fp, "%s\t%d", s, &output_model);
-    fscanf(fp, "%s\t%d", s, &start_frame);
-    fscanf(fp, "%s\t%d", s, &end_frame);
-    fscanf(fp, "%s\t%d", s, &height);
-    fscanf(fp, "%s\t%d", s, &width);
-    fscanf(fp, "%s\t%lf", s, &square_width_diam_ratio);
+    int viewNum = std::stoi(cfg_map["viewNum"]);
+    int skipped_number_of_pixel_around_ML = std::stoi(cfg_map["rmode"]);
+    int pmode = std::stoi(cfg_map["pmode"]);
+    int mmode = std::stoi(cfg_map["mmode"]);
+    int lmode = std::stoi(cfg_map["lmode"]);
+    std::string Calibration_xml = cfg_map["Calibration_xml"];
+    std::string RawImage_Path = cfg_map["RawImage_Path"];
+    std::string Output_Path = cfg_map["Output_Path"];
+    int debayer_model = std::stoi(cfg_map["Debayer_mode"]);
+    int isfiltering = std::stoi(cfg_map["Isfiltering"]);
+    int isCLAHE = std::stoi(cfg_map["isCLAHE"]);
+    double gamma = std::stod(cfg_map["Gamma"]);
+    double lambda = std::stod(cfg_map["Lambda"]);
+    double sigma = std::stod(cfg_map["Sigma"]);
+    int input_model = std::stoi(cfg_map["input_model"]);
+    int output_model = std::stoi(cfg_map["output_model"]);
+    int start_frame = std::stoi(cfg_map["start_frame"]);
+    int end_frame = std::stoi(cfg_map["end_frame"]);
+    int height = std::stoi(cfg_map["height"]);
+    int width = std::stoi(cfg_map["width"]);
+    double square_width_diam_ratio = std::stod(cfg_map["square_width_diam_ratio"]);
 
-    fclose(fp);
+    file.close();
 
     /* Read XML */
 
     pugi::xml_document doc;
-    doc.load_file(Calibration_xml);
+    doc.load_file(Calibration_xml.c_str());
 
     double diameter = doc.child("RayCalibData").child("diameter").text().as_double();
     double rotation = doc.child("RayCalibData").child("rotation").text().as_double();
