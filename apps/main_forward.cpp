@@ -6,7 +6,7 @@
 
 int main()
 {
-    auto cfg = fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
+    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
     auto src = cv::imread("src_chess.png");
     cv::Mat dst;
     lvc::preprocessForward(cfg, src, dst);

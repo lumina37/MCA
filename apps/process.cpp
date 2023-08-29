@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     std::string src_dir = root + "/src/";
     std::string dst_dir = root + "/src_pre/";
 
-    auto cfg = fromRaytrixCfgFilePath(root + "/param_pre.cfg");
+    auto cfg = lvc::fromRaytrixCfgFilePath(root + "/param_pre.cfg");
     for (int i = 1; i < 31; i++) {
         cv::Mat src, dst, backward_src;
         std::stringstream s_filename;

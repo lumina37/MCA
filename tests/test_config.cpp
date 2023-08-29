@@ -4,8 +4,7 @@
 
 TEST_CASE("Read config from param.cfg", "[config]")
 {
-    auto cfg =
-        fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230508_LVC\code\rlc-master\TestDataset\ChessPieces\param_pre.cfg)");
+    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
 
     REQUIRE(cfg.getWidth() == 3840);
     REQUIRE(cfg.getHeight() == 2160);
