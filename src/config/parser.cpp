@@ -1,5 +1,4 @@
 #include <fstream>
-#include <iostream>
 #include <map>
 #include <sstream>
 #include <string>
@@ -11,7 +10,9 @@
 #include "LVC/config/config.h"
 #include "LVC/config/parser.h"
 
-lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
+namespace lvc {
+
+Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 {
     /* Read param.cfg */
 
@@ -43,19 +44,20 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     pugi::xml_document doc;
     doc.load_file(Calibration_xml.c_str());
+    auto root_node = doc.child("RayCalibData");
 
-    double diameter = doc.child("RayCalibData").child("diameter").text().as_double();
-    double rotation = doc.child("RayCalibData").child("rotation").text().as_double();
+    double diameter = root_node.child("diameter").text().as_double();
+    double rotation = root_node.child("rotation").text().as_double();
     double radius = diameter * 0.5;
     cv::Point2d offset[3];
     cv::Point num;
     cv::Point2d center;
     cv::Point2d subGridRefPos[2][3];
 
-    center.x = width * 0.5 + doc.child("RayCalibData").child("offset").child("x").text().as_double();
-    center.y = height * 0.5 - doc.child("RayCalibData").child("offset").child("y").text().as_double();
+    center.x = width * 0.5 + root_node.child("offset").child("x").text().as_double();
+    center.y = height * 0.5 - root_node.child("offset").child("y").text().as_double();
 
-    for (const auto& lenstype : doc.child("RayCalibData").children("lens_type")) {
+    for (const auto& lenstype : root_node.children("lens_type")) {
         int id = lenstype.attribute("id").as_int();
         offset[id].x = lenstype.child("offset").child("x").text().as_double();
         offset[id].y = lenstype.child("offset").child("y").text().as_double();
@@ -64,7 +66,7 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     /* Post Processing */
 
     // transpose each matrix
-    if (rotation > lvc::PI / 4.0) {
+    if (rotation > PI / 4.0) {
         center = cv::Point2d(center.y, center.x);
         for (int i = 0; i < 3; ++i) {
             offset[i] = cv::Point2d(offset[i].y, offset[i].x);
@@ -72,8 +74,8 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     }
 
     // Calculation Number of Micro Lens
-    int upNum = (int)((center.y - radius) / (radius * sqrt(3)));
-    int downNum = (int)((height - (center.y + radius)) / (radius * sqrt(3)));
+    int upNum = (int)((center.y - radius) / (radius * dSQRT3));
+    int downNum = (int)((height - (center.y + radius)) / (radius * dSQRT3));
     num.y = upNum + 1 + downNum;
     double leftNum = (center.x - radius) / diameter;
     double rightNum = (width - (center.x + radius)) / diameter;
@@ -92,14 +94,14 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
         double dis = diameter * 3;
         subGridRefPos[upNum % 2][type].x = refPos - (int)((refPos - radius) / dis) * dis;
         refPos = center.y;
-        dis = diameter * sqrt(3);
+        dis = diameter * dSQRT3;
         subGridRefPos[upNum % 2][type].y = refPos - (int)((refPos - radius) / dis) * dis;
 
         refPos = center.x + diameter * -(offset[type].x + offset[type].y) - (radius + diameter);
         dis = diameter * 3;
         subGridRefPos[abs(upNum % 2 - 1)][type].x = refPos - (int)((refPos - radius) / dis) * dis;
-        refPos = center.y - radius * sqrt(3);
-        dis = diameter * sqrt(3);
+        refPos = center.y - radius * dSQRT3;
+        dis = diameter * dSQRT3;
         subGridRefPos[abs(upNum % 2 - 1)][type].y = refPos - (int)((refPos - radius) / dis) * dis;
     }
 
@@ -111,9 +113,9 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     double start_x = shift[0].x;
     double start_y = shift[0].y;
     bool is_right_shift = shift[0].x < shift[1].x;
-    bool is_horizontal = rotation <= lvc::PI / 4.0;
+    bool is_horizontal = rotation <= PI / 4.0;
 
-    if (rotation > lvc::PI / 4.0) {
+    if (rotation > PI / 4.0) {
         center = cv::Point2d(center.y, center.x);
         double tmp = start_x;
         start_x = start_y;
@@ -123,3 +125,5 @@ lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     return {diameter,       width,         height, start_x, start_y,
             is_right_shift, is_horizontal, 0.0,    0.0,     square_width_diam_ratio};
 }
+
+} // namespace lvc

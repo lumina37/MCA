@@ -4,4 +4,8 @@
 
 #include "config.h"
 
-LVC_EXPORT lvc::Config fromRaytrixCfgFilePath(const std::string& cfg_file_path);
+namespace lvc {
+
+LVC_EXPORT Config fromRaytrixCfgFilePath(const std::string& cfg_file_path);
+
+}
