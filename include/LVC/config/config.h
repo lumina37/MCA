@@ -3,7 +3,7 @@
 #include <opencv2/core.hpp>
 
 #include "LVC/common/defines.h"
-#include "LVC/common/helper.hpp"
+#include "LVC/preprocess/helper.hpp"
 
 namespace lvc {
 
