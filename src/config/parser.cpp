@@ -116,7 +116,6 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     bool is_horizontal = rotation <= PI / 4.0;
 
     if (rotation > PI / 4.0) {
-        center = cv::Point2d(center.y, center.x);
         double tmp = start_x;
         start_x = start_y;
         start_y = tmp;

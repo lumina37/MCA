@@ -17,14 +17,16 @@ static LVC_FORCE_INLINE void genCircleMask(cv::Mat& dst, double diameter)
 
 void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
-    dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src.type());
+    cv::Mat src_f;
+    src.convertTo(src_f, CV_64FC3);
+    cv::Mat dst_f = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src_f.type());
 
-    double inscribed_square_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
-    int inscribed_square_width_i = static_cast<int>(ceil(inscribed_square_width));
-    int diameter_i = static_cast<int>(ceil(cfg.getDiameter()));
+    double src_block_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
+    int src_block_width_i = calcReservedWidth(src_block_width);
+    int dst_block_width_i = calcReservedWidth(cfg.getDiameter());
 
     cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
-    cv::Mat mask_image = cv::Mat::zeros(diameter_i, diameter_i, CV_8U);
+    cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, CV_8U);
     genCircleMask(mask_image, cfg.getDiameter());
 
     MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
@@ -32,24 +34,14 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
     for (const auto& mi : mis) {
         cv::Point2d mi_center = mi.getCenter();
 
-        getRoiImageByLeftupCorner2i(src, src_roi_image, mi.getIndex() * inscribed_square_width_i,
-                                    inscribed_square_width);
-        getRoiImageByCenter(dst, dst_roi_image, mi_center, cfg.getDiameter());
-
-        int dst_leftup_corner_x = static_cast<int>(mi_center.x - cfg.getDiameter() / 2.0);
-        int dst_leftup_corner_y = static_cast<int>(mi_center.y - cfg.getDiameter() / 2.0);
-        int src_leftup_corner_x = static_cast<int>(mi_center.x - inscribed_square_width / 2.0);
-        int src_leftup_corner_y = static_cast<int>(mi_center.y - inscribed_square_width / 2.0);
-        int left_border_width = src_leftup_corner_x - dst_leftup_corner_x;
-        int top_border_width = src_leftup_corner_y - dst_leftup_corner_y;
-        int right_border_width = diameter_i - inscribed_square_width_i - left_border_width;
-        int bot_border_width = diameter_i - inscribed_square_width_i - top_border_width;
-        cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
-                           left_border_width, right_border_width,
-                           cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
+        getRoiImageByLeftupCorner(src_f, src_roi_image, mi.getIndex() * src_block_width_i, src_block_width);
+        getRoiImageByCenter(dst_f, dst_roi_image, mi_center, cfg.getDiameter());
+        centeredCopyMakeBorder(src_roi_image, src_roi_image_with_border, mi_center, src_block_width, cfg.getDiameter());
 
         cv::add(src_roi_image_with_border, dst_roi_image, dst_roi_image, mask_image);
     }
+
+    dst_f.convertTo(dst, CV_8UC3);
 }
 
 } // namespace lvc

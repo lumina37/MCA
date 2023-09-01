@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.8)
 
-project(libLVC_preprocess VERSION "0.1.0a0" LANGUAGES CXX)
+project(libLVC_preprocess VERSION "0.1.0" LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "Specifies the type of libraries (SHARED or STATIC) to build" OFF)
 
