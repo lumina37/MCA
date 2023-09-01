@@ -112,8 +112,8 @@ static LVC_FORCE_INLINE void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat&
     /* Down-side */
     // Blend
     double down_blend_inner_weight = ceil(src_down) - src_down;
-    cv::Mat down_inner = dst(cv::Rect(src_left_i, src_down_i - 1, src_width_i, 1));
-    cv::Mat down_outer = dst(cv::Rect(src_left_i, src_down_i, src_width_i, 1));
+    cv::Mat down_inner = dst(cv::Rect(src_left_i, src_down_i - 2, src_width_i, 1));
+    cv::Mat down_outer = dst(cv::Rect(src_left_i, src_down_i - 1, src_width_i, 1));
     cv::Mat down_blend_single = down_inner * down_blend_inner_weight + down_outer * (1.0 - down_blend_inner_weight);
     // Replicate
     cv::Mat down_blend_area =
@@ -142,8 +142,8 @@ static LVC_FORCE_INLINE void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat&
     /* Right-side */
     // Blend
     double right_blend_inner_weight = ceil(src_right) - src_right;
-    cv::Mat right_inner = dst(cv::Rect(src_right_i - 1, src_up_i, 1, src_width_i));
-    cv::Mat right_outer = dst(cv::Rect(src_right_i, src_up_i, 1, src_width_i));
+    cv::Mat right_inner = dst(cv::Rect(src_right_i - 2, src_up_i, 1, src_width_i));
+    cv::Mat right_outer = dst(cv::Rect(src_right_i - 1, src_up_i, 1, src_width_i));
     cv::Mat right_blend_single =
         right_inner * right_blend_inner_weight + right_outer * (1.0 - right_blend_inner_weight);
     // Replicate
