@@ -9,34 +9,34 @@
 
 namespace lvc {
 
-static LVC_CONSTFUNC LVC_FORCE_INLINE double calcDefaultIntervalHorizontal(double diameter) noexcept
+static inline LVC_CONSTFUNC double calcDefaultIntervalHorizontal(double diameter) noexcept
 {
     return diameter;
 }
 
-static LVC_CONSTFUNC LVC_FORCE_INLINE double calcDefaultIntervalVertical(double diameter) noexcept
+static inline LVC_CONSTFUNC double calcDefaultIntervalVertical(double diameter) noexcept
 {
     return dSQRT3_2 * diameter;
 }
 
-static LVC_CONSTFUNC LVC_FORCE_INLINE int calcNumHorizontal(int width, double diameter) noexcept
+static inline LVC_CONSTFUNC int calcNumHorizontal(int width, double diameter) noexcept
 {
     double num_x = static_cast<double>(width) / diameter - 1.0;
     return static_cast<int>(num_x);
 }
 
-static LVC_CONSTFUNC LVC_FORCE_INLINE int calcNumVertical(int height, double diameter) noexcept
+static inline LVC_CONSTFUNC int calcNumVertical(int height, double diameter) noexcept
 {
     double num_y = static_cast<double>(height) / (diameter * dSQRT3_2) - 1.0;
     return static_cast<int>(num_y);
 }
 
-static LVC_CONSTFUNC LVC_FORCE_INLINE int calcReservedWidth(double width) noexcept
+static inline LVC_CONSTFUNC int calcReservedWidth(double width) noexcept
 {
     return static_cast<int>(ceil(width)) + 1;
 }
 
-static LVC_FORCE_INLINE void getRoiImageByCenter(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& center,
+static inline void getRoiImageByCenter(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& center,
                                                  double width) noexcept
 {
     int leftup_x = static_cast<int>(center.x - width / 2.0);
@@ -46,7 +46,7 @@ static LVC_FORCE_INLINE void getRoiImageByCenter(const cv::Mat& src, cv::Mat& ds
     dst = src(roi);
 }
 
-static LVC_FORCE_INLINE void getRoiImageByLeftupCorner(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& corner,
+static inline void getRoiImageByLeftupCorner(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& corner,
                                                        double width) noexcept
 {
     int leftup_x = static_cast<int>(corner.x);
@@ -56,7 +56,7 @@ static LVC_FORCE_INLINE void getRoiImageByLeftupCorner(const cv::Mat& src, cv::M
     dst = src(roi);
 }
 
-static LVC_FORCE_INLINE void getRoiImageByLeftupCorner(const cv::Mat& src, cv::Mat& dst, const cv::Point2i& corner,
+static inline void getRoiImageByLeftupCorner(const cv::Mat& src, cv::Mat& dst, const cv::Point2i& corner,
                                                        double width) noexcept
 {
     int width_i = calcReservedWidth(width);
@@ -64,7 +64,7 @@ static LVC_FORCE_INLINE void getRoiImageByLeftupCorner(const cv::Mat& src, cv::M
     dst = src(roi);
 }
 
-static LVC_FORCE_INLINE void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& abs_center,
+static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& abs_center,
                                                     double src_width, double dst_width) noexcept
 {
     int src_width_i = calcReservedWidth(src_width);
