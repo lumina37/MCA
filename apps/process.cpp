@@ -14,11 +14,12 @@ namespace stdfs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
-    stdfs::path root = stdfs::path(argv[1]);
-    auto src_dir = root / "src";
-    auto dst_dir = root / "src_pre";
+    std::string cfg_path_str = std::string(argv[1]);
+    auto cfg_path = stdfs::path(cfg_path_str);
+    auto src_dir = stdfs::path(argv[2]);
+    auto dst_dir = stdfs::path(argv[3]);
 
-    auto cfg = lvc::fromRaytrixCfgFilePath((dst_dir / "param_pre.cfg").string());
+    auto cfg = lvc::fromRaytrixCfgFilePath(cfg_path_str);
     for (int i = 1; i < 31; i++) {
         cv::Mat src, dst, backward_src;
         std::stringstream s_filename;

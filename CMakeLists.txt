@@ -3,10 +3,6 @@ cmake_policy(SET CMP0091 NEW)  # NO MORE WINDOWS PLZ!
 
 project(libLVC_preprocess VERSION "0.1.0" LANGUAGES CXX)
 
-if(MSVC AND (NOT OpenCV_SHARED))
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-
 option(BUILD_SHARED_LIBS "Specifies the type of libraries (SHARED or STATIC) to build" OFF)
 
 set(LVC_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})

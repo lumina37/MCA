@@ -4,7 +4,7 @@ include(${PROJECT_SOURCE_DIR}/src/helper.cmake)
 
 add_executable(tests "test_config.cpp")
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
-lvc_linkage(tests)
+lvc_app_copy_dynlib(tests)
 
 include(CTest)
 include(Catch)
