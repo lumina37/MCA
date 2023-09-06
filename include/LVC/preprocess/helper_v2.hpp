@@ -60,7 +60,7 @@ static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, cons
 {
     int src_width_i = calcReservedWidth(src_width);
     int dst_width_i = calcReservedWidth(dst_width);
-    dst.create(dst_width_i, dst_width_i, CV_64FC3);
+    dst = cv::Mat::zeros(dst_width_i, dst_width_i, CV_64FC3);
 
     double dst_left_abs = floor(abs_center.x - dst_width / 2.0);
     double dst_up_abs = floor(abs_center.y - dst_width / 2.0);
@@ -146,6 +146,22 @@ static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, cons
     cv::Mat right_premult_single =
         right_blend_area(cv::Range::all(), cv::Range(right_blend_area.cols - 1, right_blend_area.cols));
     right_premult_single *= right_premult_factor;
+}
+
+static inline void paste(const cv::Mat& src, cv::Mat& dst)
+{
+    cv::Mat src_nonzero, dst_nonzero, paste_mask;
+    cv::compare(src, cv::Scalar(0, 0, 0), src_nonzero, cv::CMP_GT);
+    cv::compare(dst, cv::Scalar(0, 0, 0), dst_nonzero, cv::CMP_GT);
+    cv::bitwise_and(src_nonzero, dst_nonzero, paste_mask);
+
+    cv::Mat src_to_blend;
+    cv::addWeighted(src, 0.5, dst, 0.5, 0.0, src_to_blend);
+    src_to_blend.copyTo(dst,paste_mask);
+
+    cv::Mat direct_mask;
+    cv::bitwise_not(dst_nonzero, direct_mask);
+    src.copyTo(dst, direct_mask);
 }
 
 } // namespace lvc

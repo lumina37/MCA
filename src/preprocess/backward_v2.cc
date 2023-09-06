@@ -37,7 +37,10 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
         getRoiImageByCenter(dst_f, dst_roi_image, mi_center, cfg.getDiameter());
         centeredCopyMakeBorder(src_roi_image, src_roi_image_with_border, mi_center, src_block_width, cfg.getDiameter());
 
-        cv::add(src_roi_image_with_border, dst_roi_image, dst_roi_image, mask_image);
+        cv::Mat src_roi_image_masked;
+        src_roi_image_with_border.copyTo(src_roi_image_masked, mask_image);
+
+        paste(src_roi_image_masked, dst_roi_image);
     }
 
     dst_f.convertTo(dst, CV_8UC3);
