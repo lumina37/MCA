@@ -67,30 +67,29 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     // transpose each matrix
     if (rotation > PI / 4.0) {
-        center = cv::Point2d(center.y, center.x);
+        std::swap(center.x, center.y);
         for (int i = 0; i < 3; ++i) {
-            offset[i] = cv::Point2d(offset[i].y, offset[i].x);
+            std::swap(offset[i].y, offset[i].x);
         }
     }
 
     // Calculation Number of Micro Lens
-    int upNum = (int)((center.y - radius) / (radius * dSQRT3));
-    int downNum = (int)((height - (center.y + radius)) / (radius * dSQRT3));
+    int upNum = static_cast<int>((center.y - radius) / (radius * dSQRT3));
+    int downNum = static_cast<int>((height - (center.y + radius)) / (radius * dSQRT3));
     num.y = upNum + 1 + downNum;
     double leftNum = (center.x - radius) / diameter;
     double rightNum = (width - (center.x + radius)) / diameter;
+    int floorLeftNum = static_cast<int>(leftNum);
+    int floorRightNum = static_cast<int>(rightNum);
 
-    if (((leftNum - (int)leftNum) > 0.5) || ((rightNum - (int)rightNum) >= 0.5))
-        num.x = (int)leftNum + 1 + (int)rightNum;
-    else
-        num.x = (int)leftNum + (int)rightNum;
-    num.x = (int)(num.x / 3);
+    num.x = floorLeftNum + floorRightNum;
+    if (((leftNum - floorLeftNum) > 0.5) || ((rightNum - floorRightNum) >= 0.5))
+        num.x++;
+    num.x = static_cast<int>(num.x / 3);
 
     // Calculation subGridRefPos
     for (int type = 0; type < 3; type++) {
-        double refPos =
-            center.x + diameter * -(offset[type].x +
-                                    offset[type].y); // On the assumption that either offset[].x or offset[].y is Zero.
+        double refPos = center.x - diameter * (offset[type].x + offset[type].y);
         double dis = diameter * 3;
         subGridRefPos[upNum % 2][type].x = refPos - (int)((refPos - radius) / dis) * dis;
         refPos = center.y;
@@ -116,9 +115,7 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     bool is_horizontal = rotation <= PI / 4.0;
 
     if (rotation > PI / 4.0) {
-        double tmp = start_x;
-        start_x = start_y;
-        start_y = tmp;
+        std::swap(start_x, start_y);
     }
 
     return {diameter,       width,         height, start_x, start_y,
