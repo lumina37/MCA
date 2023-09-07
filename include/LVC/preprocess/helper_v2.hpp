@@ -95,10 +95,6 @@ static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, cons
     // Replicate
     cv::Mat up_blend_area = dst(cv::Range(dst_up_i, src_up_i + 1), cv::Range(src_left_i, src_left_i + src_width_i));
     cv::repeat(up_blend_single, up_blend_area.rows, 1, up_blend_area);
-    // Pre-mult
-    double up_premult_factor = ceil(dst_up) - dst_up;
-    cv::Mat up_premult_single = up_blend_area(cv::Range(0, 1), cv::Range::all());
-    up_premult_single *= up_premult_factor;
 
     /* Down-side */
     // Blend
@@ -110,11 +106,6 @@ static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, cons
     cv::Mat down_blend_area =
         dst(cv::Range(src_down_i - 1, dst_down_i), cv::Range(src_left_i, src_left_i + src_width_i));
     cv::repeat(down_blend_single, down_blend_area.rows, 1, down_blend_area);
-    // Pre-mult
-    double down_premult_factor = dst_down - floor(dst_down);
-    cv::Mat down_premult_single =
-        down_blend_area(cv::Range(down_blend_area.rows - 1, down_blend_area.rows), cv::Range::all());
-    down_premult_single *= down_premult_factor;
 
     /* Left-side */
     // Blend
@@ -125,10 +116,6 @@ static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, cons
     // Replicate
     cv::Mat left_blend_area = dst(cv::Range(src_up_i, src_up_i + src_width_i), cv::Range(dst_left_i, src_left_i + 1));
     cv::repeat(left_blend_single, 1, left_blend_area.cols, left_blend_area);
-    // Pre-mult
-    double left_premult_factor = ceil(dst_left) - dst_left;
-    cv::Mat left_premult_single = left_blend_area(cv::Range::all(), cv::Range(0, 1));
-    left_premult_single *= left_premult_factor;
 
     /* Right-side */
     // Blend
@@ -141,11 +128,6 @@ static inline void centeredCopyMakeBorder(const cv::Mat& src, cv::Mat& dst, cons
     cv::Mat right_blend_area =
         dst(cv::Range(src_up_i, src_up_i + src_width_i), cv::Range(src_right_i - 1, dst_right_i));
     cv::repeat(right_blend_single, 1, right_blend_area.cols, right_blend_area);
-    // Pre-mult
-    double right_premult_factor = dst_right - floor(dst_right);
-    cv::Mat right_premult_single =
-        right_blend_area(cv::Range::all(), cv::Range(right_blend_area.cols - 1, right_blend_area.cols));
-    right_premult_single *= right_premult_factor;
 }
 
 static inline void paste(const cv::Mat& src, cv::Mat& dst)
