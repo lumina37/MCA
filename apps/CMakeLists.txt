@@ -7,12 +7,8 @@ add_executable(main_process_legacy "process.cpp")
 
 include(${PROJECT_SOURCE_DIR}/src/helper.cmake)
 
-foreach (tg dbg_draw_circles dbg_draw_used_area dbg_backward dbg_forward main_process_modern)
-    target_link_libraries(${tg} PUBLIC libLVC_preprocess)
-    target_compile_features(${tg} PRIVATE cxx_std_20)
-    lvc_app_copy_dynlib(${tg})
+foreach (app dbg_draw_circles dbg_draw_used_area dbg_backward dbg_forward main_process_modern)
+    lvc_app_linkage(${app} libLVC_preprocess)
 endforeach ()
 
-target_link_libraries(main_process_legacy PUBLIC libLVC_preprocess_legacy)
-target_compile_features(main_process_legacy PRIVATE cxx_std_20)
-lvc_app_copy_dynlib(main_process_legacy)
+lvc_app_linkage(main_process_legacy libLVC_preprocess_legacy)
