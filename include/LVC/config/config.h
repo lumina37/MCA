@@ -16,25 +16,25 @@ public:
      * @param diameter Micro Image的直径
      * @param width 原始图像的宽度
      * @param height 原始图像的高度
-     * @param start 第x行最靠左的MI的坐标点组成的向量
+     * @param heads 第x行最靠左的MI的坐标点组成的向量
      * @param square_width_diam_ratio 裁切正方形宽度与直径的比值
      *
      * @note x对应width对应columns y对应height对应rows
      */
-    Config(double diameter, int width, int height, const cv::Vec<cv::Point2d, 2>& start,
+    Config(double diameter, int width, int height, const cv::Vec<cv::Point2d, 2>& heads,
            double square_width_diam_ratio = d1_SQRT2) noexcept;
 
     double getDiameter() const noexcept { return diameter_; };
     int getWidth() const noexcept { return width_; };
     int getHeight() const noexcept { return height_; };
-    const cv::Vec<cv::Point2d, 2> getStart() const noexcept { return start_; };
+    const cv::Vec<cv::Point2d, 2> getHeads() const noexcept { return heads_; };
     double getSquareWidthRatio() const noexcept { return square_width_diam_ratio_; };
 
 private:
     double diameter_;
     int width_;
     int height_;
-    cv::Vec<cv::Point2d, 2> start_;
+    cv::Vec<cv::Point2d, 2> heads_;
     double square_width_diam_ratio_;
 };
 
@@ -68,11 +68,11 @@ public:
     /**
      * @brief 用于遍历MI 支持标准`for range`语法
      *
-     * @param start 第x行最靠左的MI的坐标点组成的向量
+     * @param heads 第x行最靠左的MI的坐标点组成的向量
      * @param vec_num_x 各行x轴方向上的MI索引数量组成的向量
      * @param num_y y轴方向上的MI索引数量
      */
-    MicroImageRanges(const cv::Vec<cv::Point2d, 2>& start, double interval_x, double interval_y,
+    MicroImageRanges(const cv::Vec<cv::Point2d, 2>& heads, double interval_x, double interval_y,
                      const cv::Vec<int, 2>& vec_num_x, int num_y) noexcept;
 
     class iterator;
@@ -94,7 +94,7 @@ public:
     int getMaxNumY() const noexcept { return num_y_; }
 
 private:
-    cv::Vec<cv::Point2d, 2> start_;
+    cv::Vec<cv::Point2d, 2> heads_;
     double interval_x_;
     double interval_y_;
     cv::Vec<int, 2> vec_num_x_;
@@ -104,7 +104,7 @@ private:
 class MicroImageRanges::iterator
 {
 public:
-    iterator(const cv::Vec<cv::Point2d, 2>& start, double interval_x, double interval_y, int index_x, int index_y,
+    iterator(const cv::Vec<cv::Point2d, 2>& heads, double interval_x, double interval_y, int index_x, int index_y,
              const cv::Vec<int, 2>& vec_num_x, int num_y) noexcept;
 
     MicroImage fromIndex(int index_x, int index_y) const noexcept;
@@ -114,7 +114,7 @@ public:
     MicroImage operator*() const noexcept { return fromIndex(index_x_, index_y_); }
 
 private:
-    cv::Vec<cv::Point2d, 2> start_;
+    cv::Vec<cv::Point2d, 2> heads_;
     double interval_x_;
     double interval_y_;
     int index_x_;

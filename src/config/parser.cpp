@@ -77,13 +77,13 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     // Calculation subGridRefPos
     constexpr double double_max = std::numeric_limits<double>::max();
-    cv::Vec<cv::Point2d, 2> start = {{double_max, double_max}, {double_max, double_max}};
-    auto update_start = [&start](int i, double x, double y) {
-        if (x < start[i].x) {
-            start[i].x = x;
+    cv::Vec<cv::Point2d, 2> heads = {{double_max, double_max}, {double_max, double_max}};
+    auto update_head = [&heads](int i, double x, double y) {
+        if (x < heads[i].x) {
+            heads[i].x = x;
         }
-        if (y < start[i].y) {
-            start[i].y = y;
+        if (y < heads[i].y) {
+            heads[i].y = y;
         }
     };
 
@@ -97,25 +97,16 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
         x = ref_pos_x - (int)((ref_pos_x - radius) / dis_x) * dis_x;
         ref_pos_y = center.y;
         y = ref_pos_y - (int)((ref_pos_y - radius) / dis_y) * dis_y;
-        update_start(upNum % 2, x, y);
+        update_head(upNum % 2, x, y);
 
         ref_pos_x = center.x + diameter * -(offset[type].x + offset[type].y) - (radius + diameter);
         x = ref_pos_x - (int)((ref_pos_x - radius) / dis_x) * dis_x;
         ref_pos_y = center.y - radius * dSQRT3;
         y = ref_pos_y - (int)((ref_pos_y - radius) / dis_y) * dis_y;
-        update_start(abs(upNum % 2 - 1), x, y);
+        update_head(abs(upNum % 2 - 1), x, y);
     }
 
-    double start_x = start[0].x;
-    double start_y = start[0].y;
-    bool is_positive_shift = start[0].x < start[1].x;
-    bool is_tight_row = rotation <= PI / 4.0;
-
-    if (!is_tight_row) {
-        std::swap(start_x, start_y);
-    }
-
-    return {diameter, width, height, start, square_width_diam_ratio};
+    return {diameter, width, height, heads, square_width_diam_ratio};
 }
 
 } // namespace lvc
