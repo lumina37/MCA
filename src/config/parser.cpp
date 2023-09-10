@@ -77,7 +77,7 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     // Calculation subGridRefPos
     constexpr double double_max = std::numeric_limits<double>::max();
-    cv::Point2d start[2] = {{double_max, double_max}, {double_max, double_max}};
+    cv::Vec<cv::Point2d, 2> start = {{double_max, double_max}, {double_max, double_max}};
     auto update_start = [&start](int i, double x, double y) {
         if (x < start[i].x) {
             start[i].x = x;
@@ -115,8 +115,7 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
         std::swap(start_x, start_y);
     }
 
-    return {diameter,       width,         height, start_x, start_y,
-            is_positive_shift, is_tight_row, 0.0,    0.0,     square_width_diam_ratio};
+    return {diameter, width, height, start, square_width_diam_ratio};
 }
 
 } // namespace lvc

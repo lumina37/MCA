@@ -13,7 +13,7 @@ void preprocessForward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 
     MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
 
-    dst.create(mis.getNumY() * block_width_i, mis.getNumX() * block_width_i, src.type());
+    dst.create(mis.getMaxNumY() * block_width_i, mis.getMaxNumX() * block_width_i, src.type());
     cv::Mat src_roi_image, dst_roi_image;
 
     for (const auto& mi : mis) {

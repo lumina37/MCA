@@ -9,22 +9,6 @@
 
 namespace lvc {
 
-static inline LVC_CONSTFUNC double calcDefaultIntervalHorizontal(double diameter) noexcept { return diameter; }
-
-static inline LVC_CONSTFUNC double calcDefaultIntervalVertical(double diameter) noexcept { return dSQRT3_2 * diameter; }
-
-static inline LVC_CONSTFUNC int calcNumHorizontal(int width, double diameter) noexcept
-{
-    double num_x = static_cast<double>(width) / diameter - 1.0;
-    return static_cast<int>(num_x);
-}
-
-static inline LVC_CONSTFUNC int calcNumVertical(int height, double diameter) noexcept
-{
-    double num_y = static_cast<double>(height) / (diameter * dSQRT3_2) - 1.0;
-    return static_cast<int>(num_y);
-}
-
 static inline LVC_CONSTFUNC int calcReservedWidth(double width) noexcept { return static_cast<int>(ceil(width)) + 1; }
 
 static inline void getRoiImageByCenter(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& center,
