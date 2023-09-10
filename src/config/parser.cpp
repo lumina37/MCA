@@ -106,6 +106,11 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
         update_head(abs(upNum % 2 - 1), x, y);
     }
 
+    if (rotation > PI / 4.0) {
+        std::swap(heads[0].x, heads[0].y);
+        std::swap(heads[1].x, heads[1].y);
+    }
+
     return {diameter, width, height, heads, square_width_diam_ratio};
 }
 

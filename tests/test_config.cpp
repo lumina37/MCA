@@ -10,10 +10,6 @@ TEST_CASE("Read config from param.cfg", "[config]")
     REQUIRE_THAT(cfg.getDiameter(), Catch::Matchers::WithinAbs(34.97973633, 0.001));
     REQUIRE(cfg.getWidth() == 3840);
     REQUIRE(cfg.getHeight() == 2160);
-    REQUIRE_THAT(cfg.getStartX(), Catch::Matchers::WithinAbs(27.25284766, 0.001));
-    REQUIRE_THAT(cfg.getStartY(), Catch::Matchers::WithinAbs(27.24191481, 0.001));
-    REQUIRE_THAT(cfg.getIntervalX(), Catch::Matchers::WithinAbs(34.97973633, 0.001));
-    REQUIRE_THAT(cfg.getIntervalY(), Catch::Matchers::WithinAbs(30.29334028, 0.001));
-    REQUIRE(cfg.getIsTightRow() == true);
-    REQUIRE(cfg.getIsPositiveShift() == true);
+    REQUIRE_THAT(cfg.getHeads()[0].x, Catch::Matchers::WithinAbs(27.25284766, 0.001));
+    REQUIRE_THAT(cfg.getHeads()[0].y, Catch::Matchers::WithinAbs(27.24191481, 0.001));
 }
