@@ -14,6 +14,6 @@ TEST_CASE("Read config from param.cfg", "[config]")
     REQUIRE_THAT(cfg.getStartY(), Catch::Matchers::WithinAbs(27.24191481, 0.001));
     REQUIRE_THAT(cfg.getIntervalX(), Catch::Matchers::WithinAbs(34.97973633, 0.001));
     REQUIRE_THAT(cfg.getIntervalY(), Catch::Matchers::WithinAbs(30.29334028, 0.001));
-    REQUIRE(cfg.getIsHorizontal() == true);
-    REQUIRE(cfg.getIsRightShift() == true);
+    REQUIRE(cfg.getIsTightRow() == true);
+    REQUIRE(cfg.getIsPositiveShift() == true);
 }

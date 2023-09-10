@@ -108,15 +108,15 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     double start_x = start[0].x;
     double start_y = start[0].y;
-    bool is_right_shift = start[0].x < start[1].x;
-    bool is_horizontal = rotation <= PI / 4.0;
+    bool is_positive_shift = start[0].x < start[1].x;
+    bool is_tight_row = rotation <= PI / 4.0;
 
-    if (!is_horizontal) {
+    if (!is_tight_row) {
         std::swap(start_x, start_y);
     }
 
     return {diameter,       width,         height, start_x, start_y,
-            is_right_shift, is_horizontal, 0.0,    0.0,     square_width_diam_ratio};
+            is_positive_shift, is_tight_row, 0.0,    0.0,     square_width_diam_ratio};
 }
 
 } // namespace lvc

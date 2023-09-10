@@ -18,26 +18,30 @@ public:
      * @param height 原始图像的高度
      * @param start_x 第一行最靠左的MI(即最左上角的MI)的x坐标
      * @param start_y 第一行最靠左的MI的y坐标
-     * @param is_right_shift 第二行的最左MI是否位于第一行的最左MI的右侧 默认为`true`
-     * @param is_horizontal {
-     * `true`则MI横向直排而纵向呈左右交错(例如chess序列)
-     * `false`则纵向直排而横向呈上下交错(NagoyaFujita)
+     * @param is_positive_shift {
+     * `true`则第二个密排行/列位于第一个密排行/列的右侧/下侧(例如chess和NagoyaFujita序列)
+     * `false`则第二个密排行/列位于第一个密排行/列的左侧/上侧
+     * 默认为`true`
+     * }
+     * @param is_tight_row {
+     * `true`则MI横向密排而纵向左右交错(例如chess序列)
+     * `false`则MI纵向密排而横向上下交错(NagoyaFujita)
      * 默认为`true`
      * }
      * @param interval_x {
-     * 若`is_horizontal`为`true`则为横向两个直排MI的间距 反之为纵向两个直排MI的间距
+     * 若`is_tight_row`为`true`则为横向两个直排MI的间距 反之为纵向两个直排MI的间距
      * 默认为 $2*diameter$
      * }
      * @param interval_y {
-     * 若`is_horizontal`为`true`则为纵向两个交错MI的间距 反之为横向两个交错MI的间距
+     * 若`is_tight_row`为`true`则为纵向两个交错MI的间距 反之为横向两个交错MI的间距
      * 默认为 $\\sqrt{3}/2*diameter$
      * }
      * @param square_width_diam_ratio 裁切正方形宽度与直径的比值
      *
      * @note x对应width对应columns y对应height对应rows
      */
-    Config(double diameter, int width, int height, double start_x, double start_y, bool is_right_shift = true,
-           bool is_horizontal = true, double interval_x = 0.0, double interval_y = 0.0,
+    Config(double diameter, int width, int height, double start_x, double start_y, bool is_positive_shift = true,
+           bool is_tight_row = true, double interval_x = 0.0, double interval_y = 0.0,
            double square_width_diam_ratio = d1_SQRT2) noexcept;
 
     double getDiameter() const noexcept { return diameter_; };
@@ -48,8 +52,8 @@ public:
     double getIntervalX() const noexcept { return interval_x_; };
     double getIntervalY() const noexcept { return interval_y_; };
     double getSquareWidthRatio() const noexcept { return square_width_diam_ratio_; };
-    bool getIsRightShift() const noexcept { return is_right_shift_; };
-    bool getIsHorizontal() const noexcept { return is_horizontal_; };
+    bool getIsPositiveShift() const noexcept { return is_positive_shift_; };
+    bool getIsTightRow() const noexcept { return is_tight_row_; };
 
 private:
     double diameter_;
@@ -60,8 +64,8 @@ private:
     double interval_x_;
     double interval_y_;
     double square_width_diam_ratio_;
-    bool is_horizontal_;
-    bool is_right_shift_;
+    bool is_tight_row_;
+    bool is_positive_shift_;
 };
 
 class LVC_EXPORT MicroImage
@@ -96,19 +100,23 @@ public:
      *
      * @param start_x 第一行最靠左的MI(即最左上角的MI)的x坐标
      * @param start_y 第一行最靠左的MI的y坐标
-     * @param interval_x 若`is_horizontal`为`true`则为横向两个直排MI的间距 反之为纵向两个直排MI的间距
-     * @param interval_y 若`is_horizontal`为`true`则为纵向两个交错MI的间距 反之为横向两个交错MI的间距
+     * @param interval_x 若`is_tight_row`为`true`则为横向两个直排MI的间距 反之为纵向两个直排MI的间距
+     * @param interval_y 若`is_tight_row`为`true`则为纵向两个交错MI的间距 反之为横向两个交错MI的间距
      * @param num_x x轴方向上的MI索引数量
      * @param num_y y轴方向上的MI索引数量
-     * @param is_right_shift 第二行的最左MI是否位于第一行的最左MI的右侧 默认为`true`
-     * @param is_horizontal {
-     * `true`则MI横向直排而纵向呈左右交错(例如chess序列)
-     * `false`则纵向直排而横向呈上下交错(NagoyaFujita)
+     * @param is_positive_shift {
+     * `true`则第二个密排行/列位于第一个密排行/列的右侧/下侧(例如chess和NagoyaFujita序列)
+     * `false`则第二个密排行/列位于第一个密排行/列的左侧/上侧
+     * 默认为`true`
+     * }
+     * @param is_tight_row {
+     * `true`则MI横向密排而纵向左右交错(例如chess序列)
+     * `false`则MI纵向密排而横向上下交错(NagoyaFujita)
      * 默认为`true`
      * }
      */
     MicroImageRanges(double start_x, double start_y, double interval_x, double interval_y, int num_x, int num_y,
-                     bool is_right_shift, bool is_horizontal) noexcept;
+                     bool is_positive_shift, bool is_tight_row) noexcept;
 
     class iterator;
 
@@ -132,15 +140,15 @@ private:
     double interval_y_;
     int num_x_;
     int num_y_;
-    bool is_horizontal_;
-    bool is_right_shift_;
+    bool is_tight_row_;
+    bool is_positive_shift_;
 };
 
 class MicroImageRanges::iterator
 {
 public:
     iterator(double start_x, double start_y, double interval_x, double interval_y, int index_x, int index_y, int num_x,
-             int num_y, bool is_horizontal, bool is_right_shift) noexcept;
+             int num_y, bool is_tight_row, bool is_positive_shift) noexcept;
 
     MicroImage fromIndex(int index_x, int index_y) const noexcept;
 
@@ -157,8 +165,8 @@ private:
     int index_y_;
     int num_x_;
     int num_y_;
-    bool is_horizontal_;
-    bool is_right_shift_;
+    bool is_tight_row_;
+    bool is_positive_shift_;
 };
 
 } // namespace lvc
