@@ -50,7 +50,6 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     double rotation = root_node.child("rotation").text().as_double();
     double radius = diameter * 0.5;
     cv::Point2d offset[3];
-    cv::Point num;
     cv::Point2d center;
     cv::Point2d subGridRefPos[2][3];
 
@@ -75,46 +74,44 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     // Calculation Number of Micro Lens
     int upNum = static_cast<int>((center.y - radius) / (radius * dSQRT3));
-    int downNum = static_cast<int>((height - (center.y + radius)) / (radius * dSQRT3));
-    num.y = upNum + 1 + downNum;
-    double leftNum = (center.x - radius) / diameter;
-    double rightNum = (width - (center.x + radius)) / diameter;
-    int floorLeftNum = static_cast<int>(leftNum);
-    int floorRightNum = static_cast<int>(rightNum);
-
-    num.x = floorLeftNum + floorRightNum;
-    if (((leftNum - floorLeftNum) > 0.5) || ((rightNum - floorRightNum) >= 0.5))
-        num.x++;
-    num.x = static_cast<int>(num.x / 3);
 
     // Calculation subGridRefPos
-    for (int type = 0; type < 3; type++) {
-        double refPos = center.x - diameter * (offset[type].x + offset[type].y);
-        double dis = diameter * 3;
-        subGridRefPos[upNum % 2][type].x = refPos - (int)((refPos - radius) / dis) * dis;
-        refPos = center.y;
-        dis = diameter * dSQRT3;
-        subGridRefPos[upNum % 2][type].y = refPos - (int)((refPos - radius) / dis) * dis;
+    constexpr double double_max = std::numeric_limits<double>::max();
+    cv::Point2d start[2] = {{double_max, double_max}, {double_max, double_max}};
+    auto update_start = [&start](int i, double x, double y) {
+        if (x < start[i].x) {
+            start[i].x = x;
+        }
+        if (y < start[i].y) {
+            start[i].y = y;
+        }
+    };
 
-        refPos = center.x + diameter * -(offset[type].x + offset[type].y) - (radius + diameter);
-        dis = diameter * 3;
-        subGridRefPos[abs(upNum % 2 - 1)][type].x = refPos - (int)((refPos - radius) / dis) * dis;
-        refPos = center.y - radius * dSQRT3;
-        dis = diameter * dSQRT3;
-        subGridRefPos[abs(upNum % 2 - 1)][type].y = refPos - (int)((refPos - radius) / dis) * dis;
+    for (int type = 0; type < 3; type++) {
+        double ref_pos_x, ref_pos_y;
+        double x, y;
+        double dis_x = diameter * 3;
+        double dis_y = diameter * dSQRT3;
+
+        ref_pos_x = center.x - diameter * (offset[type].x + offset[type].y);
+        x = ref_pos_x - (int)((ref_pos_x - radius) / dis_x) * dis_x;
+        ref_pos_y = center.y;
+        y = ref_pos_y - (int)((ref_pos_y - radius) / dis_y) * dis_y;
+        update_start(upNum % 2, x, y);
+
+        ref_pos_x = center.x + diameter * -(offset[type].x + offset[type].y) - (radius + diameter);
+        x = ref_pos_x - (int)((ref_pos_x - radius) / dis_x) * dis_x;
+        ref_pos_y = center.y - radius * dSQRT3;
+        y = ref_pos_y - (int)((ref_pos_y - radius) / dis_y) * dis_y;
+        update_start(abs(upNum % 2 - 1), x, y);
     }
 
-    cv::Point2d shift[2];
-    shift[0].x = std::min(subGridRefPos[0][0].x, std::min(subGridRefPos[0][1].x, subGridRefPos[0][2].x));
-    shift[0].y = std::min(subGridRefPos[0][0].y, std::min(subGridRefPos[0][1].y, subGridRefPos[0][2].y));
-    shift[1].x = std::min(subGridRefPos[1][0].x, std::min(subGridRefPos[1][1].x, subGridRefPos[1][2].x));
-    shift[1].y = std::min(subGridRefPos[1][0].y, std::min(subGridRefPos[1][1].y, subGridRefPos[1][2].y));
-    double start_x = shift[0].x;
-    double start_y = shift[0].y;
-    bool is_right_shift = shift[0].x < shift[1].x;
+    double start_x = start[0].x;
+    double start_y = start[0].y;
+    bool is_right_shift = start[0].x < start[1].x;
     bool is_horizontal = rotation <= PI / 4.0;
 
-    if (rotation > PI / 4.0) {
+    if (!is_horizontal) {
         std::swap(start_x, start_y);
     }
 
