@@ -77,7 +77,7 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 
     // Calculation subGridRefPos
     constexpr double double_max = std::numeric_limits<double>::max();
-    cv::Vec<cv::Point2d, 2> heads = {{double_max, double_max}, {double_max, double_max}};
+    cv::Vec<cv::Point2d, 2> heads{{double_max, double_max}, {double_max, double_max}};
     auto update_head = [&heads](int i, double x, double y) {
         if (x < heads[i].x) {
             heads[i].x = x;

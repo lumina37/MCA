@@ -15,7 +15,7 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
 
 void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
-    dst.create(cfg.getHeight(), cfg.getWidth(), src.type());
+    dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src.type());
 
     double src_block_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
     int src_block_width_i = static_cast<int>(round(src_block_width));

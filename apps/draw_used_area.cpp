@@ -24,9 +24,9 @@ static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std:
 int main()
 {
     auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
-    std::vector<cv::Mat> maps = {cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
-                                 cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
-                                 cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};
+    std::vector<cv::Mat> maps{cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
+                              cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
+                              cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};
 
     cv::Mat patch_size_map;
     mergePatchSizeMap(maps, {{1, 0, 2}, {2, 1, 0}}, patch_size_map);

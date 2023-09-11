@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
+    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\NagoyaFujita\param.cfg)");
     auto src = cv::imread("forward.png");
     cv::Mat dst;
     lvc::preprocessBackward(cfg, src, dst);

@@ -55,7 +55,7 @@ void dbgDrawUsedArea(const Config& cfg, const cv::Mat& patch_size_map, int view_
 
         for (int view_shift_x = -view_shift; view_shift_x <= view_shift; view_shift_x++) {
             for (int view_shift_y = -view_shift; view_shift_y <= view_shift; view_shift_y++) {
-                cv::Point2i shift = {view_shift_x, view_shift_y};
+                cv::Point2i shift{view_shift_x, view_shift_y};
                 dbgDrawSoildCircle(dst, mi.getCenter() + static_cast<cv::Point2d>(shift), patch_size, color);
             }
         }
