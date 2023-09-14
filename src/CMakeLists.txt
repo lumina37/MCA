@@ -25,5 +25,3 @@ function(lvc_lib_linkage tg)
 endfunction()
 
 lvc_lib_linkage(libLVC_preprocess)
-lvc_lib_linkage(libLVC_preprocess_legacy)
-target_compile_definitions(libLVC_preprocess_legacy PUBLIC LVC_USE_LEGACY)
