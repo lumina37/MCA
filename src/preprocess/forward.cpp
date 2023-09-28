@@ -19,7 +19,12 @@ void preprocessForward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
         return num + pad;
     };
 
-    dst.create(align(mis.getMaxNumY() * block_width_i), align(mis.getMaxNumX() * block_width_i), src.type());
+    int req_cols = align(mis.getMaxElemNum() * block_width_i);
+    int req_rows = align(mis.getMaxLineNum() * block_width_i);
+    if (cfg.getIsRotated())
+        std::swap(req_cols, req_rows);
+
+    dst.create(req_rows, req_cols, src.type());
     cv::Mat src_roi_image, dst_roi_image;
 
     for (const auto& mi : mis) {

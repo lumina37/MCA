@@ -9,6 +9,16 @@
 
 namespace lvc {
 
+static inline double computeElemInterval(const cv::Vec<cv::Point2d, 2>& line_starts)
+{
+    return abs(line_starts[1].x - line_starts[0].x) * 2;
+}
+
+static inline double computeLineInterval(const cv::Vec<cv::Point2d, 2>& line_starts)
+{
+    return line_starts[1].y - line_starts[0].y;
+}
+
 static inline void getRoiImageByCenter(const cv::Mat& src, cv::Mat& dst, const cv::Point2d& center,
                                        double width) noexcept
 {

@@ -4,73 +4,103 @@
 
 namespace lvc {
 
-Config::Config(double diameter, int width, int height, const cv::Vec<cv::Point2d, 2>& heads,
-               double square_width_diam_ratio) noexcept
-    : diameter_(diameter), width_(width), height_(height), heads_(heads),
-      square_width_diam_ratio_(square_width_diam_ratio)
+Config::Config(double diameter, int width, int height, cv::Point2d point, double square_width_diam_ratio,
+               bool is_rotated) noexcept
+    : diameter_(diameter), width_(width), height_(height), square_width_diam_ratio_(square_width_diam_ratio),
+      is_rotated_(is_rotated)
+{
+    double radius = diameter / 2.0;
+    // `line` is ALWAYS contiguous.
+    // If `is_rotated==false`, just like *chess*, then `line` is horizontal.
+    // Otherwise, aiming to keep `line` contiguous, it is vertical.
+    double elem_interval = diameter;
+    double line_interval = diameter * dSQRT3_2;
+
+    if (!is_rotated) {
+        int line_idx = static_cast<int>((point.y - radius) / line_interval);
+        line_starts_[line_idx % 2].x = point.x - floor((point.x - radius) / elem_interval) * elem_interval;
+        line_starts_[abs((line_idx % 2) - 1)].x = point.x - floor(point.x / elem_interval) * elem_interval + radius;
+        line_starts_[0].y = point.y - line_idx * line_interval;
+        line_starts_[1].y = line_starts_[0].y + line_interval;
+    } else {
+        int line_idx = static_cast<int>((point.x - radius) / line_interval);
+        line_starts_[line_idx % 2].x = point.y - floor((point.y - radius) / elem_interval) * elem_interval;
+        line_starts_[abs((line_idx % 2) - 1)].x = point.y - floor(point.y / elem_interval) * elem_interval + radius;
+        line_starts_[0].y = point.x - line_idx * line_interval;
+        line_starts_[1].y = line_starts_[0].y + line_interval;
+    }
+}
+
+MicroImage::MicroImage(double x, double y, int xidx, int yidx) noexcept : x_(x), y_(y), index_x_(xidx), index_y_(yidx)
 {}
 
-MicroImage::MicroImage(double x, double y, int index_x, int index_y) noexcept
-    : x_(x), y_(y), index_x_(index_x), index_y_(index_y)
+MicroImageRanges::MicroImageRanges(cv::Vec<cv::Point2d, 2> line_starts, cv::Vec2i elem_nums, int line_num,
+                                   bool is_rotated) noexcept
+    : line_starts_(line_starts), elem_nums_(elem_nums), line_num_(line_num), is_rotated_(is_rotated)
 {}
 
-MicroImageRanges::MicroImageRanges(const cv::Vec<cv::Point2d, 2>& heads, double interval_x, double interval_y,
-                                   const cv::Vec<int, 2>& vec_num_x, int num_y) noexcept
-    : heads_(heads), interval_x_(interval_x), interval_y_(interval_y), vec_num_x_(vec_num_x), num_y_(num_y)
-{}
-
-MicroImageRanges::iterator::iterator(const cv::Vec<cv::Point2d, 2>& heads, double interval_x, double interval_y,
-                                     int index_x, int index_y, const cv::Vec<int, 2>& vec_num_x, int num_y) noexcept
-    : heads_(heads), interval_x_(interval_x), interval_y_(interval_y), index_x_(index_x), index_y_(index_y),
-      vec_num_x_(vec_num_x), num_y_(num_y)
+MicroImageRanges::iterator::iterator(cv::Vec<cv::Point2d, 2> line_starts, double elem_interval, double line_interval,
+                                     int elem_idx, int line_idx, cv::Vec2i elem_nums, int line_num,
+                                     bool is_rotated) noexcept
+    : line_starts_(line_starts), elem_interval_(elem_interval), line_interval_(line_interval), elem_idx_(elem_idx),
+      line_idx_(line_idx), elem_nums_(elem_nums), line_num_(line_num), is_rotated_(is_rotated)
 {}
 
 MicroImageRanges MicroImageRanges::fromConfig(const Config& cfg) noexcept
 {
-    auto heads = cfg.getHeads();
-    double interval_x = abs(heads[1].x - heads[0].x) * 2.0;
-    double interval_y = heads[1].y - heads[0].y;
+    auto line_starts = cfg.getLineStarts();
+    double elem_interval = computeElemInterval(line_starts);
+    double line_interval = computeLineInterval(line_starts);
 
-    cv::Vec<int, 2> vec_num_x;
+    cv::Vec2i elem_nums;
+    double elem_size_limit = cfg.getIsRotated() ? cfg.getHeight() : cfg.getWidth();
+    double line_size_limit = cfg.getIsRotated() ? cfg.getWidth() : cfg.getHeight();
+
     for (int i = 0; i < 2; i++) {
-        auto head = heads[i];
-        vec_num_x[i] = static_cast<int>((cfg.getWidth() - head.x - cfg.getDiameter() / 2) / interval_x) + 1;
+        elem_nums[i] = static_cast<int>((elem_size_limit - line_starts[i].x - cfg.getDiameter() / 2) / elem_interval) + 1;
     }
+    int line_num = static_cast<int>((line_size_limit - line_starts[0].y - cfg.getDiameter() / 2) / line_interval) + 1;
 
-    int num_y = static_cast<int>((cfg.getHeight() - heads[0].y - cfg.getDiameter() / 2) / interval_y) + 1;
-
-    return {heads, interval_x, interval_y, vec_num_x, num_y};
+    return {line_starts, elem_nums, line_num, cfg.getIsRotated()};
 }
 
 MicroImageRanges::iterator MicroImageRanges::begin() const noexcept
 {
-    return {heads_, interval_x_, interval_y_, 0, 0, vec_num_x_, num_y_};
+    return {
+        line_starts_, computeElemInterval(line_starts_), computeLineInterval(line_starts_), 0, 0, elem_nums_, line_num_,
+        is_rotated_};
 }
 
 MicroImageRanges::iterator MicroImageRanges::end() const noexcept
 {
-    return {heads_, interval_x_, interval_y_, 0, num_y_, vec_num_x_, num_y_};
+    return {line_starts_, 0.0, 0.0, 0, line_num_, elem_nums_, line_num_, is_rotated_};
 }
 
 MicroImageRanges::iterator& MicroImageRanges::iterator::operator++() noexcept
 {
-    index_x_ += 1;
-    int num_x = vec_num_x_[index_y_ % 2];
-    if (index_x_ == num_x) {
-        index_x_ = 0;
-        index_y_ += 1;
+    elem_idx_ += 1;
+    int elem_num = elem_nums_[line_idx_ % 2];
+    if (elem_idx_ == elem_num) {
+        elem_idx_ = 0;
+        line_idx_ += 1;
     }
     return *this;
 }
 
-MicroImage MicroImageRanges::iterator::fromIndex(int index_x, int index_y) const noexcept
+MicroImage MicroImageRanges::iterator::fromIndex(int elem_idx, int line_idx) const noexcept
 {
-    int mod_idx_y = index_y % 2;
-    double head_x = heads_[mod_idx_y].x;
-    double head_y = heads_[0].x;
-    double x = head_x + static_cast<double>(index_x) * interval_x_;
-    double y = head_y + static_cast<double>(index_y) * interval_y_;
-    return {x, y, index_x, index_y};
+    int line_idx_mod2 = line_idx % 2;
+    double start_x = line_starts_[line_idx_mod2].x;
+    double start_y = line_starts_[0].y;
+    double x = start_x + static_cast<double>(elem_idx) * elem_interval_;
+    double y = start_y + static_cast<double>(line_idx) * line_interval_;
+
+    if (is_rotated_) {
+        std::swap(x, y);
+        std::swap(elem_idx, line_idx);
+    }
+
+    return {x, y, elem_idx, line_idx};
 }
 
 } // namespace lvc

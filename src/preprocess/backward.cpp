@@ -37,10 +37,12 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
         int dst_leftup_corner_y = static_cast<int>(round(mi_center.y - cfg.getDiameter() / 2.0));
         int src_leftup_corner_x = static_cast<int>(round(mi_center.x - src_block_width / 2.0));
         int src_leftup_corner_y = static_cast<int>(round(mi_center.y - src_block_width / 2.0));
+
         int left_border_width = src_leftup_corner_x - dst_leftup_corner_x;
         int top_border_width = src_leftup_corner_y - dst_leftup_corner_y;
         int right_border_width = dst_block_width_i - src_block_width_i - left_border_width;
         int bot_border_width = dst_block_width_i - src_block_width_i - top_border_width;
+
         cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
                            left_border_width, right_border_width,
                            cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
