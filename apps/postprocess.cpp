@@ -6,7 +6,7 @@
 
 #include "LVC/config/parser.h"
 
-#include "LVC/preprocess/forward.h"
+#include "LVC/preprocess/backward.h"
 
 namespace stdfs = std::filesystem;
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
         cv::Mat src, dst;
         src = cv::imread(src_path_str);
-        lvc::preprocessForward(cfg, src, dst);
+        lvc::preprocessBackward(cfg, src, dst);
         auto dst_path = dst_dir / src_path.filename();
         cv::imwrite(dst_path.string(), dst);
     }
