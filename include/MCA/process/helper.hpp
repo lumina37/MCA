@@ -4,10 +4,10 @@
 
 #include <opencv2/core.hpp>
 
-#include "LVC/common/const.h"
-#include "LVC/common/defines.h"
+#include "MCA/common/const.h"
+#include "MCA/common/defines.h"
 
-namespace lvc {
+namespace mca {
 
 static inline double computeElemInterval(const cv::Vec<cv::Point2d, 2>& line_starts)
 {
@@ -38,4 +38,4 @@ static inline void getRoiImageByLeftupCorner(const cv::Mat& src, cv::Mat& dst, c
     dst = src(roi);
 }
 
-} // namespace lvc
+} // namespace mca

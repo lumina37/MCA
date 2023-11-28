@@ -1,12 +1,12 @@
 #include <opencv2/core.hpp>
 
-#include "LVC/config/config.h"
+#include "MCA/config/config.h"
 
-#include "LVC/preprocess/forward.h"
+#include "MCA/process/preproc.h"
 
-namespace lvc {
+namespace mca {
 
-void preprocessForward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+void preprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     double block_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
     int block_width_i = static_cast<int>(round(block_width));
@@ -34,4 +34,4 @@ void preprocessForward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
     }
 }
 
-} // namespace lvc
+} // namespace mca

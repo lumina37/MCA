@@ -1,8 +1,8 @@
-#include "LVC/preprocess/helper.hpp"
+#include "MCA/process/helper.hpp"
 
-#include "LVC/config/config.h"
+#include "MCA/config/config.h"
 
-namespace lvc {
+namespace mca {
 
 Config::Config(double diameter, int width, int height, cv::Point2d point, double square_width_diam_ratio,
                bool is_rotated) noexcept
@@ -103,4 +103,4 @@ MicroImage MicroImageRanges::iterator::fromIndex(int elem_idx, int line_idx) con
     return {x, y, elem_idx, line_idx};
 }
 
-} // namespace lvc
+} // namespace mca

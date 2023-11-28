@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LVC/common/cmake.h"
+#include "MCA/common/cmake.h"
 
 #if defined(_WIN32) && defined(LVC_BUILD_SHARED_LIBS)
 #ifdef _LVC_EXPORTS

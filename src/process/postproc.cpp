@@ -1,11 +1,11 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "LVC/config/config.h"
+#include "MCA/config/config.h"
 
-#include "LVC/preprocess/backward.h"
+#include "MCA/process/postproc.h"
 
-namespace lvc {
+namespace mca {
 
 static inline void genCircleMask(cv::Mat& dst, double diameter)
 {
@@ -13,7 +13,7 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
-void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+void postprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src.type());
 
@@ -51,4 +51,4 @@ void preprocessBackward(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
     }
 }
 
-} // namespace lvc
+} // namespace mca

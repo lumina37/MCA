@@ -1,11 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-#include "LVC/config/parser.h"
+#include "MCA/config/parser.h"
 
 TEST_CASE("Read config from param.cfg", "[config]")
 {
-    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
+    auto cfg = mca::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
 
     REQUIRE_THAT(cfg.getDiameter(), Catch::Matchers::WithinAbs(34.97973633, 0.001));
     REQUIRE(cfg.getWidth() == 3840);

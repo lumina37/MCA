@@ -6,11 +6,11 @@
 #include <opencv2/core.hpp>
 #include <pugixml.hpp>
 
-#include "LVC/common/const.h"
-#include "LVC/config/config.h"
-#include "LVC/config/parser.h"
+#include "MCA/common/const.h"
+#include "MCA/config/config.h"
+#include "MCA/config/parser.h"
 
-namespace lvc {
+namespace mca {
 
 Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
 {
@@ -55,4 +55,4 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     return {diameter, width, height, center, square_width_diam_ratio, is_rotated};
 }
 
-} // namespace lvc
+} // namespace mca

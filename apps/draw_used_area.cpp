@@ -3,8 +3,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "LVC/config/parser.h"
-#include "LVC/preprocess/debug.h"
+#include "MCA/config/parser.h"
+#include "MCA/process/debug.h"
 
 static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std::vector<int>> types, cv::Mat& dst)
 {
@@ -23,7 +23,7 @@ static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std:
 
 int main()
 {
-    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
+    auto cfg = mca::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
     std::vector<cv::Mat> maps{cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
                               cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
                               cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};
@@ -37,9 +37,9 @@ int main()
     }
 
     cv::Mat dst_3, dst_5;
-    lvc::dbgDrawUsedArea(cfg, patch_size_map, 3, dst_3);
+    mca::dbgDrawUsedArea(cfg, patch_size_map, 3, dst_3);
     cv::imwrite("used_area_3.png", dst_3);
-    lvc::dbgDrawUsedArea(cfg, patch_size_map, 5, dst_5);
+    mca::dbgDrawUsedArea(cfg, patch_size_map, 5, dst_5);
     cv::imwrite("used_area_5.png", dst_5);
 
     return 0;

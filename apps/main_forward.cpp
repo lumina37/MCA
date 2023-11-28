@@ -1,15 +1,15 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "LVC/config/parser.h"
-#include "LVC/preprocess/forward.h"
+#include "MCA/config/parser.h"
+#include "MCA/process/preproc.h"
 
 int main()
 {
-    auto cfg = lvc::fromRaytrixCfgFilePath(R"(D:\code\SIGS\230818_VVC\dataset\config\ChessPieces\param.cfg)");
+    auto cfg = mca::fromRaytrixCfgFilePath(R"(D:\code\SIGS\230818_VVC\dataset\config\ChessPieces\param.cfg)");
     auto src = cv::imread("src_chess.png");
     cv::Mat dst;
-    lvc::preprocessForward(cfg, src, dst);
+    mca::preprocess(cfg, src, dst);
     cv::imwrite("forward.png", dst);
     return 0;
 }

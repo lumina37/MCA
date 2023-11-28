@@ -1,11 +1,11 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "LVC/config/config.h"
+#include "MCA/config/config.h"
 
-#include "LVC/preprocess/debug.h"
+#include "MCA/process/debug.h"
 
-namespace lvc {
+namespace mca {
 
 static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter)
 {
@@ -62,4 +62,4 @@ void dbgDrawUsedArea(const Config& cfg, const cv::Mat& patch_size_map, int view_
     }
 }
 
-} // namespace lvc
+} // namespace mca

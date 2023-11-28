@@ -2,10 +2,10 @@
 
 #include <opencv2/core.hpp>
 
-#include "LVC/common/defines.h"
-#include "LVC/preprocess/helper.hpp"
+#include "MCA/common/defines.h"
+#include "MCA/process/helper.hpp"
 
-namespace lvc {
+namespace mca {
 
 class LVC_EXPORT Config
 {
@@ -125,4 +125,4 @@ private:
     bool is_rotated_;
 };
 
-} // namespace lvc
+} // namespace mca

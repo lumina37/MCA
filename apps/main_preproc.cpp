@@ -4,9 +4,9 @@
 
 #include <opencv2/imgcodecs.hpp>
 
-#include "LVC/config/parser.h"
+#include "MCA/config/parser.h"
 
-#include "LVC/preprocess/forward.h"
+#include "MCA/process/preproc.h"
 
 namespace stdfs = std::filesystem;
 
@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     auto src_dir = stdfs::path(argv[2]);
     auto dst_dir = stdfs::path(argv[3]);
 
-    auto cfg = lvc::fromRaytrixCfgFilePath(cfg_path_str);
+    auto cfg = mca::fromRaytrixCfgFilePath(cfg_path_str);
     std::regex suffix(R"(.*png)");
 
     for (auto& src_path_iter : stdfs::directory_iterator(src_dir)) {
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
         cv::Mat src, dst;
         src = cv::imread(src_path_str);
-        lvc::preprocessForward(cfg, src, dst);
+        mca::preprocess(cfg, src, dst);
         auto dst_path = dst_dir / src_path.filename();
         cv::imwrite(dst_path.string(), dst);
     }
