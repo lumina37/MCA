@@ -3,7 +3,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "mca/config/parser.h"
+#include "mca/config.h"
 #include "mca/process/debug.h"
 
 static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std::vector<int>> types, cv::Mat& dst)
@@ -23,7 +23,7 @@ static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std:
 
 int main()
 {
-    auto cfg = mca::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
+    auto cfg = mca::Config::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
     std::vector<cv::Mat> maps{cv::imread("patchSizeMap_0.png", cv::IMREAD_GRAYSCALE),
                               cv::imread("patchSizeMap_1.png", cv::IMREAD_GRAYSCALE),
                               cv::imread("patchSizeMap_2.png", cv::IMREAD_GRAYSCALE)};

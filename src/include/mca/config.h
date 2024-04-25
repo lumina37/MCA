@@ -23,6 +23,8 @@ public:
     Config(double diameter, int width, int height, cv::Point2d point, double crop_ratio = d1_SQRT2,
            bool is_rotated = false) noexcept;
 
+    static Config fromRaytrixCfgFilePath(const std::string& cfg_file_path);
+
     double getDiameter() const noexcept { return diameter_; };
     int getWidth() const noexcept { return width_; };
     int getHeight() const noexcept { return height_; };

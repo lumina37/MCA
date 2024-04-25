@@ -1,7 +1,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "mca/config/config.h"
+#include "mca/config.h"
 
 #include "mca/process/postproc.h"
 

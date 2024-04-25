@@ -11,7 +11,7 @@ function(mca_add_library name srcs)
     target_compile_features(${name} PUBLIC cxx_std_20)
 endfunction()
 
-set(MCA_SRCS "process/preproc.cpp" "process/postproc.cpp" "process/debug.cpp" "config/config.cpp" "config/parser.cpp")
+set(MCA_SRCS "process/preproc.cpp" "process/postproc.cpp" "process/debug.cpp" "config.cpp")
 
 # Remember to add "" here, or the function will only get the first item.
 mca_add_library(libMCA "${MCA_SRCS}")

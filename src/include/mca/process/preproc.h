@@ -3,7 +3,7 @@
 #include <opencv2/core.hpp>
 
 #include "mca/common/defines.h"
-#include "mca/config/config.h"
+#include "mca/config.h"
 
 namespace mca {
 

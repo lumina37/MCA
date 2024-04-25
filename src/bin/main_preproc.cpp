@@ -4,8 +4,7 @@
 
 #include <opencv2/imgcodecs.hpp>
 
-#include "mca/config/parser.h"
-
+#include "mca/config.h"
 #include "mca/process/preproc.h"
 
 namespace stdfs = std::filesystem;
@@ -17,7 +16,7 @@ int main(int argc, char* argv[])
     auto src_dir = stdfs::path(argv[2]);
     auto dst_dir = stdfs::path(argv[3]);
 
-    auto cfg = mca::fromRaytrixCfgFilePath(cfg_path_str);
+    auto cfg = mca::Config::fromRaytrixCfgFilePath(cfg_path_str);
     std::regex suffix(R"(.*png)");
 
     for (auto& src_path_iter : stdfs::directory_iterator(src_dir)) {

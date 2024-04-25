@@ -1,6 +1,6 @@
 #include <opencv2/core.hpp>
 
-#include "mca/config/config.h"
+#include "mca/config.h"
 
 #include "mca/process/preproc.h"
 
