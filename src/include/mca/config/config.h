@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include <opencv2/core.hpp>
 
-#include "MCA/common/defines.h"
-#include "MCA/process/helper.hpp"
+#include "mca/common/defines.h"
+#include "mca/process/helper.hpp"
 
 namespace mca {
 
@@ -17,17 +17,17 @@ public:
      * @param width 原始图像的宽度
      * @param height 原始图像的高度
      * @param point 任意一个MI的坐标
-     * @param square_width_diam_ratio 裁切正方形宽度与直径的比值
+     * @param crop_ratio 裁切正方形宽度与直径的比值
      * @param is_rotated 相机是否经过旋转
      */
-    Config(double diameter, int width, int height, cv::Point2d point, double square_width_diam_ratio = d1_SQRT2,
+    Config(double diameter, int width, int height, cv::Point2d point, double crop_ratio = d1_SQRT2,
            bool is_rotated = false) noexcept;
 
     double getDiameter() const noexcept { return diameter_; };
     int getWidth() const noexcept { return width_; };
     int getHeight() const noexcept { return height_; };
     cv::Vec<cv::Point2d, 2> getLineStarts() const noexcept { return line_starts_; };
-    double getSquareWidthRatio() const noexcept { return square_width_diam_ratio_; };
+    double getCropRatio() const noexcept { return crop_ratio_; };
     bool getIsRotated() const noexcept { return is_rotated_; }
 
 private:
@@ -35,7 +35,7 @@ private:
     int width_;
     int height_;
     cv::Vec<cv::Point2d, 2> line_starts_;
-    double square_width_diam_ratio_;
+    double crop_ratio_;
     bool is_rotated_;
 };
 

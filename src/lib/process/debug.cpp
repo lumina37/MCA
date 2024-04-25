@@ -1,9 +1,9 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "MCA/config/config.h"
+#include "mca/config/config.h"
 
-#include "MCA/process/debug.h"
+#include "mca/process/debug.h"
 
 namespace mca {
 

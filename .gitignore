@@ -1,19 +1,5 @@
-*
+.idea/
 
-!.gitattributes
-!.gitignore
-!README.md
+*build*/
 
-!.clang-format
-!CMakeLists.txt
-
-!apps
-!apps/**
-!include
-!include/**
-!src
-!src/**
-!thirdparty
-!thirdparty/**
-!tests
-!tests/**
+data/

@@ -1,15 +1,14 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <gtest/gtest.h>
 
-#include "MCA/config/parser.h"
+#include "mca/config/parser.h"
 
-TEST_CASE("Read config from param.cfg", "[config]")
+TEST(Config, common)
 {
-    auto cfg = mca::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
+    const auto cfg = mca::fromRaytrixCfgFilePath(R"(D:\Code\SIGS\230818_VVC\dataset\videos\ChessPieces\param.cfg)");
 
-    REQUIRE_THAT(cfg.getDiameter(), Catch::Matchers::WithinAbs(34.97973633, 0.001));
+    EXPECT_FLOAT_EQ(cfg.getDiameter(), 34.97973633);
     REQUIRE(cfg.getWidth() == 3840);
     REQUIRE(cfg.getHeight() == 2160);
-    REQUIRE_THAT(cfg.getLineStarts()[0].x, Catch::Matchers::WithinAbs(27.25284766, 0.001));
-    REQUIRE_THAT(cfg.getLineStarts()[0].y, Catch::Matchers::WithinAbs(27.24191481, 0.001));
+    EXPECT_FLOAT_EQ(cfg.getLineStarts()[0].x, 27.25284766);
+    EXPECT_FLOAT_EQ(cfg.getLineStarts()[0].y, 27.24191481);
 }

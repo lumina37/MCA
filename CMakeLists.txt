@@ -1,15 +1,21 @@
 ﻿cmake_minimum_required(VERSION 3.8)
-cmake_policy(SET CMP0091 NEW)  # NO MORE WINDOWS PLZ!
+project(libMCA LANGUAGES CXX)
 
-project(libMCA VERSION "0.1.0" LANGUAGES CXX)
+# Enables the MSVC_RUNTIME_LIBRARY property on targets
+cmake_policy(SET CMP0091 NEW)
 
-option(BUILD_SHARED_LIBS "Specifies the type of libraries (SHARED or STATIC) to build" OFF)
+set(CMAKE_PROJECT_VERSION_MAJOR 0)
+set(CMAKE_PROJECT_VERSION_MINOR 1)
+set(CMAKE_PROJECT_VERSION_PATCH 0)
+set(CMAKE_PROJECT_VERSION ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH})
 
-set(LVC_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-set(libMCA_CONFIG_DIR "${PROJECT_SOURCE_DIR}/include/MCA/common")
-configure_file("${libMCA_CONFIG_DIR}/cmake.h.in" "${libMCA_CONFIG_DIR}/cmake.h")
+include(cmake/options.cmake)
+include(cmake/dependencies.cmake)
 
-add_subdirectory("src")
-add_subdirectory("apps")
-add_subdirectory("tests")
+add_subdirectory(src)
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif ()

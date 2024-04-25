@@ -1,8 +1,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "MCA/config/parser.h"
-#include "MCA/process/postproc.h"
+#include "mca/config/parser.h"
+#include "mca/process/postproc.h"
 
 using namespace std;
 

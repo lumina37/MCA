@@ -1,14 +1,14 @@
 #include <opencv2/core.hpp>
 
-#include "MCA/config/config.h"
+#include "mca/config/config.h"
 
-#include "MCA/process/preproc.h"
+#include "mca/process/preproc.h"
 
 namespace mca {
 
 void preprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
-    double block_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
+    double block_width = cfg.getDiameter() * cfg.getCropRatio();
     int block_width_i = static_cast<int>(round(block_width));
 
     MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);

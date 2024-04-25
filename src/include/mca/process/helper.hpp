@@ -4,8 +4,8 @@
 
 #include <opencv2/core.hpp>
 
-#include "MCA/common/const.h"
-#include "MCA/common/defines.h"
+#include "mca/common/const.h"
+#include "mca/common/defines.h"
 
 namespace mca {
 

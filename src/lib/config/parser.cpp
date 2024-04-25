@@ -6,9 +6,9 @@
 #include <opencv2/core.hpp>
 #include <pugixml.hpp>
 
-#include "MCA/common/const.h"
-#include "MCA/config/config.h"
-#include "MCA/config/parser.h"
+#include "mca/common/const.h"
+#include "mca/config/config.h"
+#include "mca/config/parser.h"
 
 namespace mca {
 
@@ -34,7 +34,7 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     std::string Calibration_xml = cfg_map["Calibration_xml"];
     int height = std::stoi(cfg_map["height"]);
     int width = std::stoi(cfg_map["width"]);
-    double square_width_diam_ratio = std::stod(cfg_map["square_width_diam_ratio"]);
+    double crop_ratio = std::stod(cfg_map["crop_ratio"]);
 
     file.close();
 
@@ -52,7 +52,7 @@ Config fromRaytrixCfgFilePath(const std::string& cfg_file_path)
     double offset_y = root_node.child("offset").child("y").text().as_double();
     cv::Point2d center{width / 2.0 + offset_x, height / 2.0 - offset_y};
 
-    return {diameter, width, height, center, square_width_diam_ratio, is_rotated};
+    return {diameter, width, height, center, crop_ratio, is_rotated};
 }
 
 } // namespace mca

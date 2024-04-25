@@ -3,8 +3,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "MCA/config/parser.h"
-#include "MCA/process/debug.h"
+#include "mca/config/parser.h"
+#include "mca/process/debug.h"
 
 static void mergePatchSizeMap(const std::vector<cv::Mat>& maps, std::vector<std::vector<int>> types, cv::Mat& dst)
 {

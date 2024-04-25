@@ -1,13 +1,11 @@
-#include "MCA/process/helper.hpp"
+#include "mca/process/helper.hpp"
 
-#include "MCA/config/config.h"
+#include "mca/config/config.h"
 
 namespace mca {
 
-Config::Config(double diameter, int width, int height, cv::Point2d point, double square_width_diam_ratio,
-               bool is_rotated) noexcept
-    : diameter_(diameter), width_(width), height_(height), square_width_diam_ratio_(square_width_diam_ratio),
-      is_rotated_(is_rotated)
+Config::Config(double diameter, int width, int height, cv::Point2d point, double crop_ratio, bool is_rotated) noexcept
+    : diameter_(diameter), width_(width), height_(height), crop_ratio_(crop_ratio), is_rotated_(is_rotated)
 {
     double radius = diameter / 2.0;
     // `line` is ALWAYS contiguous.
@@ -57,7 +55,8 @@ MicroImageRanges MicroImageRanges::fromConfig(const Config& cfg) noexcept
     double line_size_limit = cfg.getIsRotated() ? cfg.getWidth() : cfg.getHeight();
 
     for (int i = 0; i < 2; i++) {
-        elem_nums[i] = static_cast<int>((elem_size_limit - line_starts[i].x - cfg.getDiameter() / 2) / elem_interval) + 1;
+        elem_nums[i] =
+            static_cast<int>((elem_size_limit - line_starts[i].x - cfg.getDiameter() / 2) / elem_interval) + 1;
     }
     int line_num = static_cast<int>((line_size_limit - line_starts[0].y - cfg.getDiameter() / 2) / line_interval) + 1;
 

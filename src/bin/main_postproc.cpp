@@ -4,9 +4,9 @@
 
 #include <opencv2/imgcodecs.hpp>
 
-#include "MCA/config/parser.h"
+#include "mca/config/parser.h"
 
-#include "MCA/process/preproc.h"
+#include "mca/process/postproc.h"
 
 namespace stdfs = std::filesystem;
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
         cv::Mat src, dst;
         src = cv::imread(src_path_str);
-        mca::preprocess(cfg, src, dst);
+        mca::postprocess(cfg, src, dst);
         auto dst_path = dst_dir / src_path.filename();
         cv::imwrite(dst_path.string(), dst);
     }

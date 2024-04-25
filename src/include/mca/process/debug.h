@@ -2,8 +2,8 @@
 
 #include <opencv2/core.hpp>
 
-#include "MCA/common/defines.h"
-#include "MCA/config/config.h"
+#include "mca/common/defines.h"
+#include "mca/config/config.h"
 
 namespace mca {
 

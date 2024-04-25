@@ -1,8 +1,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "MCA/config/parser.h"
-#include "MCA/process/preproc.h"
+#include "mca/config/parser.h"
+#include "mca/process/preproc.h"
 
 int main()
 {

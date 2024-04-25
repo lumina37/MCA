@@ -1,9 +1,9 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "MCA/config/config.h"
+#include "mca/config/config.h"
 
-#include "MCA/process/postproc.h"
+#include "mca/process/postproc.h"
 
 namespace mca {
 
@@ -17,7 +17,7 @@ void postprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src.type());
 
-    double src_block_width = cfg.getDiameter() * cfg.getSquareWidthRatio();
+    double src_block_width = cfg.getDiameter() * cfg.getCropRatio();
     int src_block_width_i = static_cast<int>(round(src_block_width));
     int dst_block_width_i = static_cast<int>(round(cfg.getDiameter()));
 
