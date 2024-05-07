@@ -1,14 +1,14 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "mca/config.h"
-#include "mca/process/postproc.h"
+#include "mca/config.hpp"
+#include "mca/impl/postproc.hpp"
 
 using namespace std;
 
 int main()
 {
-    auto cfg = mca::Config::fromRaytrixCfgFilePath(R"(D:\code\SIGS\230818_VVC\dataset\config\ChessPieces\param.cfg)");
+    auto cfg = mca::Config::fromRaytrixCfgFilePath("param.cfg");
     auto src = cv::imread("forward.png");
     cv::Mat dst;
     mca::postprocess(cfg, src, dst);

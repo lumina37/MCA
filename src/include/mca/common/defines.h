@@ -1,25 +1,25 @@
 #pragma once
 
-#include "mca/common/cmake.h"
+#include "cmake.h"
 
-#if defined(_WIN32) && defined(LVC_BUILD_SHARED_LIBS)
-#ifdef _LVC_EXPORTS
-#define LVC_EXPORT __declspec(dllexport)
+#ifdef MCA_BUILD_SHARED_LIBS
+#    ifdef _MSC_VER
+#        ifdef _MCA_BUILD_LIBS
+#            define MCA_API __declspec(dllexport)
+#        else
+#            define MCA_API __declspec(dllimport)
+#        endif
+#    else
+#        ifdef _MCA_BUILD_LIBS
+#            define MCA_API __attribute__((visibility("default")))
+#        else
+#            define MCA_API
+#        endif
+#    endif
 #else
-#define LVC_EXPORT __declspec(dllimport)
-#endif
-#else
-#ifdef _LVC_EXPORTS
-#define LVC_EXPORT __attribute__((visibility("default")))
-#else
-#define LVC_EXPORT
-#endif
-#endif
-
-#ifdef __GNUC__
-#define LVC_CONSTFUNC __attribute__((const))
-#define LVC_PUREFUNC __attribute__((pure))
-#else
-#define LVC_CONSTFUNC
-#define LVC_PUREFUNC
+#    ifdef MCA_HEADER_ONLY
+#        define MCA_API static
+#    else
+#        define MCA_API
+#    endif
 #endif

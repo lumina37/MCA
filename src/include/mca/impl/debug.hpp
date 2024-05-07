@@ -1,11 +1,12 @@
+#pragma once
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "mca/config.h"
+#include "mca/common/defines.h"
+#include "mca/config.hpp"
 
-#include "mca/process/debug.h"
-
-namespace mca {
+namespace mca::dbg {
 
 static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter)
 {
@@ -19,7 +20,7 @@ static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double d
                cv::LineTypes::LINE_AA);
 }
 
-void dbgDrawMicroImageEdges(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+MCA_API inline void dbgDrawMicroImageEdges(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     dst = src.clone();
 
@@ -30,7 +31,7 @@ void dbgDrawMicroImageEdges(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
     }
 }
 
-void dbgDrawUsedArea(const Config& cfg, const cv::Mat& patch_size_map, int view_num, cv::Mat& dst)
+MCA_API inline void dbgDrawUsedArea(const Config& cfg, const cv::Mat& patch_size_map, int view_num, cv::Mat& dst)
 {
     dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), CV_8UC3);
 
@@ -62,4 +63,4 @@ void dbgDrawUsedArea(const Config& cfg, const cv::Mat& patch_size_map, int view_
     }
 }
 
-} // namespace mca
+} // namespace mca::dbg

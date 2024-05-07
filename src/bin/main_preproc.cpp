@@ -4,14 +4,14 @@
 
 #include <opencv2/imgcodecs.hpp>
 
-#include "mca/config.h"
-#include "mca/process/preproc.h"
+#include "mca/config.hpp"
+#include "mca/impl/preproc.hpp"
 
 namespace stdfs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
-    std::string cfg_path_str = std::string(argv[1]);
+    std::string_view cfg_path_str = argv[1];
     auto cfg_path = stdfs::path(cfg_path_str);
     auto src_dir = stdfs::path(argv[2]);
     auto dst_dir = stdfs::path(argv[3]);

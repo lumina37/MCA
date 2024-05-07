@@ -1,8 +1,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "mca/config.h"
-#include "mca/process/debug.h"
+#include "mca/config.hpp"
+#include "mca/impl/debug.hpp"
 
 using namespace std;
 

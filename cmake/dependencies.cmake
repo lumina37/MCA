@@ -2,6 +2,9 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED core imgcodecs imgproc highgui)
 
+set(PUGIXML_NO_XPATH ON CACHE BOOL "" FORCE)
+set(PUGIXML_NO_EXCEPTIONS ON CACHE BOOL "" FORCE)
+set(PUGIXML_NO_STL ON CACHE BOOL "" FORCE)
 FetchContent_Declare(
         pugixml
         GIT_REPOSITORY https://github.com/zeux/pugixml.git
@@ -25,6 +28,8 @@ if (BUILD_TESTS)
             GIT_TAG v1.14.0
     )
 
+    set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+    set(GTEST_LINKED_AS_SHARED_LIBRARY 1 CACHE BOOL "" FORCE)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
 

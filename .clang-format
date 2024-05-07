@@ -3,12 +3,12 @@ IndentWidth: 4
 ColumnLimit: 120
 ---
 Language: Cpp
+NamespaceIndentation: None
 AccessModifierOffset: -4
 PointerAlignment: Left
-NamespaceIndentation: None
 BreakBeforeBraces: Custom
+IndentPPDirectives: AfterHash
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: Never
   AfterFunction: true
-  SplitEmptyFunction: false

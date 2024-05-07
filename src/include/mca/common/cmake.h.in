@@ -1,3 +1,9 @@
 #pragma once
 
-#cmakedefine LVC_BUILD_SHARED_LIBS
+#cmakedefine MCA_HEADER_ONLY
+#cmakedefine MCA_BUILD_SHARED_LIBS
+
+#cmakedefine MCA_VERSION_MAJOR @MCA_VERSION_MAJOR@
+#cmakedefine MCA_VERSION_MINOR @MCA_VERSION_MINOR@
+#cmakedefine MCA_VERSION_PATCH @MCA_VERSION_PATCH@
+#cmakedefine MCA_VERSION "@MCA_VERSION@"

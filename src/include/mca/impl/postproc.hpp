@@ -1,11 +1,14 @@
+﻿#pragma once
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "mca/config.h"
-
-#include "mca/process/postproc.h"
+#include "mca/common/defines.h"
+#include "mca/config.hpp"
 
 namespace mca {
+
+namespace _helper {
 
 static inline void genCircleMask(cv::Mat& dst, double diameter)
 {
@@ -13,17 +16,19 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
-void postprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+} // namespace _helper
+
+MCA_API inline void postprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
 {
     dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src.type());
 
     double src_block_width = cfg.getDiameter() * cfg.getCropRatio();
-    int src_block_width_i = static_cast<int>(round(src_block_width));
-    int dst_block_width_i = static_cast<int>(round(cfg.getDiameter()));
+    int src_block_width_i = static_cast<int>(ceil(src_block_width));
+    int dst_block_width_i = static_cast<int>(ceil(cfg.getDiameter()));
 
     cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
     cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, src.type());
-    genCircleMask(mask_image, cfg.getDiameter());
+    _helper::genCircleMask(mask_image, cfg.getDiameter());
 
     MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
 

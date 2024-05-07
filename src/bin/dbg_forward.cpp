@@ -1,12 +1,12 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "mca/config.h"
-#include "mca/process/preproc.h"
+#include "mca/config.hpp"
+#include "mca/impl/preproc.hpp"
 
 int main()
 {
-    auto cfg = mca::Config::fromRaytrixCfgFilePath(R"(D:\code\SIGS\230818_VVC\dataset\config\ChessPieces\param.cfg)");
+    auto cfg = mca::Config::fromRaytrixCfgFilePath("param.cfg");
     auto src = cv::imread("src_chess.png");
     cv::Mat dst;
     mca::preprocess(cfg, src, dst);
