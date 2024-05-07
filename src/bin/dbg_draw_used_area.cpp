@@ -37,9 +37,9 @@ int main()
     }
 
     cv::Mat dst_3, dst_5;
-    mca::dbgDrawUsedArea(cfg, patch_size_map, 3, dst_3);
+    mca::dbg::dbgDrawUsedArea(cfg, patch_size_map, 3, dst_3);
     cv::imwrite("used_area_3.png", dst_3);
-    mca::dbgDrawUsedArea(cfg, patch_size_map, 5, dst_5);
+    mca::dbg::dbgDrawUsedArea(cfg, patch_size_map, 5, dst_5);
     cv::imwrite("used_area_5.png", dst_5);
 
     return 0;
