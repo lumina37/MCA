@@ -5,5 +5,3 @@ function(mca_add_test name srcs)
     copy_dlls_if_needed(${name})
     gtest_discover_tests(${name})
 endfunction()
-
-mca_add_test(test_config "test_config.cpp")

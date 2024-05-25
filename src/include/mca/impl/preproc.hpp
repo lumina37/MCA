@@ -1,38 +1,49 @@
 ﻿#pragma once
 
+#include <numbers>
+#include <ranges>
+
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <tlct/config.hpp>
+#include <tlct/helper/static_math.hpp>
 
 #include "mca/common/defines.h"
-#include "mca/config.hpp"
+#include "mca/helper.hpp"
 
 namespace mca {
 
-MCA_API inline void preprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+namespace rgs = std::ranges;
+namespace tcfg = tlct::cfg::raytrix;
+
+MCA_API inline void preprocess_(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                                const double crop_ratio = 1. / std::numbers::sqrt2)
 {
-    double block_width = cfg.getDiameter() * cfg.getCropRatio();
+    double block_width = layout.getDiameter() * crop_ratio;
     int block_width_i = static_cast<int>(ceil(block_width));
 
-    MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
-
-    auto align = [](int num) {
-        constexpr int target = 2;
-        int pad = (target - num % target) % target;
-        return num + pad;
-    };
-
-    int req_cols = align(mis.getMaxElemNum() * block_width_i);
-    int req_rows = align(mis.getMaxLineNum() * block_width_i);
-    if (cfg.getIsRotated())
-        std::swap(req_cols, req_rows);
+    int req_cols = tlct::_hp::align_to_2(layout.getMIMaxCols() * block_width_i);
+    int req_rows = tlct::_hp::align_to_2(layout.getMIRows() * block_width_i);
 
     dst.create(req_rows, req_cols, src.type());
     cv::Mat src_roi_image, dst_roi_image;
 
-    for (const auto& mi : mis) {
-        getRoiImageByCenter(src, src_roi_image, mi.getCenter(), block_width);
-        getRoiImageByLeftupCorner(dst, dst_roi_image, mi.getIndex() * block_width_i, block_width);
-        src_roi_image.copyTo(dst_roi_image);
+    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
+        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
+            const cv::Point2d micenter = layout.getMICenter(row, col);
+            src_roi_image = getRoiImageByCenter(src, micenter, block_width);
+            dst_roi_image = getRoiImageByLeftupCorner(dst, cv::Point(col, row) * block_width_i, block_width);
+            src_roi_image.copyTo(dst_roi_image);
+        }
     }
+}
+
+MCA_API inline cv::Mat preprocess(const tcfg::Layout& layout, const cv::Mat& src,
+                                  const double crop_ratio = 1. / std::numbers::sqrt2)
+{
+    cv::Mat dst;
+    preprocess_(layout, src, dst, crop_ratio);
+    return dst;
 }
 
 } // namespace mca

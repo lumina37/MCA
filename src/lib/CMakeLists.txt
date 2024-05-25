@@ -22,8 +22,8 @@ set_target_properties(${MCA_LIB_NAME} PROPERTIES
 target_compile_definitions(${MCA_LIB_NAME} PRIVATE ${MCA_LIB_COMPILE_DEFS})
 target_include_directories(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE}
         ${OpenCV_INCLUDE_DIR}
-        "${pugixml_SOURCE_DIR}/src"
-        "${CMAKE_SOURCE_DIR}/src/include")
+        "${tlct_SOURCE_DIR}/src/include"
+        "${PROJECT_SOURCE_DIR}/src/include")
 target_link_libraries(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE}
         ${OpenCV_LIBS}
-        pugixml)
+        tlct)

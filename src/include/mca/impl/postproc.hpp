@@ -1,14 +1,21 @@
 ﻿#pragma once
 
+#include <numbers>
+#include <ranges>
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#include <tlct/config.hpp>
 
 #include "mca/common/defines.h"
-#include "mca/config.hpp"
+#include "mca/helper.hpp"
 
 namespace mca {
 
-namespace _helper {
+namespace rgs = std::ranges;
+namespace tcfg = tlct::cfg::raytrix;
+
+namespace _hp {
 
 static inline void genCircleMask(cv::Mat& dst, double diameter)
 {
@@ -16,44 +23,53 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
-} // namespace _helper
+} // namespace _hp
 
-MCA_API inline void postprocess(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+MCA_API inline void postprocess_(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                                 const double crop_ratio = 1. / std::numbers::sqrt2)
 {
-    dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), src.type());
+    dst = cv::Mat::zeros(layout.getImgSize(), src.type());
 
-    double src_block_width = cfg.getDiameter() * cfg.getCropRatio();
+    double src_block_width = layout.getDiameter() * crop_ratio;
     int src_block_width_i = static_cast<int>(ceil(src_block_width));
-    int dst_block_width_i = static_cast<int>(ceil(cfg.getDiameter()));
+    int dst_block_width_i = static_cast<int>(ceil(layout.getDiameter()));
 
     cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
     cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, src.type());
-    _helper::genCircleMask(mask_image, cfg.getDiameter());
+    _hp::genCircleMask(mask_image, layout.getDiameter());
 
-    MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
+    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
+        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
+            const cv::Point2d micenter = layout.getMICenter(row, col);
 
-    for (const auto& mi : mis) {
-        cv::Point2d mi_center = mi.getCenter();
+            src_roi_image = getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
+            dst_roi_image = getRoiImageByCenter(dst, micenter, layout.getDiameter());
 
-        getRoiImageByLeftupCorner(src, src_roi_image, mi.getIndex() * src_block_width_i, src_block_width);
-        getRoiImageByCenter(dst, dst_roi_image, mi_center, cfg.getDiameter());
+            int dst_leftup_corner_x = static_cast<int>(round(micenter.x - layout.getDiameter() / 2.0));
+            int dst_leftup_corner_y = static_cast<int>(round(micenter.y - layout.getDiameter() / 2.0));
+            int src_leftup_corner_x = static_cast<int>(round(micenter.x - src_block_width / 2.0));
+            int src_leftup_corner_y = static_cast<int>(round(micenter.y - src_block_width / 2.0));
 
-        int dst_leftup_corner_x = static_cast<int>(round(mi_center.x - cfg.getDiameter() / 2.0));
-        int dst_leftup_corner_y = static_cast<int>(round(mi_center.y - cfg.getDiameter() / 2.0));
-        int src_leftup_corner_x = static_cast<int>(round(mi_center.x - src_block_width / 2.0));
-        int src_leftup_corner_y = static_cast<int>(round(mi_center.y - src_block_width / 2.0));
+            int left_border_width = src_leftup_corner_x - dst_leftup_corner_x;
+            int top_border_width = src_leftup_corner_y - dst_leftup_corner_y;
+            int right_border_width = dst_block_width_i - src_block_width_i - left_border_width;
+            int bot_border_width = dst_block_width_i - src_block_width_i - top_border_width;
 
-        int left_border_width = src_leftup_corner_x - dst_leftup_corner_x;
-        int top_border_width = src_leftup_corner_y - dst_leftup_corner_y;
-        int right_border_width = dst_block_width_i - src_block_width_i - left_border_width;
-        int bot_border_width = dst_block_width_i - src_block_width_i - top_border_width;
+            cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
+                               left_border_width, right_border_width,
+                               cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
 
-        cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
-                           left_border_width, right_border_width,
-                           cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
-
-        src_roi_image_with_border.copyTo(dst_roi_image, mask_image);
+            src_roi_image_with_border.copyTo(dst_roi_image, mask_image);
+        }
     }
+}
+
+MCA_API inline cv::Mat postprocess(const tcfg::Layout& layout, const cv::Mat& src,
+                                   const double crop_ratio = 1. / std::numbers::sqrt2)
+{
+    cv::Mat dst;
+    postprocess_(layout, src, dst, crop_ratio);
+    return dst;
 }
 
 } // namespace mca

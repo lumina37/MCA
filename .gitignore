@@ -4,3 +4,5 @@
 
 data/
 CMakePresets.json
+
+cmake.h

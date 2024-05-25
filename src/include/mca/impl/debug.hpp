@@ -1,12 +1,18 @@
 #pragma once
 
+#include <numbers>
+#include <ranges>
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#include <tlct/config.hpp>
 
 #include "mca/common/defines.h"
-#include "mca/config.hpp"
 
 namespace mca::dbg {
+
+namespace rgs = std::ranges;
+namespace tcfg = tlct::cfg::raytrix;
 
 static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter)
 {
@@ -20,44 +26,46 @@ static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double d
                cv::LineTypes::LINE_AA);
 }
 
-MCA_API inline void dbgDrawMicroImageEdges(const Config& cfg, const cv::Mat& src, cv::Mat& dst)
+MCA_API inline void dbgDrawMicroImageEdges(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst)
 {
     dst = src.clone();
 
-    MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
-
-    for (const auto& mi : mis) {
-        dbgDrawCircle(dst, mi.getCenter(), cfg.getDiameter());
+    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
+        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
+            const cv::Point2d micenter = layout.getMICenter(row, col);
+            dbgDrawCircle(dst, micenter, layout.getDiameter());
+        }
     }
 }
 
-MCA_API inline void dbgDrawUsedArea(const Config& cfg, const cv::Mat& patch_size_map, int view_num, cv::Mat& dst)
+MCA_API inline void dbgDrawUsedArea(const tcfg::Layout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst)
 {
-    dst = cv::Mat::zeros(cfg.getHeight(), cfg.getWidth(), CV_8UC3);
+    dst = cv::Mat::zeros(layout.getImgSize(), CV_8UC3);
 
-    MicroImageRanges mis = MicroImageRanges::fromConfig(cfg);
     int view_shift = view_num / 2;
 
-    for (const auto& mi : mis) {
-        auto idx = mi.getIndex();
-        if (idx.x >= patch_size_map.cols || idx.y >= patch_size_map.rows) {
-            continue;
-        }
+    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
+        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
+            if (col >= patchsizes.cols || row >= patchsizes.rows) {
+                continue;
+            }
 
-        double patch_size = static_cast<double>(patch_size_map.at<uchar>(idx.y, idx.x));
-        cv::Scalar color;
-        if (patch_size + static_cast<double>(view_num) > cfg.getDiameter()) {
-            color = cv::Scalar(0, 0, 160);
-        } else {
-            color = cv::Scalar::all(255);
-        }
+            double patch_size = static_cast<double>(patchsizes.at<uchar>(row, col));
+            cv::Scalar color;
+            if (patch_size + static_cast<double>(view_num) > layout.getDiameter()) {
+                color = cv::Scalar(0, 0, 160);
+            } else {
+                color = cv::Scalar::all(255);
+            }
 
-        dbgDrawCircle(dst, mi.getCenter(), cfg.getDiameter());
+            const cv::Point2d micenter = layout.getMICenter(row, col);
+            dbgDrawCircle(dst, micenter, layout.getDiameter());
 
-        for (int view_shift_x = -view_shift; view_shift_x <= view_shift; view_shift_x++) {
-            for (int view_shift_y = -view_shift; view_shift_y <= view_shift; view_shift_y++) {
-                cv::Point2i shift{view_shift_x, view_shift_y};
-                dbgDrawSoildCircle(dst, mi.getCenter() + static_cast<cv::Point2d>(shift), patch_size, color);
+            for (int view_shift_x = -view_shift; view_shift_x <= view_shift; view_shift_x++) {
+                for (int view_shift_y = -view_shift; view_shift_y <= view_shift; view_shift_y++) {
+                    cv::Point2i shift{view_shift_x, view_shift_y};
+                    dbgDrawSoildCircle(dst, micenter + static_cast<cv::Point2d>(shift), patch_size, color);
+                }
             }
         }
     }

@@ -2,26 +2,14 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED core imgcodecs imgproc highgui)
 
-set(PUGIXML_NO_XPATH ON CACHE BOOL "" FORCE)
-set(PUGIXML_NO_EXCEPTIONS ON CACHE BOOL "" FORCE)
-set(PUGIXML_NO_STL ON CACHE BOOL "" FORCE)
 FetchContent_Declare(
-        pugixml
-        GIT_REPOSITORY https://github.com/zeux/pugixml.git
-        GIT_TAG v1.14
+        tlct
+        GIT_REPOSITORY "https://github.com/SIGS-TZ/TLCT.git"
+        GIT_TAG v0.6.0
 )
-FetchContent_MakeAvailable(pugixml)
+FetchContent_MakeAvailable(tlct)
 
-set(MCA_INCLUDE_DIR
-        ${OpenCV_INCLUDE_DIR}
-        "${pugixml_SOURCE_DIR}/src"
-        "${CMAKE_SOURCE_DIR}/src/include")
-
-set(MCA_LINK_LIBS
-        ${OpenCV_LIBS}
-        pugixml)
-
-if (BUILD_TESTS)
+if (MCA_BUILD_TESTS)
     FetchContent_Declare(
             googletest
             GIT_REPOSITORY https://github.com/google/googletest.git
