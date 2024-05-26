@@ -6,6 +6,5 @@ function(mca_add_executable name srcs)
 endfunction()
 
 mca_add_executable(dbg_draw_circles "dbg_draw_circles.cpp")
-mca_add_executable(dbg_draw_used_area "dbg_draw_used_area.cpp")
-mca_add_executable(main_preproc "main_preproc.cpp")
-mca_add_executable(main_postproc "main_postproc.cpp")
+mca_add_executable(mca-preproc "main_preproc.cpp")
+mca_add_executable(mca-postproc "main_postproc.cpp")

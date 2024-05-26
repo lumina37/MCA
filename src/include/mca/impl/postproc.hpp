@@ -29,7 +29,9 @@ template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
 static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
-    cv::Mat canvas = cv::Mat::zeros(layout.getImgSize(), src.type());
+    const int border = (int)(layout.getDiameter() / 2.0);
+    const cv::Point2d pos_shift{(double)border, (double)border};
+    cv::Mat canvas = cv::Mat::zeros(layout.getImgSize() + cv::Size(border, border) * 2, src.type());
 
     double src_block_width = layout.getDiameter() * crop_ratio;
     int src_block_width_i = static_cast<int>(ceil(src_block_width));
@@ -41,7 +43,7 @@ static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::M
 
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
-            const cv::Point2d micenter = layout.getMICenter(row, col);
+            const cv::Point2d micenter = layout.getMICenter(row, col) + pos_shift;
 
             src_roi_image =
                 _hp::getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
@@ -65,10 +67,12 @@ static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::M
         }
     }
 
+    const cv::Mat cropped_canvas = canvas({border, canvas.rows - border}, {border, canvas.cols - border});
+
     if (layout.getRotation() != 0.0) {
-        cv::transpose(canvas, dst);
+        cv::transpose(cropped_canvas, dst);
     } else {
-        dst = std::move(canvas);
+        dst = std::move(cropped_canvas);
     }
 }
 

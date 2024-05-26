@@ -1,6 +1,6 @@
 include(FetchContent)
 
-find_package(OpenCV REQUIRED core imgcodecs imgproc highgui)
+find_package(OpenCV REQUIRED core imgcodecs imgproc)
 
 set(TLCT_HEADER_ONLY ON CACHE BOOL "" FORCE)
 FetchContent_Declare(
