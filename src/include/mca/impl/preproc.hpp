@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <cmath>
 #include <numbers>
 #include <ranges>
 
@@ -20,13 +21,13 @@ template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
 inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
-    double block_width = layout.getDiameter() * crop_ratio;
-    int block_width_i = static_cast<int>(ceil(block_width));
+    const double block_width = layout.getDiameter() * crop_ratio;
+    const int block_width_i = static_cast<int>(std::ceil(block_width));
 
-    int req_cols = tlct::_hp::align_to_2(layout.getMIMaxCols() * block_width_i);
-    int req_rows = tlct::_hp::align_to_2(layout.getMIRows() * block_width_i);
+    const int canvas_width = tlct::_hp::align_to_2(layout.getMIMaxCols() * block_width_i);
+    const int canvas_height = tlct::_hp::align_to_2(layout.getMIRows() * block_width_i);
 
-    cv::Mat canvas(req_rows, req_cols, src.type());
+    cv::Mat canvas(canvas_height, canvas_width, src.type());
     cv::Mat src_roi_image, dst_roi_image;
 
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {

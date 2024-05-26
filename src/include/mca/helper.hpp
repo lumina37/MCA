@@ -19,7 +19,7 @@ static inline cv::Mat getRoiImageByCenter(const cv::Mat& src, const cv::Point2d&
 static inline cv::Mat getRoiImageByLeftupCorner(const cv::Mat& src, const cv::Point2i& corner, double width) noexcept
 {
     const auto corner_i = cv::Point2i(corner);
-    const int width_i = (int)ceil(width);
+    const int width_i = (int)std::ceil(width);
     cv::Rect roi(corner_i.x, corner_i.y, width_i, width_i);
     return src(roi);
 }

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <cmath>
 #include <numbers>
 #include <ranges>
 
@@ -33,9 +34,9 @@ static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::M
     const cv::Point2d pos_shift{(double)border, (double)border};
     cv::Mat canvas = cv::Mat::zeros(layout.getImgSize() + cv::Size(border, border) * 2, src.type());
 
-    double src_block_width = layout.getDiameter() * crop_ratio;
-    int src_block_width_i = static_cast<int>(ceil(src_block_width));
-    int dst_block_width_i = static_cast<int>(ceil(layout.getDiameter()));
+    const double src_block_width = layout.getDiameter() * crop_ratio;
+    const int src_block_width_i = (int)std::ceil(src_block_width);
+    const int dst_block_width_i = (int)std::ceil(layout.getDiameter());
 
     cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
     cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, src.type());
@@ -49,15 +50,15 @@ static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::M
                 _hp::getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
             dst_roi_image = _hp::getRoiImageByCenter(canvas, micenter, layout.getDiameter());
 
-            int dst_leftup_corner_x = static_cast<int>(round(micenter.x - layout.getDiameter() / 2.0));
-            int dst_leftup_corner_y = static_cast<int>(round(micenter.y - layout.getDiameter() / 2.0));
-            int src_leftup_corner_x = static_cast<int>(round(micenter.x - src_block_width / 2.0));
-            int src_leftup_corner_y = static_cast<int>(round(micenter.y - src_block_width / 2.0));
+            const int dst_ltop_x = (int)(micenter.x - layout.getDiameter() / 2.0);
+            const int dst_ltop_y = (int)(micenter.y - layout.getDiameter() / 2.0);
+            const int src_ltop_x = (int)(micenter.x - src_block_width / 2.0);
+            const int src_ltop_y = (int)(micenter.y - src_block_width / 2.0);
 
-            int left_border_width = src_leftup_corner_x - dst_leftup_corner_x;
-            int top_border_width = src_leftup_corner_y - dst_leftup_corner_y;
-            int right_border_width = dst_block_width_i - src_block_width_i - left_border_width;
-            int bot_border_width = dst_block_width_i - src_block_width_i - top_border_width;
+            const int left_border_width = src_ltop_x - dst_ltop_x;
+            const int top_border_width = src_ltop_y - dst_ltop_y;
+            const int right_border_width = dst_block_width_i - src_block_width_i - left_border_width;
+            const int bot_border_width = dst_block_width_i - src_block_width_i - top_border_width;
 
             cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
                                left_border_width, right_border_width,
@@ -67,12 +68,12 @@ static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::M
         }
     }
 
-    const cv::Mat cropped_canvas = canvas({border, canvas.rows - border}, {border, canvas.cols - border});
+    const cv::Mat canvas_withoutborder = canvas({border, canvas.rows - border}, {border, canvas.cols - border});
 
     if (layout.getRotation() != 0.0) {
-        cv::transpose(cropped_canvas, dst);
+        cv::transpose(canvas_withoutborder, dst);
     } else {
-        dst = std::move(cropped_canvas);
+        dst = std::move(canvas_withoutborder);
     }
 }
 
