@@ -30,7 +30,7 @@ void mainProc(const tcfg::CommonParamConfig& common_cfg)
         const cv::Mat& src = cv::imread(srcpath.string());
         const cv::Mat transposed_src = TLayout::procImg(layout, src);
 
-        const cv::Mat dst = mca::postprocess(layout, transposed_src);
+        const cv::Mat dst = mca::postprocess(layout, transposed_src, param_cfg.getCropRatio());
 
         std::stringstream ss;
         ss << "frame#" << std::setw(3) << std::setfill('0') << i << ".png";

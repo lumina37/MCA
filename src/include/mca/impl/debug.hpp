@@ -12,7 +12,9 @@
 namespace mca::dbg {
 
 namespace rgs = std::ranges;
-namespace tcfg = tlct::cfg::raytrix;
+namespace tcfg = tlct::cfg;
+
+namespace _hp {
 
 static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter)
 {
@@ -20,25 +22,34 @@ static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diamet
                cv::LineTypes::LINE_AA);
 }
 
-static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double diameter, cv::Scalar color)
+static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double diameter, const cv::Scalar& color)
 {
     cv::circle(dst, static_cast<cv::Point2i>(center), static_cast<int>(diameter / 2.0), color, cv::LineTypes::FILLED,
                cv::LineTypes::LINE_AA);
 }
 
-MCA_API inline void dbgDrawMicroImageEdges(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst)
+} // namespace _hp
+
+template <typename TLayout>
+    requires tcfg::concepts::CLayout<TLayout>
+inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv::Mat& dst)
 {
     dst = src.clone();
 
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
             const cv::Point2d micenter = layout.getMICenter(row, col);
-            dbgDrawCircle(dst, micenter, layout.getDiameter());
+            _hp::dbgDrawCircle(dst, micenter, layout.getDiameter());
         }
     }
 }
 
-MCA_API inline void dbgDrawUsedArea(const tcfg::Layout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst)
+template MCA_API void dbgDrawMicroImageEdges(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst);
+template MCA_API void dbgDrawMicroImageEdges(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst);
+
+template <typename TLayout>
+    requires tcfg::concepts::CLayout<TLayout>
+inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst)
 {
     dst = cv::Mat::zeros(layout.getImgSize(), CV_8UC3);
 
@@ -59,16 +70,21 @@ MCA_API inline void dbgDrawUsedArea(const tcfg::Layout& layout, const cv::Mat& p
             }
 
             const cv::Point2d micenter = layout.getMICenter(row, col);
-            dbgDrawCircle(dst, micenter, layout.getDiameter());
+            _hp::dbgDrawCircle(dst, micenter, layout.getDiameter());
 
             for (int view_shift_x = -view_shift; view_shift_x <= view_shift; view_shift_x++) {
                 for (int view_shift_y = -view_shift; view_shift_y <= view_shift; view_shift_y++) {
                     cv::Point2i shift{view_shift_x, view_shift_y};
-                    dbgDrawSoildCircle(dst, micenter + static_cast<cv::Point2d>(shift), patch_size, color);
+                    _hp::dbgDrawSoildCircle(dst, micenter + static_cast<cv::Point2d>(shift), patch_size, color);
                 }
             }
         }
     }
 }
+
+template MCA_API void dbgDrawUsedArea(const tcfg::tspc::Layout& layout, const cv::Mat& patchsizes, int view_num,
+                                      cv::Mat& dst);
+template MCA_API void dbgDrawUsedArea(const tcfg::raytrix::Layout& layout, const cv::Mat& patchsizes, int view_num,
+                                      cv::Mat& dst);
 
 } // namespace mca::dbg

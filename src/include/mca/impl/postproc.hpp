@@ -27,8 +27,7 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst,
-                                const double crop_ratio = 1. / std::numbers::sqrt2)
+static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     cv::Mat canvas = cv::Mat::zeros(layout.getImgSize(), src.type());
 
@@ -73,14 +72,20 @@ static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::M
     }
 }
 
+template void postprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio);
+template void postprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                           const double crop_ratio);
+
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src,
-                                  const double crop_ratio = 1. / std::numbers::sqrt2)
+inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
 {
     cv::Mat dst;
     postprocess_(layout, src, dst, crop_ratio);
     return dst;
 }
+
+template cv::Mat postprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
+template cv::Mat postprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
 } // namespace mca

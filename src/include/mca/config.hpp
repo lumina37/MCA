@@ -115,7 +115,7 @@ static inline fs::path fmtSrcPath(const ParamConfig<TCalibConfig>& cfg, int i) n
     return {buffer};
 }
 
-using TSPCParamConfig = ParamConfig<tcfg::tspc::CalibConfig>;
-using RaytrixParamConfig = ParamConfig<tcfg::raytrix::CalibConfig>;
+template class ParamConfig<tcfg::tspc::CalibConfig>;
+template class ParamConfig<tcfg::raytrix::CalibConfig>;
 
 } // namespace mca::cfg

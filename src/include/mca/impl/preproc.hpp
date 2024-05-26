@@ -18,8 +18,7 @@ namespace tcfg = tlct::cfg;
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst,
-                               const double crop_ratio = 1. / std::numbers::sqrt2)
+inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     double block_width = layout.getDiameter() * crop_ratio;
     int block_width_i = static_cast<int>(ceil(block_width));
@@ -46,14 +45,20 @@ static inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Ma
     }
 }
 
+template void preprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio);
+template void preprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                          const double crop_ratio);
+
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src,
-                                 const double crop_ratio = 1. / std::numbers::sqrt2)
+inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
 {
     cv::Mat dst;
     preprocess_(layout, src, dst, crop_ratio);
     return dst;
 }
+
+template cv::Mat preprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
+template cv::Mat preprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
 } // namespace mca
