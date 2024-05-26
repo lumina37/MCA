@@ -14,10 +14,12 @@
 namespace mca {
 
 namespace rgs = std::ranges;
-namespace tcfg = tlct::cfg::raytrix;
+namespace tcfg = tlct::cfg;
 
-MCA_API inline void preprocess_(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst,
-                                const double crop_ratio = 1. / std::numbers::sqrt2)
+template <typename TLayout>
+    requires tcfg::concepts::CLayout<TLayout>
+static inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst,
+                               const double crop_ratio = 1. / std::numbers::sqrt2)
 {
     double block_width = layout.getDiameter() * crop_ratio;
     int block_width_i = static_cast<int>(ceil(block_width));
@@ -44,8 +46,10 @@ MCA_API inline void preprocess_(const tcfg::Layout& layout, const cv::Mat& src, 
     }
 }
 
-MCA_API inline cv::Mat preprocess(const tcfg::Layout& layout, const cv::Mat& src,
-                                  const double crop_ratio = 1. / std::numbers::sqrt2)
+template <typename TLayout>
+    requires tcfg::concepts::CLayout<TLayout>
+static inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src,
+                                 const double crop_ratio = 1. / std::numbers::sqrt2)
 {
     cv::Mat dst;
     preprocess_(layout, src, dst, crop_ratio);

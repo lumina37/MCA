@@ -13,7 +13,7 @@
 namespace mca {
 
 namespace rgs = std::ranges;
-namespace tcfg = tlct::cfg::raytrix;
+namespace tcfg = tlct::cfg;
 
 namespace _hp {
 
@@ -25,8 +25,10 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
 
 } // namespace _hp
 
-MCA_API inline void postprocess_(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst,
-                                 const double crop_ratio = 1. / std::numbers::sqrt2)
+template <typename TLayout>
+    requires tcfg::concepts::CLayout<TLayout>
+static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst,
+                                const double crop_ratio = 1. / std::numbers::sqrt2)
 {
     cv::Mat canvas = cv::Mat::zeros(layout.getImgSize(), src.type());
 
@@ -71,8 +73,10 @@ MCA_API inline void postprocess_(const tcfg::Layout& layout, const cv::Mat& src,
     }
 }
 
-MCA_API inline cv::Mat postprocess(const tcfg::Layout& layout, const cv::Mat& src,
-                                   const double crop_ratio = 1. / std::numbers::sqrt2)
+template <typename TLayout>
+    requires tcfg::concepts::CLayout<TLayout>
+static inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src,
+                                  const double crop_ratio = 1. / std::numbers::sqrt2)
 {
     cv::Mat dst;
     postprocess_(layout, src, dst, crop_ratio);
