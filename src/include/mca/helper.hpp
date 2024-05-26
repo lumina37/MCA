@@ -4,10 +4,9 @@
 
 #include <opencv2/core.hpp>
 
-#include "mca/common/const.h"
 #include "mca/common/defines.h"
 
-namespace mca {
+namespace mca::_hp {
 
 static inline cv::Mat getRoiImageByCenter(const cv::Mat& src, const cv::Point2d& center, double width) noexcept
 {
@@ -25,4 +24,4 @@ static inline cv::Mat getRoiImageByLeftupCorner(const cv::Mat& src, const cv::Po
     return src(roi);
 }
 
-} // namespace mca
+} // namespace mca::_hp

@@ -1,38 +1,51 @@
 #include <filesystem>
-#include <iostream>
-#include <regex>
+#include <sstream>
 
+#include <argparse/argparse.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <tlct/config.hpp>
 
+#include "mca/common/cmake.h"
 #include "mca/config.hpp"
 #include "mca/impl/postproc.hpp"
 
-namespace stdfs = std::filesystem;
+namespace tcfg = tlct::cfg;
+namespace fs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
-    std::string_view cfg_path_str = argv[1];
-    auto cfg_path = stdfs::path(cfg_path_str);
-    auto src_dir = stdfs::path(argv[2]);
-    auto dst_dir = stdfs::path(argv[3]);
+    argparse::ArgumentParser program("MCA", MCA_VERSION, argparse::default_arguments::all);
+    program.add_argument("param_file_path").help("the MCA parameter file path").required();
 
-    auto cfg = mca::Config::fromRaytrixCfgFilePath(cfg_path_str);
-    std::regex suffix(R"(.*png)");
-
-    for (auto& src_path_iter : stdfs::directory_iterator(src_dir)) {
-        const auto& src_path = src_path_iter.path();
-        auto src_path_str = src_path.string();
-
-        if (!std::regex_match(src_path_str, suffix)) {
-            continue;
-        }
-
-        cv::Mat src, dst;
-        src = cv::imread(src_path_str);
-        mca::postprocess(cfg, src, dst);
-        auto dst_path = dst_dir / src_path.filename();
-        cv::imwrite(dst_path.string(), dst);
+    try {
+        program.parse_args(argc, argv);
+    } catch (const std::exception& err) {
+        std::cerr << err.what() << std::endl;
+        std::cerr << program;
+        std::exit(1);
     }
 
-    return 0;
+    const auto& param_file_path = program.get<std::string>("param_file_path");
+    const auto common_cfg = tcfg::CommonParamConfig::fromPath(param_file_path.c_str());
+    const auto param_cfg = mca::cfg::ParamConfig::fromCommonCfg(common_cfg);
+    const auto& calib_cfg = param_cfg.getCalibCfg();
+    const auto layout = tcfg::raytrix::Layout::fromCfgAndImgsize(calib_cfg, param_cfg.getImgSize());
+
+    fs::create_directories(param_cfg.getDstDir());
+
+    const cv::Range range = param_cfg.getRange();
+    for (int i = range.start; i <= range.end; i++) {
+        const auto srcpath = mca::cfg::fmtSrcPath(param_cfg, i);
+
+        const cv::Mat& src = cv::imread(srcpath.string());
+        const cv::Mat transposed_src = tcfg::raytrix::procImg(layout, src);
+
+        const cv::Mat dst = mca::postprocess(layout, transposed_src);
+
+        std::stringstream ss;
+        ss << "frame#" << std::setw(3) << std::setfill('0') << i << ".png";
+        const auto dstpath = param_cfg.getDstDir() / ss.str();
+        cv::imwrite(dstpath.string(), dst);
+    }
 }

@@ -25,16 +25,22 @@ MCA_API inline void preprocess_(const tcfg::Layout& layout, const cv::Mat& src, 
     int req_cols = tlct::_hp::align_to_2(layout.getMIMaxCols() * block_width_i);
     int req_rows = tlct::_hp::align_to_2(layout.getMIRows() * block_width_i);
 
-    dst.create(req_rows, req_cols, src.type());
+    cv::Mat canvas(req_rows, req_cols, src.type());
     cv::Mat src_roi_image, dst_roi_image;
 
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
             const cv::Point2d micenter = layout.getMICenter(row, col);
-            src_roi_image = getRoiImageByCenter(src, micenter, block_width);
-            dst_roi_image = getRoiImageByLeftupCorner(dst, cv::Point(col, row) * block_width_i, block_width);
+            src_roi_image = _hp::getRoiImageByCenter(src, micenter, block_width);
+            dst_roi_image = _hp::getRoiImageByLeftupCorner(canvas, cv::Point(col, row) * block_width_i, block_width);
             src_roi_image.copyTo(dst_roi_image);
         }
+    }
+
+    if (layout.getRotation() != 0.0) {
+        cv::transpose(canvas, dst);
+    } else {
+        dst = std::move(canvas);
     }
 }
 

@@ -28,7 +28,7 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
 MCA_API inline void postprocess_(const tcfg::Layout& layout, const cv::Mat& src, cv::Mat& dst,
                                  const double crop_ratio = 1. / std::numbers::sqrt2)
 {
-    dst = cv::Mat::zeros(layout.getImgSize(), src.type());
+    cv::Mat canvas = cv::Mat::zeros(layout.getImgSize(), src.type());
 
     double src_block_width = layout.getDiameter() * crop_ratio;
     int src_block_width_i = static_cast<int>(ceil(src_block_width));
@@ -42,8 +42,9 @@ MCA_API inline void postprocess_(const tcfg::Layout& layout, const cv::Mat& src,
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
             const cv::Point2d micenter = layout.getMICenter(row, col);
 
-            src_roi_image = getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
-            dst_roi_image = getRoiImageByCenter(dst, micenter, layout.getDiameter());
+            src_roi_image =
+                _hp::getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
+            dst_roi_image = _hp::getRoiImageByCenter(canvas, micenter, layout.getDiameter());
 
             int dst_leftup_corner_x = static_cast<int>(round(micenter.x - layout.getDiameter() / 2.0));
             int dst_leftup_corner_y = static_cast<int>(round(micenter.y - layout.getDiameter() / 2.0));
@@ -61,6 +62,12 @@ MCA_API inline void postprocess_(const tcfg::Layout& layout, const cv::Mat& src,
 
             src_roi_image_with_border.copyTo(dst_roi_image, mask_image);
         }
+    }
+
+    if (layout.getRotation() != 0.0) {
+        cv::transpose(canvas, dst);
+    } else {
+        dst = std::move(canvas);
     }
 }
 
