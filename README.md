@@ -13,15 +13,15 @@ mca-postproc [param_file_path]
 
 ### Options
 
-+ camType (int): The image is captured by Raytrix (0) or TSPC (1).
-+ Calibration_xml (str): The path of the calibration file.
-+ RawImage_Path (str): The glob pattern of the input images.
-+ Output_Path (str): The path of the output directory.
-+ start_frame (int): The index of the start frame, left contains.
-+ end_frame (int): The index of the end frame, right contains.
-+ width (int): The pixel width of input image.
-+ height (int): The pixel height of input image.
-+ crop_ratio (float): The ratio between cropping width and diameter of Micro Image.
++ `camType (int)` The image is captured by Raytrix (0) or TSPC (1).
++ `Calibration_xml (str)` The path of the calibration file.
++ `RawImage_Path (str)` The glob pattern of the input images in C-printf style, filled with the frame index.
++ `Output_Path (str)` The path of the output directory.
++ `start_frame (int)` The index of the start frame, left contains.
++ `end_frame (int)` The index of the end frame, right contains.
++ `width (int)` The pixel width of input image.
++ `height (int)` The pixel height of input image.
++ `crop_ratio (float)` The ratio between cropping width and diameter of Micro Image.
 
 ### Example
 
