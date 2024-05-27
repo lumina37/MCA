@@ -55,9 +55,9 @@ int main(int argc, char* argv[])
     const auto& param_file_path = program.get<std::string>("param_file_path");
     const auto common_cfg = tcfg::CommonParamConfig::fromPath(param_file_path.c_str());
 
-    if (common_cfg.isTSPC()) {
-        mainProc<tcfg::tspc::Layout>(common_cfg);
-    } else {
+    if (common_cfg.getCameraType() == 0) {
         mainProc<tcfg::raytrix::Layout>(common_cfg);
+    } else {
+        mainProc<tcfg::tspc::Layout>(common_cfg);
     }
 }
