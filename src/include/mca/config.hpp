@@ -20,24 +20,25 @@ template <typename TCalibConfig>
 class ParamConfig
 {
 public:
-    TLCT_API ParamConfig() noexcept : calib_cfg_(), crop_ratio_(), imgsize_(), range_(), src_pattern_(), dst_dir_() {};
-    TLCT_API ParamConfig& operator=(const ParamConfig& cfg) noexcept = default;
-    TLCT_API ParamConfig(const ParamConfig& cfg) noexcept = default;
-    TLCT_API ParamConfig& operator=(ParamConfig&& cfg) noexcept = default;
-    TLCT_API ParamConfig(ParamConfig&& cfg) noexcept = default;
-    TLCT_API ParamConfig(TCalibConfig&& calib_cfg, double crop_ratio, cv::Size imgsize, cv::Range range,
-                         std::string src_pattern, const std::string& dst_dir) noexcept
+    TLCT_API inline ParamConfig() noexcept
+        : calib_cfg_(), crop_ratio_(), imgsize_(), range_(), src_pattern_(), dst_dir_(){};
+    TLCT_API inline ParamConfig& operator=(const ParamConfig& cfg) noexcept = default;
+    TLCT_API inline ParamConfig(const ParamConfig& cfg) noexcept = default;
+    TLCT_API inline ParamConfig& operator=(ParamConfig&& cfg) noexcept = default;
+    TLCT_API inline ParamConfig(ParamConfig&& cfg) noexcept = default;
+    TLCT_API inline ParamConfig(TCalibConfig&& calib_cfg, double crop_ratio, cv::Size imgsize, cv::Range range,
+                                std::string src_pattern, const std::string& dst_dir) noexcept
         : calib_cfg_(calib_cfg), crop_ratio_(crop_ratio), imgsize_(imgsize), range_(range),
-          src_pattern_(std::move(src_pattern)), dst_dir_(dst_dir) {};
+          src_pattern_(std::move(src_pattern)), dst_dir_(dst_dir){};
 
-    [[nodiscard]] TLCT_API static ParamConfig fromCommonCfg(const tcfg::CommonParamConfig& cfg);
+    [[nodiscard]] TLCT_API static inline ParamConfig fromCommonCfg(const tcfg::CommonParamConfig& cfg);
 
-    [[nodiscard]] TLCT_API const TCalibConfig& getCalibCfg() const noexcept;
-    [[nodiscard]] TLCT_API double getCropRatio() const noexcept;
-    [[nodiscard]] TLCT_API cv::Size getImgSize() const noexcept;
-    [[nodiscard]] TLCT_API cv::Range getRange() const noexcept;
-    [[nodiscard]] TLCT_API const std::string& getSrcPattern() const noexcept;
-    [[nodiscard]] TLCT_API const fs::path& getDstDir() const noexcept;
+    [[nodiscard]] TLCT_API inline const TCalibConfig& getCalibCfg() const noexcept;
+    [[nodiscard]] TLCT_API inline double getCropRatio() const noexcept;
+    [[nodiscard]] TLCT_API inline cv::Size getImgSize() const noexcept;
+    [[nodiscard]] TLCT_API inline cv::Range getRange() const noexcept;
+    [[nodiscard]] TLCT_API inline const std::string& getSrcPattern() const noexcept;
+    [[nodiscard]] TLCT_API inline const fs::path& getDstDir() const noexcept;
 
 private:
     TCalibConfig calib_cfg_;
@@ -50,7 +51,7 @@ private:
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline ParamConfig<TCalibConfig> ParamConfig<TCalibConfig>::fromCommonCfg(const tcfg::CommonParamConfig& cfg)
+ParamConfig<TCalibConfig> ParamConfig<TCalibConfig>::fromCommonCfg(const tcfg::CommonParamConfig& cfg)
 {
     const auto& cfg_map = cfg.getConfigMap();
     auto calib_cfg = TCalibConfig::fromXMLPath(cfg_map.at("Calibration_xml").c_str());
@@ -66,49 +67,49 @@ inline ParamConfig<TCalibConfig> ParamConfig<TCalibConfig>::fromCommonCfg(const 
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline const TCalibConfig& ParamConfig<TCalibConfig>::getCalibCfg() const noexcept
+const TCalibConfig& ParamConfig<TCalibConfig>::getCalibCfg() const noexcept
 {
     return calib_cfg_;
 }
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline double ParamConfig<TCalibConfig>::getCropRatio() const noexcept
+double ParamConfig<TCalibConfig>::getCropRatio() const noexcept
 {
     return crop_ratio_;
 }
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline cv::Size ParamConfig<TCalibConfig>::getImgSize() const noexcept
+cv::Size ParamConfig<TCalibConfig>::getImgSize() const noexcept
 {
     return imgsize_;
 }
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline cv::Range ParamConfig<TCalibConfig>::getRange() const noexcept
+cv::Range ParamConfig<TCalibConfig>::getRange() const noexcept
 {
     return range_;
 }
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline const std::string& ParamConfig<TCalibConfig>::getSrcPattern() const noexcept
+const std::string& ParamConfig<TCalibConfig>::getSrcPattern() const noexcept
 {
     return src_pattern_;
 }
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-inline const fs::path& ParamConfig<TCalibConfig>::getDstDir() const noexcept
+const fs::path& ParamConfig<TCalibConfig>::getDstDir() const noexcept
 {
     return {dst_dir_};
 }
 
 template <typename TCalibConfig>
     requires tcfg::concepts::CCalibConfig<TCalibConfig>
-static inline fs::path fmtSrcPath(const ParamConfig<TCalibConfig>& cfg, int i) noexcept
+fs::path fmtSrcPath(const ParamConfig<TCalibConfig>& cfg, int i) noexcept
 {
     char buffer[256];
     sprintf(buffer, cfg.getSrcPattern().c_str(), i);
