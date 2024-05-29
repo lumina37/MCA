@@ -6,7 +6,7 @@ set(TLCT_HEADER_ONLY ON CACHE BOOL "" FORCE)
 FetchContent_Declare(
         tlct
         GIT_REPOSITORY "https://github.com/SIGS-TZ/TLCT.git"
-        GIT_TAG v0.9.0
+        GIT_TAG v0.9.1
 )
 FetchContent_MakeAvailable(tlct)
 
