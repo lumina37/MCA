@@ -19,7 +19,7 @@ namespace tcfg = tlct::cfg;
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
+MCA_API inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     const double block_width = layout.getDiameter() * crop_ratio;
     const int block_width_i = static_cast<int>(std::ceil(block_width));
@@ -52,7 +52,7 @@ template void preprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& sr
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
+MCA_API inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
 {
     cv::Mat dst;
     preprocess_(layout, src, dst, crop_ratio);

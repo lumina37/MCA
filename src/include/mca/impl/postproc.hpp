@@ -28,7 +28,7 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
+MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     const int border = (int)(layout.getDiameter() / 2.0);
     const cv::Point2d pos_shift{(double)border, (double)border};
@@ -83,7 +83,7 @@ template void postprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& s
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
+MCA_API inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
 {
     cv::Mat dst;
     postprocess_(layout, src, dst, crop_ratio);
