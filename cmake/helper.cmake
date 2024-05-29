@@ -6,4 +6,4 @@ function(copy_dlls_if_needed name)
 endfunction()
 
 set(MCA_CONFIGURE_DIR "${PROJECT_SOURCE_DIR}/src/include/mca/common")
-configure_file("${MCA_CONFIGURE_DIR}/cmake.h.in" "${MCA_CONFIGURE_DIR}/cmake.h")
+configure_file("${MCA_CONFIGURE_DIR}/cmake.h.in" "${MCA_CONFIGURE_DIR}/cmake.h" @ONLY)
