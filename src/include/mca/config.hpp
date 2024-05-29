@@ -15,11 +15,14 @@ namespace mca::cfg {
 namespace fs = std::filesystem;
 namespace tcfg = tlct::cfg;
 
-template <typename TCalibConfig>
-    requires tcfg::concepts::CCalibConfig<TCalibConfig>
+template <typename TCalibConfig_>
+    requires tcfg::concepts::CCalibConfig<TCalibConfig_>
 class ParamConfig
 {
 public:
+    using TCalibConfig = TCalibConfig_;
+
+    // Constructor
     TLCT_API inline ParamConfig() noexcept
         : calib_cfg_(), crop_ratio_(), imgsize_(), range_(), src_pattern_(), dst_dir_(){};
     TLCT_API inline ParamConfig& operator=(const ParamConfig& cfg) noexcept = default;
@@ -31,8 +34,10 @@ public:
         : calib_cfg_(calib_cfg), crop_ratio_(crop_ratio), imgsize_(imgsize), range_(range),
           src_pattern_(std::move(src_pattern)), dst_dir_(dst_dir){};
 
+    // Initialize from
     [[nodiscard]] TLCT_API static inline ParamConfig fromCommonCfg(const tcfg::CommonParamConfig& cfg);
 
+    // Const methods
     [[nodiscard]] TLCT_API inline const TCalibConfig& getCalibCfg() const noexcept;
     [[nodiscard]] TLCT_API inline double getCropRatio() const noexcept;
     [[nodiscard]] TLCT_API inline cv::Size getImgSize() const noexcept;
