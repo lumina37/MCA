@@ -77,9 +77,10 @@ MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::
     }
 }
 
-template void postprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio);
-template void postprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
-                           const double crop_ratio);
+template MCA_API void postprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                                   const double crop_ratio);
+template MCA_API void postprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                                   const double crop_ratio);
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
@@ -90,7 +91,7 @@ MCA_API inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src, co
     return dst;
 }
 
-template cv::Mat postprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
-template cv::Mat postprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
+template MCA_API cv::Mat postprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
+template MCA_API cv::Mat postprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
 } // namespace mca

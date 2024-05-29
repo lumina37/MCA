@@ -20,6 +20,7 @@ template <typename TCalibConfig_>
 class ParamConfig
 {
 public:
+    // Typename alias
     using TCalibConfig = TCalibConfig_;
 
     // Constructor

@@ -19,7 +19,7 @@ namespace tcfg = tlct::cfg;
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-MCA_API inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
+inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     const double block_width = layout.getDiameter() * crop_ratio;
     const int block_width_i = static_cast<int>(std::ceil(block_width));
@@ -46,20 +46,21 @@ MCA_API inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::M
     }
 }
 
-template void preprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio);
-template void preprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
-                          const double crop_ratio);
+template MCA_API void preprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                                  const double crop_ratio);
+template MCA_API void preprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
+                                  const double crop_ratio);
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-MCA_API inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
+inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
 {
     cv::Mat dst;
     preprocess_(layout, src, dst, crop_ratio);
     return dst;
 }
 
-template cv::Mat preprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
-template cv::Mat preprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
+template MCA_API cv::Mat preprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
+template MCA_API cv::Mat preprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
 } // namespace mca
