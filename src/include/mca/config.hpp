@@ -64,7 +64,7 @@ template <typename TCalibConfig>
 ParamConfig<TCalibConfig> ParamConfig<TCalibConfig>::fromCommonCfg(const tcfg::CommonParamConfig& cfg)
 {
     const auto& cfg_map = cfg.getConfigMap();
-    auto calib_cfg = TCalibConfig::fromXMLPath(cfg_map.at("Calibration_xml").c_str());
+    auto calib_cfg = TCalibConfig::fromXMLPath(cfg_map.at("Calibration_xml"));
     const double crop_ratio = std::stod(cfg_map.at("crop_ratio"));
     const int width = std::stoi(cfg_map.at("width"));
     const int height = std::stoi(cfg_map.at("height"));
