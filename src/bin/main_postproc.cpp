@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <sstream>
 
 #include <argparse/argparse.hpp>
 #include <opencv2/core.hpp>
@@ -17,24 +16,24 @@ template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
 void mainProc(const tcfg::CommonParamConfig& common_cfg)
 {
-    const auto param_cfg = mca::cfg::ParamConfig<typename TLayout::TCalibConfig>::fromCommonCfg(common_cfg);
+    using ParamConfig = mca::cfg::ParamConfig<typename TLayout::TCalibConfig>;
+    const auto param_cfg = ParamConfig::fromCommonCfg(common_cfg);
     const auto& calib_cfg = param_cfg.getCalibCfg();
     const auto layout = TLayout::fromCfgAndImgsize(calib_cfg, param_cfg.getImgSize());
 
-    fs::create_directories(param_cfg.getDstDir());
+    const auto dstdir = fs::path{param_cfg.getDstPattern()}.parent_path();
+    fs::create_directories(dstdir);
 
     const cv::Range range = param_cfg.getRange();
     for (int i = range.start; i <= range.end; i++) {
-        const auto srcpath = mca::cfg::fmtSrcPath(param_cfg, i);
+        const auto srcpath = ParamConfig::fmtSrcPath(param_cfg, i);
 
         const cv::Mat& src = cv::imread(srcpath.string());
         const cv::Mat transposed_src = TLayout::procImg(layout, src);
 
         const cv::Mat dst = mca::postprocess(layout, transposed_src, param_cfg.getCropRatio());
 
-        std::stringstream ss;
-        ss << "frame#" << std::setw(3) << std::setfill('0') << i << ".png";
-        const auto dstpath = param_cfg.getDstDir() / ss.str();
+        const auto dstpath = ParamConfig::fmtDstPath(param_cfg, i);
         cv::imwrite(dstpath.string(), dst);
     }
 }

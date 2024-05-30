@@ -25,15 +25,15 @@ public:
 
     // Constructor
     TLCT_API inline ParamConfig() noexcept
-        : calib_cfg_(), crop_ratio_(), imgsize_(), range_(), src_pattern_(), dst_dir_(){};
+        : calib_cfg_(), crop_ratio_(), imgsize_(), range_(), src_pattern_(), dst_pattern_(){};
     TLCT_API inline ParamConfig& operator=(const ParamConfig& cfg) noexcept = default;
     TLCT_API inline ParamConfig(const ParamConfig& cfg) noexcept = default;
     TLCT_API inline ParamConfig& operator=(ParamConfig&& cfg) noexcept = default;
     TLCT_API inline ParamConfig(ParamConfig&& cfg) noexcept = default;
     TLCT_API inline ParamConfig(TCalibConfig&& calib_cfg, double crop_ratio, cv::Size imgsize, cv::Range range,
-                                std::string src_pattern, const std::string& dst_dir) noexcept
+                                std::string src_pattern, std::string dst_pattern) noexcept
         : calib_cfg_(calib_cfg), crop_ratio_(crop_ratio), imgsize_(imgsize), range_(range),
-          src_pattern_(std::move(src_pattern)), dst_dir_(dst_dir){};
+          src_pattern_(std::move(src_pattern)), dst_pattern_(std::move(dst_pattern)){};
 
     // Initialize from
     [[nodiscard]] TLCT_API static inline ParamConfig fromCommonCfg(const tcfg::CommonParamConfig& cfg);
@@ -44,7 +44,11 @@ public:
     [[nodiscard]] TLCT_API inline cv::Size getImgSize() const noexcept { return imgsize_; };
     [[nodiscard]] TLCT_API inline cv::Range getRange() const noexcept { return range_; };
     [[nodiscard]] TLCT_API inline const std::string& getSrcPattern() const noexcept { return src_pattern_; };
-    [[nodiscard]] TLCT_API inline const fs::path& getDstDir() const noexcept { return {dst_dir_}; };
+    [[nodiscard]] TLCT_API inline const std::string& getDstPattern() const noexcept { return dst_pattern_; };
+
+    // Utils
+    [[nodiscard]] TLCT_API static inline fs::path fmtSrcPath(const ParamConfig& cfg, int i) noexcept;
+    [[nodiscard]] TLCT_API static inline fs::path fmtDstPath(const ParamConfig& cfg, int i) noexcept;
 
 private:
     TCalibConfig calib_cfg_;
@@ -52,7 +56,7 @@ private:
     cv::Size imgsize_;
     cv::Range range_;
     std::string src_pattern_;
-    fs::path dst_dir_;
+    std::string dst_pattern_;
 };
 
 template <typename TCalibConfig>
@@ -67,16 +71,25 @@ ParamConfig<TCalibConfig> ParamConfig<TCalibConfig>::fromCommonCfg(const tcfg::C
     const int start = std::stoi(cfg_map.at("start_frame"));
     const int end = std::stoi(cfg_map.at("end_frame"));
     const std::string& src_pattern = cfg_map.at("RawImage_Path");
-    const std::string& dst_dir = cfg_map.at("Output_Path");
-    return {std::move(calib_cfg), crop_ratio, {width, height}, {start, end}, src_pattern, dst_dir};
+    const std::string& dst_pattern = cfg_map.at("Output_Path");
+    return {std::move(calib_cfg), crop_ratio, {width, height}, {start, end}, src_pattern, dst_pattern};
 }
 
-template <typename TCalibConfig>
-    requires tcfg::concepts::CCalibConfig<TCalibConfig>
-fs::path fmtSrcPath(const ParamConfig<TCalibConfig>& cfg, int i) noexcept
+template <typename TCalibConfig_>
+    requires tcfg::concepts::CCalibConfig<TCalibConfig_>
+fs::path ParamConfig<TCalibConfig_>::fmtSrcPath(const ParamConfig<TCalibConfig_>& cfg, int i) noexcept
 {
     char buffer[256];
     sprintf(buffer, cfg.getSrcPattern().c_str(), i);
+    return {buffer};
+}
+
+template <typename TCalibConfig_>
+    requires tcfg::concepts::CCalibConfig<TCalibConfig_>
+fs::path ParamConfig<TCalibConfig_>::fmtDstPath(const ParamConfig<TCalibConfig_>& cfg, int i) noexcept
+{
+    char buffer[256];
+    sprintf(buffer, cfg.getDstPattern().c_str(), i);
     return {buffer};
 }
 
