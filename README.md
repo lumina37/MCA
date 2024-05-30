@@ -16,7 +16,7 @@ mca-postproc [param_file_path]
 + `camType (int)` The image is captured by Raytrix (0) or TSPC (1).
 + `Calibration_xml (str)` The path of the calibration file.
 + `RawImage_Path (str)` The glob pattern of the input images in C-printf style, filled with the frame index.
-+ `Output_Path (str)` The path of the output directory.
++ `Output_Path (str)` The glob pattern of the output images in C-printf style, filled with the frame index.
 + `start_frame (int)` The index of the start frame, left contains.
 + `end_frame (int)` The index of the end frame, right contains.
 + `width (int)` The pixel width of input image.
