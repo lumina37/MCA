@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
     const auto& param_file_path = program.get<std::string>("param_file_path");
     const auto common_cfg = tcfg::CommonParamConfig::fromPath(param_file_path);
 
-    if (common_cfg.getCameraType() == 0) {
+    if (common_cfg.getPipelineType() == tcfg::PipelineType::RLC) {
         mainProc<tcfg::raytrix::Layout>(common_cfg);
     } else {
         mainProc<tcfg::tspc::Layout>(common_cfg);
