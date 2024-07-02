@@ -8,23 +8,19 @@
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 
+#include "helper.hpp"
 #include "mca/common/defines.h"
-#include "mca/helper.hpp"
 
-namespace mca {
+namespace mca::_proc {
 
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
-
-namespace _hp {
 
 static inline void genCircleMask(cv::Mat& dst, double diameter)
 {
     cv::circle(dst, {dst.cols / 2, dst.rows / 2}, static_cast<int>(diameter / 2.0), cv::Scalar::all(255.0),
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
-
-} // namespace _hp
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
@@ -40,15 +36,14 @@ MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::
 
     cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
     cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, src.type());
-    _hp::genCircleMask(mask_image, layout.getDiameter());
+    genCircleMask(mask_image, layout.getDiameter());
 
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
             const cv::Point2d micenter = layout.getMICenter(row, col) + pos_shift;
 
-            src_roi_image =
-                _hp::getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
-            dst_roi_image = _hp::getRoiImageByCenter(canvas, micenter, layout.getDiameter());
+            src_roi_image = getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
+            dst_roi_image = getRoiImageByCenter(canvas, micenter, layout.getDiameter());
 
             const int dst_ltop_x = (int)(micenter.x - layout.getDiameter() / 2.0);
             const int dst_ltop_y = (int)(micenter.y - layout.getDiameter() / 2.0);
@@ -94,4 +89,13 @@ MCA_API inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src, co
 template MCA_API cv::Mat postprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
 template MCA_API cv::Mat postprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
-} // namespace mca
+} // namespace mca::_proc
+
+namespace mca::proc {
+
+namespace _priv = mca::_proc;
+
+using _priv::postprocess;
+using _priv::postprocess_;
+
+} // namespace mca::proc

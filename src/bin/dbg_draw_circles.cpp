@@ -1,17 +1,16 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <tlct.hpp>
 
-#include "mca/config.hpp"
 #include "mca/impl/debug.hpp"
 
-using namespace std;
-namespace tcfg = tlct::cfg::tspc;
+namespace tn = tlct::tspc;
 
 int main()
 {
     auto src = cv::imread("src_square.png");
-    const auto calib_cfg = tcfg::CalibConfig::fromXMLPath("Boys.xml");
-    const auto layout = tcfg::Layout::fromCfgAndImgsize(calib_cfg, src.size());
+    const auto calib_cfg = tn::CalibConfig::fromXMLPath("Boys.xml");
+    const auto layout = tn::Layout::fromCfgAndImgsize(calib_cfg, src.size());
 
     cv::Mat dst;
     mca::dbg::dbgDrawMicroImageEdges(layout, src, dst);

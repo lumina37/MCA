@@ -3,37 +3,39 @@
 #include <argparse/argparse.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <tlct/config.hpp>
+#include <tlct.hpp>
 
-#include "mca/common/cmake.h"
-#include "mca/config.hpp"
 #include "mca/impl/preproc.hpp"
 
-namespace tcfg = tlct::cfg;
 namespace fs = std::filesystem;
+namespace tcpt = tlct::cfg::concepts;
 
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-void mainProc(const tcfg::CommonParamConfig& common_cfg)
+template <typename TParamConfig, typename TLayout>
+    requires tcpt::CSpecificConfig<typename TParamConfig::TSpecificConfig> &&
+             tcpt::CCalibConfig<typename TParamConfig::TCalibConfig> && tcpt::CLayout<TLayout>
+void mainProc(const tlct::ConfigMap& cfg_map)
 {
-    using ParamConfig = mca::cfg::ParamConfig<typename TLayout::TCalibConfig>;
-    const auto param_cfg = ParamConfig::fromCommonCfg(common_cfg);
-    const auto& calib_cfg = param_cfg.getCalibCfg();
-    const auto layout = TLayout::fromCfgAndImgsize(calib_cfg, param_cfg.getImgSize());
+    auto param_cfg = TParamConfig::fromConfigMap(cfg_map);
 
-    const auto dstdir = fs::path{param_cfg.getDstPattern()}.parent_path();
+    const auto& calib_cfg = param_cfg.getCalibCfg();
+    const auto& generic_cfg = param_cfg.getGenericCfg();
+    const auto& spec_cfg = param_cfg.getSpecificCfg();
+    const auto layout = TLayout::fromCfgAndImgsize(calib_cfg, spec_cfg.getImgSize());
+
+    const auto dstdir = fs::path{generic_cfg.getDstPattern()}.parent_path();
     fs::create_directories(dstdir);
 
-    const cv::Range range = param_cfg.getRange();
+    const cv::Range range = generic_cfg.getRange();
     for (int i = range.start; i <= range.end; i++) {
-        const auto srcpath = ParamConfig::fmtSrcPath(param_cfg, i);
+        const auto srcpath = generic_cfg.fmtSrcPath(i);
 
         const cv::Mat& src = cv::imread(srcpath.string());
-        const cv::Mat transposed_src = TLayout::procImg(layout, src);
+        const cv::Mat transposed_src = layout.procImg(src);
 
-        const cv::Mat dst = mca::preprocess(layout, transposed_src, param_cfg.getCropRatio());
+        const double crop_ratio = std::stod(cfg_map.getMap().at("crop_ratio"));
+        const cv::Mat dst = mca::proc::preprocess(layout, transposed_src, crop_ratio);
 
-        const auto dstpath = ParamConfig::fmtDstPath(param_cfg, i);
+        const auto dstpath = generic_cfg.fmtDstPath(i);
         cv::imwrite(dstpath.string(), dst);
     }
 }
@@ -52,11 +54,13 @@ int main(int argc, char* argv[])
     }
 
     const auto& param_file_path = program.get<std::string>("param_file_path");
-    const auto common_cfg = tcfg::CommonParamConfig::fromPath(param_file_path);
+    const auto cfg_map = tlct::ConfigMap::fromPath(param_file_path);
 
-    if (common_cfg.getPipelineType() == tcfg::PipelineType::RLC) {
-        mainProc<tcfg::raytrix::Layout>(common_cfg);
+    if (cfg_map.getPipelineType() == tlct::PipelineType::RLC) {
+        namespace tn = tlct::raytrix;
+        mainProc<tn::ParamConfig, tn::Layout>(cfg_map);
     } else {
-        mainProc<tcfg::tspc::Layout>(common_cfg);
+        namespace tn = tlct::tspc;
+        mainProc<tn::ParamConfig, tn::Layout>(cfg_map);
     }
 }

@@ -9,12 +9,10 @@
 
 #include "mca/common/defines.h"
 
-namespace mca::dbg {
+namespace mca::_dbg {
 
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
-
-namespace _hp {
 
 static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter)
 {
@@ -28,8 +26,6 @@ static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double d
                cv::LineTypes::LINE_AA);
 }
 
-} // namespace _hp
-
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
 inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv::Mat& dst)
@@ -39,7 +35,7 @@ inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
             const cv::Point2d micenter = layout.getMICenter(row, col);
-            _hp::dbgDrawCircle(dst, micenter, layout.getDiameter());
+            dbgDrawCircle(dst, micenter, layout.getDiameter());
         }
     }
 }
@@ -70,12 +66,12 @@ inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, in
             }
 
             const cv::Point2d micenter = layout.getMICenter(row, col);
-            _hp::dbgDrawCircle(dst, micenter, layout.getDiameter());
+            dbgDrawCircle(dst, micenter, layout.getDiameter());
 
             for (int view_shift_x = -view_shift; view_shift_x <= view_shift; view_shift_x++) {
                 for (int view_shift_y = -view_shift; view_shift_y <= view_shift; view_shift_y++) {
                     cv::Point2i shift{view_shift_x, view_shift_y};
-                    _hp::dbgDrawSoildCircle(dst, micenter + static_cast<cv::Point2d>(shift), patch_size, color);
+                    dbgDrawSoildCircle(dst, micenter + static_cast<cv::Point2d>(shift), patch_size, color);
                 }
             }
         }
@@ -86,5 +82,16 @@ template MCA_API void dbgDrawUsedArea(const tcfg::tspc::Layout& layout, const cv
                                       cv::Mat& dst);
 template MCA_API void dbgDrawUsedArea(const tcfg::raytrix::Layout& layout, const cv::Mat& patchsizes, int view_num,
                                       cv::Mat& dst);
+
+} // namespace mca::_dbg
+
+namespace mca::dbg {
+
+namespace _priv = mca::_dbg;
+
+using _priv::dbgDrawCircle;
+using _priv::dbgDrawMicroImageEdges;
+using _priv::dbgDrawSoildCircle;
+using _priv::dbgDrawUsedArea;
 
 } // namespace mca::dbg

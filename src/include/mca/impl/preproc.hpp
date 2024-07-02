@@ -9,10 +9,10 @@
 #include <tlct/config.hpp>
 #include <tlct/helper/static_math.hpp>
 
+#include "helper.hpp"
 #include "mca/common/defines.h"
-#include "mca/helper.hpp"
 
-namespace mca {
+namespace mca::_proc {
 
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
@@ -33,8 +33,8 @@ inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst,
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
         for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
             const cv::Point2d micenter = layout.getMICenter(row, col);
-            src_roi_image = _hp::getRoiImageByCenter(src, micenter, block_width);
-            dst_roi_image = _hp::getRoiImageByLeftupCorner(canvas, cv::Point(col, row) * block_width_i, block_width);
+            src_roi_image = getRoiImageByCenter(src, micenter, block_width);
+            dst_roi_image = getRoiImageByLeftupCorner(canvas, cv::Point(col, row) * block_width_i, block_width);
             src_roi_image.copyTo(dst_roi_image);
         }
     }
@@ -63,4 +63,13 @@ inline cv::Mat preprocess(const TLayout& layout, const cv::Mat& src, const doubl
 template MCA_API cv::Mat preprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
 template MCA_API cv::Mat preprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
-} // namespace mca
+} // namespace mca::_proc
+
+namespace mca::proc {
+
+namespace _priv = mca::_proc;
+
+using _priv::preprocess;
+using _priv::preprocess_;
+
+} // namespace mca::proc

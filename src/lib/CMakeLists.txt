@@ -9,7 +9,11 @@ else ()
         set(MCA_LIB_TYPE "STATIC")
     endif ()
     set(MCA_LIB_DEP_SCOPE "PUBLIC")
+
     set(MCA_LIB_SRCS "lib.cpp")
+    if (PUGIXML_HEADER_ONLY)
+        list(APPEND MCA_LIB_SRCS "${pugixml_SOURCE_DIR}/src/pugixml.cpp")
+    endif ()
 endif ()
 
 set(MCA_LIB_NAME mca)
@@ -19,6 +23,7 @@ set_target_properties(${MCA_LIB_NAME} PROPERTIES
         SOVERSION ${MCA_VERSION}
         DEBUG_POSTFIX "-${MCA_VERSION}d"
         RELEASE_POSTFIX "-${MCA_VERSION}")
+target_compile_features(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE} cxx_std_20)
 target_compile_definitions(${MCA_LIB_NAME} PRIVATE ${MCA_LIB_COMPILE_DEFS})
 target_include_directories(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE}
         ${OpenCV_INCLUDE_DIR}

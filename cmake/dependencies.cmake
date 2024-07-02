@@ -2,33 +2,26 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED core imgcodecs imgproc)
 
-set(TLCT_HEADER_ONLY ON CACHE BOOL "")
+set(MCA_TLCT_PATH "https://github.com/SIGS-TZ/TLCT/archive/refs/tags/v0.14.0.tar.gz" CACHE STRING
+        "Specifies the path of TLCT")
+
+set(TLCT_HEADER_ONLY ${MCA_HEADER_ONLY} CACHE BOOL "")
+set(TLCT_BUILD_SHARED_LIBS ${MCA_BUILD_SHARED_LIBS} CACHE BOOL "")
 FetchContent_Declare(
         tlct
-        GIT_REPOSITORY "https://github.com/SIGS-TZ/TLCT.git"
-        GIT_TAG v0.10.2
+        DOWNLOAD_EXTRACT_TIMESTAMP ON
+        URL ${MCA_TLCT_PATH}
 )
 FetchContent_MakeAvailable(tlct)
 
-FetchContent_Declare(
-        argparse
-        GIT_REPOSITORY "https://github.com/p-ranav/argparse.git"
-        GIT_TAG v3.0
-)
-FetchContent_MakeAvailable(argparse)
-
-if (MCA_BUILD_TESTS)
+if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.1.tar.gz" CACHE STRING
+            "Specifies the path of argparse")
+    set(TLCT_ARGPARSE_PATH ${MCA_ARGPARSE_PATH} CACHE STRING "")
     FetchContent_Declare(
-            googletest
-            GIT_REPOSITORY https://github.com/google/googletest.git
-            GIT_TAG v1.14.0
+            argparse
+            DOWNLOAD_EXTRACT_TIMESTAMP ON
+            URL ${MCA_ARGPARSE_PATH}
     )
-
-    set(BUILD_GMOCK OFF CACHE INTERNAL "" FORCE)
-    set(GTEST_LINKED_AS_SHARED_LIBRARY 1 CACHE INTERNAL "" FORCE)
-    set(gtest_force_shared_crt ON CACHE INTERNAL "" FORCE)
-    FetchContent_MakeAvailable(googletest)
-
-    enable_testing()
-    include(GoogleTest)
+    FetchContent_MakeAvailable(argparse)
 endif ()
