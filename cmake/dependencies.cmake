@@ -2,7 +2,7 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED core imgcodecs imgproc)
 
-set(TLCT_HEADER_ONLY ON CACHE INTERNAL "" FORCE)
+set(TLCT_HEADER_ONLY ON CACHE BOOL "")
 FetchContent_Declare(
         tlct
         GIT_REPOSITORY "https://github.com/SIGS-TZ/TLCT.git"
