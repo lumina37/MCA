@@ -17,10 +17,8 @@ void mainProc(const tlct::ConfigMap& cfg_map)
 {
     auto param_cfg = TParamConfig::fromConfigMap(cfg_map);
 
-    const auto& calib_cfg = param_cfg.getCalibCfg();
     const auto& generic_cfg = param_cfg.getGenericCfg();
-    const auto& spec_cfg = param_cfg.getSpecificCfg();
-    const auto layout = TLayout::fromCfgAndImgsize(calib_cfg, spec_cfg.getImgSize());
+    const auto layout = TLayout::fromParamConfig(param_cfg);
 
     const auto dstdir = fs::path{generic_cfg.getDstPattern()}.parent_path();
     fs::create_directories(dstdir);

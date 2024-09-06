@@ -6,11 +6,13 @@
 
 namespace tn = tlct::tspc;
 
-int main()
+int main(int argc, char* argv[])
 {
+    const auto cfg_map = tlct::ConfigMap::fromPath(argv[1]);
+    const auto param_cfg = tn::ParamConfig::fromConfigMap(cfg_map);
+    const auto layout = tn::Layout::fromParamConfig(param_cfg);
+
     auto src = cv::imread("src_square.png");
-    const auto calib_cfg = tn::CalibConfig::fromXMLPath("Boys.xml");
-    const auto layout = tn::Layout::fromCfgAndImgsize(calib_cfg, src.size());
 
     cv::Mat dst;
     mca::dbg::dbgDrawMicroImageEdges(layout, src, dst);
