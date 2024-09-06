@@ -1,6 +1,6 @@
 # MCA
 
-This is the official implementation of *Microimage Cropping and Aligning*.
+The official implementation of *Microimage Cropping and Aligning*.
 
 ## Usage
 
@@ -13,7 +13,7 @@ mca-postproc [param_file_path]
 
 ### Options
 
-+ `camType (int)` The image is captured by Raytrix (0) or TSPC (1).
++ `pipeline (int)` The image is captured by Raytrix (0) or TSPC (1).
 + `Calibration_xml (str)` The path of the calibration file.
 + `RawImage_Path (str)` The glob pattern of the input images in C-printf style, filled with the frame index.
 + `Output_Path (str)` The glob pattern of the output images in C-printf style, filled with the frame index.
@@ -26,12 +26,12 @@ mca-postproc [param_file_path]
 ### Example
 
 ```
-camType            1
+pipeline           1
 Calibration_xml    Boys.xml
-RawImage_Path      Boys-pre/frame#%03d.png
-Output_Path        Boys-post
+RawImage_Path      Boys/src/image_%d.png
+Output_Path        Boys/dst
 start_frame        1
-end_frame          1
+end_frame          300
 height             3068
 width              4080
 crop_ratio         0.7071067811865475
