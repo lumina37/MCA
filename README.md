@@ -37,6 +37,10 @@ width              4080
 crop_ratio         0.7071067811865475
 ```
 
+### Charset
+
+Must be utf-8!
+
 ## Compile Options
 
 See `cmake/options.cmake`
