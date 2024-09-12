@@ -93,9 +93,9 @@ template MCA_API cv::Mat postprocess(const tcfg::raytrix::Layout& layout, const 
 
 namespace mca::proc {
 
-namespace _priv = mca::_proc;
+namespace _ = _proc;
 
-using _priv::postprocess;
-using _priv::postprocess_;
+using _::postprocess;
+using _::postprocess_;
 
 } // namespace mca::proc

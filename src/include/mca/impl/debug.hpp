@@ -87,11 +87,11 @@ template MCA_API void dbgDrawUsedArea(const tcfg::raytrix::Layout& layout, const
 
 namespace mca::dbg {
 
-namespace _priv = mca::_dbg;
+namespace _ = _dbg;
 
-using _priv::dbgDrawCircle;
-using _priv::dbgDrawMicroImageEdges;
-using _priv::dbgDrawSoildCircle;
-using _priv::dbgDrawUsedArea;
+using _::dbgDrawCircle;
+using _::dbgDrawMicroImageEdges;
+using _::dbgDrawSoildCircle;
+using _::dbgDrawUsedArea;
 
 } // namespace mca::dbg

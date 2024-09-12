@@ -67,9 +67,9 @@ template MCA_API cv::Mat preprocess(const tcfg::raytrix::Layout& layout, const c
 
 namespace mca::proc {
 
-namespace _priv = mca::_proc;
+namespace _ = _proc;
 
-using _priv::preprocess;
-using _priv::preprocess_;
+using _::preprocess;
+using _::preprocess_;
 
 } // namespace mca::proc
