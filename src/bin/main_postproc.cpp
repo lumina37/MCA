@@ -40,8 +40,9 @@ void mainProc(const tlct::ConfigMap& cfg_map)
 
 int main(int argc, char* argv[])
 {
-    argparse::ArgumentParser program("MCA", MCA_VERSION, argparse::default_arguments::all);
+    argparse::ArgumentParser program("MCA", MCA_GIT_TAG, argparse::default_arguments::all);
     program.add_argument("param_file_path").help("the MCA parameter file path").required();
+    program.add_epilog(MCA_EPILOG);
 
     try {
         program.parse_args(argc, argv);

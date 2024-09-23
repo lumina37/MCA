@@ -5,5 +5,20 @@ function(copy_dlls_if_needed name)
     endif ()
 endfunction()
 
+find_package(Git QUIET)
+if (GIT_FOUND)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --tags
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE MCA_GIT_TAG
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif ()
+if (NOT TLCT_GIT_TAG)
+    set(TLCT_GIT_TAG "unknown")
+endif ()
+
+set(MCA_EPILOG "{tag:${MCA_GIT_TAG}} by [${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}]")
+
 set(MCA_CONFIGURE_DIR "${PROJECT_SOURCE_DIR}/src/include/mca/common")
 configure_file("${MCA_CONFIGURE_DIR}/cmake.h.in" "${MCA_CONFIGURE_DIR}/cmake.h" @ONLY)
