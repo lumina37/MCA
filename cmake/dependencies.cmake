@@ -2,7 +2,7 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED imgcodecs imgproc)
 
-set(MCA_TLCT_PATH "https://github.com/SIGS-TZ/TLCT/archive/refs/tags/v0.14.4.tar.gz" CACHE STRING
+set(MCA_TLCT_PATH "https://github.com/SIGS-TZ/TLCT/archive/refs/tags/v0.15.0.tar.gz" CACHE STRING
         "Specifies the path of TLCT")
 
 set(TLCT_HEADER_ONLY ${MCA_HEADER_ONLY} CACHE BOOL "")

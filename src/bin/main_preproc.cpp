@@ -8,29 +8,30 @@
 #include "mca/impl/preproc.hpp"
 
 namespace fs = std::filesystem;
-namespace tcpt = tlct::cfg::concepts;
 
-template <typename TParamConfig, typename TLayout>
-    requires tcpt::CSpecificConfig<typename TParamConfig::TSpecificConfig> &&
-             tcpt::CCalibConfig<typename TParamConfig::TCalibConfig> && tcpt::CLayout<TLayout>
+template <typename TLayout>
+    requires tlct::cfg::concepts::CLayout<TLayout>
 void mainProc(const tlct::ConfigMap& cfg_map)
 {
+    using TParamConfig = tlct::_cfg::ParamConfig_<TLayout>;
+
     auto param_cfg = TParamConfig::fromConfigMap(cfg_map);
 
     const auto& generic_cfg = param_cfg.getGenericCfg();
-    const auto layout = TLayout::fromParamConfig(param_cfg);
+    const auto layout = TLayout::fromCalibAndSpecConfig(param_cfg.getCalibCfg(), param_cfg.getSpecificCfg());
 
     const auto dstdir = fs::path{generic_cfg.getDstPattern()}.parent_path();
     fs::create_directories(dstdir);
 
+    cv::Mat transposed_src;
     const cv::Range range = generic_cfg.getRange();
     for (int i = range.start; i <= range.end; i++) {
         const auto srcpath = generic_cfg.fmtSrcPath(i);
 
         const cv::Mat& src = cv::imread(srcpath.string());
-        const cv::Mat transposed_src = layout.procImg(src);
+        layout.processInto(src, transposed_src);
 
-        const double crop_ratio = std::stod(cfg_map.getMap().at("crop_ratio"));
+        const double crop_ratio = cfg_map.get<double, "crop_ratio">();
         const cv::Mat dst = mca::proc::preprocess(layout, transposed_src, crop_ratio);
 
         const auto dstpath = generic_cfg.fmtDstPath(i);
@@ -57,9 +58,9 @@ int main(int argc, char* argv[])
 
     if (cfg_map.getPipelineType() == tlct::PipelineType::RLC) {
         namespace tn = tlct::raytrix;
-        mainProc<tn::ParamConfig, tn::Layout>(cfg_map);
+        mainProc<tn::Layout>(cfg_map);
     } else {
         namespace tn = tlct::tspc;
-        mainProc<tn::ParamConfig, tn::Layout>(cfg_map);
+        mainProc<tn::Layout>(cfg_map);
     }
 }

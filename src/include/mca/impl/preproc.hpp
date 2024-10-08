@@ -7,7 +7,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
-#include <tlct/helper/static_math.hpp>
+#include <tlct/helper/constexpr/math.hpp>
 
 #include "helper.hpp"
 #include "mca/common/defines.h"
