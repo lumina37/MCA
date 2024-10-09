@@ -1,3 +1,4 @@
+#include <array>
 #include <filesystem>
 
 #include <argparse/argparse.hpp>
@@ -9,11 +10,10 @@
 
 namespace fs = std::filesystem;
 
-template <typename TLayout>
-    requires tlct::cfg::concepts::CLayout<TLayout>
+template <tlct::concepts::CLayout TLayout>
 void mainProc(const tlct::ConfigMap& cfg_map)
 {
-    using TParamConfig = tlct::_cfg::ParamConfig_<TLayout>;
+    using TParamConfig = tlct::cfg::ParamConfig_<TLayout>;
 
     auto param_cfg = TParamConfig::fromConfigMap(cfg_map);
 
@@ -31,7 +31,7 @@ void mainProc(const tlct::ConfigMap& cfg_map)
         const cv::Mat& src = cv::imread(srcpath.string());
         layout.processInto(src, transposed_src);
 
-        const double crop_ratio = cfg_map.get<double, "crop_ratio">();
+        const auto crop_ratio = cfg_map.get<double, "crop_ratio">();
         const cv::Mat dst = mca::proc::postprocess(layout, transposed_src, crop_ratio);
 
         const auto dstpath = generic_cfg.fmtDstPath(i);
@@ -56,11 +56,10 @@ int main(int argc, char* argv[])
     const auto& param_file_path = program.get<std::string>("param_file_path");
     const auto cfg_map = tlct::ConfigMap::fromPath(param_file_path);
 
-    if (cfg_map.getPipelineType() == tlct::PipelineType::RLC) {
-        namespace tn = tlct::raytrix;
-        mainProc<tn::Layout>(cfg_map);
-    } else {
-        namespace tn = tlct::tspc;
-        mainProc<tn::Layout>(cfg_map);
-    }
+    constexpr std::array<void (*)(const tlct::ConfigMap&), tlct::PIPELINE_COUNT> handlers{
+        mainProc<tlct::raytrix::Layout>,
+        mainProc<tlct::tspc::Layout>,
+    };
+    const auto& handler = handlers[cfg_map.getPipelineType()];
+    handler(cfg_map);
 }
