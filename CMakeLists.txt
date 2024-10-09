@@ -2,7 +2,10 @@
 
 include(cmake/policies.cmake)
 
-project(MCA VERSION 0.3.3 LANGUAGES CXX)
+project(MCA
+        VERSION 0.3.4
+        LANGUAGES CXX
+)
 
 include(cmake/options.cmake)
 include(cmake/dependencies.cmake)
