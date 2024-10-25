@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 {
     argparse::ArgumentParser program("MCA", MCA_GIT_TAG, argparse::default_arguments::all);
     program.add_argument("param_file_path").help("the MCA parameter file path").required();
-    program.add_description(MCA_COMPILE_INFO);
+    program.add_epilog(MCA_COMPILE_INFO);
 
     try {
         program.parse_args(argc, argv);
