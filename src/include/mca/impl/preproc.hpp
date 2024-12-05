@@ -22,7 +22,7 @@ template <typename TLayout>
 inline void preprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     const double block_width = layout.getDiameter() * crop_ratio;
-    const int block_width_i = static_cast<int>(std::ceil(block_width));
+    const int block_width_i = (int)std::round(block_width);
 
     const int canvas_width = tlct::_hp::alignUp<2>(layout.getMIMaxCols() * block_width_i);
     const int canvas_height = tlct::_hp::alignUp<2>(layout.getMIRows() * block_width_i);

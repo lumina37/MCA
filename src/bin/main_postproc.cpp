@@ -1,5 +1,7 @@
 #include <array>
+#include <cstdio>
 #include <filesystem>
+#include <numbers>
 
 #include <argparse/argparse.hpp>
 #include <opencv2/core.hpp>
@@ -20,28 +22,30 @@ void mainProc(const tlct::ConfigMap& cfg_map)
     const auto& generic_cfg = param_cfg.getGenericCfg();
     const auto layout = TLayout::fromCalibAndSpecConfig(param_cfg.getCalibCfg(), param_cfg.getSpecificCfg());
 
-    const auto dstdir = fs::path{generic_cfg.getDstPattern()}.parent_path();
+    const auto dstdir = generic_cfg.getDstPath().parent_path();
     fs::create_directories(dstdir);
 
     cv::Mat transposed_src;
+    const char srcpath[256]{};
+    const char dstpath[256]{};
     const cv::Range range = generic_cfg.getRange();
     for (int i = range.start; i <= range.end; i++) {
-        const auto srcpath = generic_cfg.fmtSrcPath(i);
+        sprintf((char*)srcpath, generic_cfg.getSrcPath().string().c_str(), i);
 
-        const cv::Mat& src = cv::imread(srcpath.string());
+        const cv::Mat& src = cv::imread(srcpath);
         layout.processInto(src, transposed_src);
 
-        const auto crop_ratio = cfg_map.get<double, "crop_ratio">();
+        const auto crop_ratio = cfg_map.get<"crop_ratio">(1. / std::numbers::sqrt2);
         const cv::Mat dst = mca::proc::postprocess(layout, transposed_src, crop_ratio);
 
-        const auto dstpath = generic_cfg.fmtDstPath(i);
-        cv::imwrite(dstpath.string(), dst);
+        sprintf((char*)dstpath, generic_cfg.getDstPath().string().c_str(), i);
+        cv::imwrite(dstpath, dst);
     }
 }
 
 int main(int argc, char* argv[])
 {
-    argparse::ArgumentParser program("MCA", MCA_GIT_TAG, argparse::default_arguments::all);
+    argparse::ArgumentParser program("MCA-PostProc", mca_VERSION, argparse::default_arguments::all);
     program.add_argument("param_file_path").help("the MCA parameter file path").required();
     program.add_epilog(MCA_COMPILE_INFO);
 

@@ -31,8 +31,8 @@ MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::
     cv::Mat canvas = cv::Mat::zeros(layout.getImgSize() + cv::Size(border, border) * 2, src.type());
 
     const double src_block_width = layout.getDiameter() * crop_ratio;
-    const int src_block_width_i = (int)std::ceil(src_block_width);
-    const int dst_block_width_i = (int)std::ceil(layout.getDiameter());
+    const int src_block_width_i = (int)std::round(src_block_width);
+    const int dst_block_width_i = (int)std::round(layout.getDiameter());
 
     cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
     cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, src.type());
@@ -45,10 +45,10 @@ MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::
             src_roi_image = getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
             dst_roi_image = getRoiImageByCenter(canvas, micenter, layout.getDiameter());
 
-            const int dst_ltop_x = (int)(micenter.x - layout.getDiameter() / 2.0);
-            const int dst_ltop_y = (int)(micenter.y - layout.getDiameter() / 2.0);
-            const int src_ltop_x = (int)(micenter.x - src_block_width / 2.0);
-            const int src_ltop_y = (int)(micenter.y - src_block_width / 2.0);
+            const int dst_ltop_x = (int)std::round(micenter.x - layout.getDiameter() / 2.0);
+            const int dst_ltop_y = (int)std::round(micenter.y - layout.getDiameter() / 2.0);
+            const int src_ltop_x = (int)std::round(micenter.x - src_block_width / 2.0);
+            const int src_ltop_y = (int)std::round(micenter.y - src_block_width / 2.0);
 
             const int left_border_width = src_ltop_x - dst_ltop_x;
             const int top_border_width = src_ltop_y - dst_ltop_y;

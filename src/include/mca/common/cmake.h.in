@@ -3,8 +3,8 @@
 #cmakedefine MCA_HEADER_ONLY
 #cmakedefine MCA_BUILD_SHARED_LIBS
 
-#cmakedefine MCA_VERSION_MAJOR @MCA_VERSION_MAJOR@
-#cmakedefine MCA_VERSION_MINOR @MCA_VERSION_MINOR@
-#cmakedefine MCA_VERSION_PATCH @MCA_VERSION_PATCH@
-#cmakedefine MCA_GIT_TAG "@MCA_GIT_TAG@"
+#cmakedefine mca_VERSION_MAJOR @mca_VERSION_MAJOR@
+#cmakedefine mca_VERSION_MINOR @mca_VERSION_MINOR@
+#cmakedefine mca_VERSION_PATCH @mca_VERSION_PATCH@
+#cmakedefine mca_VERSION "@mca_VERSION@"
 #cmakedefine MCA_COMPILE_INFO "@MCA_COMPILE_INFO@"

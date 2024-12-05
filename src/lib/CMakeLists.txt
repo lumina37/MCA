@@ -18,18 +18,21 @@ endif ()
 set(MCA_LIB_NAME mca)
 add_library(${MCA_LIB_NAME} ${MCA_LIB_TYPE} ${MCA_LIB_SRCS})
 set_target_properties(${MCA_LIB_NAME} PROPERTIES
-        VERSION ${MCA_VERSION}
-        SOVERSION ${MCA_VERSION}
-        DEBUG_POSTFIX "-${MCA_VERSION}d"
-        RELEASE_POSTFIX "-${MCA_VERSION}")
+        VERSION ${mca_VERSION}
+        SOVERSION ${mca_VERSION}
+        DEBUG_POSTFIX "-${mca_VERSION}d"
+        RELEASE_POSTFIX "-${mca_VERSION}"
+)
 target_compile_features(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE} cxx_std_20)
 target_include_directories(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE}
         ${OpenCV_INCLUDE_DIR}
         "${tlct_SOURCE_DIR}/src/include"
-        "${PROJECT_SOURCE_DIR}/src/include")
+        "${PROJECT_SOURCE_DIR}/src/include"
+)
 target_link_libraries(${MCA_LIB_NAME} ${MCA_LIB_DEP_SCOPE}
         ${OpenCV_LIBS}
-        tlct)
+        tlct::lib
+)
 
 if (NOT MCA_HEADER_ONLY AND MCA_BUILD_SHARED_LIBS)
     target_compile_definitions(${MCA_LIB_NAME} PRIVATE "_MCA_BUILD_LIBS")
