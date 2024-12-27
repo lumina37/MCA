@@ -1,6 +1,6 @@
 #include <array>
 #include <filesystem>
-#include <iostream>
+#include <sstream>
 
 #include <argparse/argparse.hpp>
 #include <opencv2/core.hpp>
@@ -35,14 +35,13 @@ static inline void mainProc(const argparse::ArgumentParser& parser, const tlct::
         proc_fn = mca::proc::preprocessInto<TLayout>;
     }
 
-    std::cout << "The output size is: " << dst_size << std::endl;
+    const auto& dstdir = cli_cfg.path.dst;
+    fs::create_directories(dstdir);
 
-    const auto& dstdir = cli_cfg.path.dst.parent_path();
-    if (!dstdir.empty()) {
-        fs::create_directories(dstdir);
-    }
-
-    auto yuv_writer = tlct::io::Yuv420Writer::fromPath(cli_cfg.path.dst);
+    std::stringstream filename_s;
+    filename_s << "mca-" << dst_size.width << 'x' << dst_size.height << ".yuv";
+    fs::path saveto_path = dstdir / filename_s.str();
+    auto yuv_writer = tlct::io::Yuv420Writer::fromPath(saveto_path);
     auto yuv_reader = tlct::io::Yuv420Reader::fromPath(cli_cfg.path.src, src_size.width, src_size.height);
     yuv_reader.skip(cli_cfg.range.begin);
 

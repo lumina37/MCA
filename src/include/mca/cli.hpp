@@ -22,7 +22,7 @@ namespace fs = std::filesystem;
     parser->add_argument("calib_file").help("path of the `calib.cfg`").required();
     parser->add_group("I/O");
     parser->add_argument("-i", "--src").help("input yuv420p file").required();
-    parser->add_argument("-o", "--dst").help("output yuv420p file").required();
+    parser->add_argument("-o", "--dst").help("output directory").required();
     parser->add_group("Frame Range");
     parser->add_argument("-b", "--begin")
         .help("the index of the start frame, left contains, starts from zero")

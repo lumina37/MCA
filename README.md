@@ -2,48 +2,16 @@
 
 The official implementation of *Microimage Cropping and Aligning*.
 
-## Usage
+## Recommend Calibration Configs
 
-```shell
-mca-preproc [param_file_path]
-mca-postproc [param_file_path]
-```
+We've already fine-tuned the calibration configs for all CTC sequences. You can download
+them [here](https://github.com/lumina37/TLCT-test-data/tree/master/recommend).
 
-## Configuration File Format
+## Tested Complier Version
 
-### Options
-
-+ `pipeline (int)` The image is captured by Raytrix (0) or TSPC (1).
-+ `Calibration_xml (str)` The path of the calibration file.
-+ `RawImage_Path (str)` The glob pattern of the input images in C-printf style, filled with the frame index.
-+ `Output_Path (str)` The glob pattern of the output images in C-printf style, filled with the frame index.
-+ `start_frame (int)` The index of the start frame, left contains.
-+ `end_frame (int)` The index of the end frame, right contains.
-+ `width (int)` The pixel width of input image.
-+ `height (int)` The pixel height of input image.
-+ `crop_ratio (float)` The ratio between cropping width and diameter of Micro Image.
-
-### Example
-
-```
-pipeline           1
-Calibration_xml    Boys.xml
-RawImage_Path      Boys/src/image_%d.png
-Output_Path        Boys/dst
-start_frame        1
-end_frame          300
-height             3068
-width              4080
-crop_ratio         0.7071067811865475
-```
-
-### Charset
-
-Must be utf-8!
-
-## Compile Options
-
-See `cmake/options.cmake`
++ gcc v13
++ clang v18
++ msvc v19.29* (*hard to test different version of msvc)
 
 ## Related Document
 
