@@ -40,9 +40,6 @@ inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv
     }
 }
 
-template MCA_API void dbgDrawMicroImageEdges(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst);
-template MCA_API void dbgDrawMicroImageEdges(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst);
-
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
 inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst)
@@ -77,11 +74,6 @@ inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, in
         }
     }
 }
-
-template MCA_API void dbgDrawUsedArea(const tcfg::tspc::Layout& layout, const cv::Mat& patchsizes, int view_num,
-                                      cv::Mat& dst);
-template MCA_API void dbgDrawUsedArea(const tcfg::raytrix::Layout& layout, const cv::Mat& patchsizes, int view_num,
-                                      cv::Mat& dst);
 
 } // namespace mca::_dbg
 

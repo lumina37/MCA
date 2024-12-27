@@ -8,8 +8,8 @@
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 
-#include "helper.hpp"
 #include "mca/common/defines.h"
+#include "mca/proc/helper.hpp"
 
 namespace mca::_proc {
 
@@ -24,7 +24,7 @@ static inline void genCircleMask(cv::Mat& dst, double diameter)
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
+static inline void postprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
 {
     const int border = (int)(layout.getDiameter() / 2.0);
     const cv::Point2d pos_shift{(double)border, (double)border};
@@ -64,38 +64,7 @@ MCA_API inline void postprocess_(const TLayout& layout, const cv::Mat& src, cv::
     }
 
     const cv::Mat canvas_withoutborder = canvas({border, canvas.rows - border}, {border, canvas.cols - border});
-
-    if (layout.getRotation() != 0.0) {
-        cv::transpose(canvas_withoutborder, dst);
-    } else {
-        dst = std::move(canvas_withoutborder);
-    }
+    canvas_withoutborder.copyTo(dst);
 }
-
-template MCA_API void postprocess_(const tcfg::tspc::Layout& layout, const cv::Mat& src, cv::Mat& dst,
-                                   const double crop_ratio);
-template MCA_API void postprocess_(const tcfg::raytrix::Layout& layout, const cv::Mat& src, cv::Mat& dst,
-                                   const double crop_ratio);
-
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-MCA_API inline cv::Mat postprocess(const TLayout& layout, const cv::Mat& src, const double crop_ratio)
-{
-    cv::Mat dst;
-    postprocess_(layout, src, dst, crop_ratio);
-    return dst;
-}
-
-template MCA_API cv::Mat postprocess(const tcfg::tspc::Layout& layout, const cv::Mat& src, const double crop_ratio);
-template MCA_API cv::Mat postprocess(const tcfg::raytrix::Layout& layout, const cv::Mat& src, const double crop_ratio);
 
 } // namespace mca::_proc
-
-namespace mca::proc {
-
-namespace _ = _proc;
-
-using _::postprocess;
-using _::postprocess_;
-
-} // namespace mca::proc

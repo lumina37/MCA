@@ -1,8 +1,5 @@
 #pragma once
 
-#cmakedefine MCA_HEADER_ONLY
-#cmakedefine MCA_BUILD_SHARED_LIBS
-
 #cmakedefine mca_VERSION_MAJOR @mca_VERSION_MAJOR@
 #cmakedefine mca_VERSION_MINOR @mca_VERSION_MINOR@
 #cmakedefine mca_VERSION_PATCH @mca_VERSION_PATCH@

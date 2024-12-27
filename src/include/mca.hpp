@@ -1,3 +1,12 @@
 #pragma once
 
-#include "mca/impl.hpp"
+#include "mca/cli.hpp"
+#include "mca/debug.hpp"
+#include "mca/proc.hpp"
+
+namespace mca {
+
+using cfg::CliConfig;
+using cfg::makeParser;
+
+} // namespace mca

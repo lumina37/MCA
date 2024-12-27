@@ -6,16 +6,13 @@ cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0091 NEW)
 
 project(mca
-        VERSION 0.3.5.0
+        VERSION 0.4.0.0
         LANGUAGES CXX
 )
 
 # Compile Options
 include(CMakeDependentOption)
 
-option(MCA_HEADER_ONLY "Enable the header-only mode" OFF)
-cmake_dependent_option(MCA_BUILD_SHARED_LIBS "Specifies the type of MCA to build" ON
-        "NOT MCA_HEADER_ONLY AND BUILD_SHARED_LIBS" OFF)
 cmake_dependent_option(MCA_ENABLE_LTO "Enable full link-time-optimizations (LTO)" OFF
         "CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR" OFF)
 
@@ -27,9 +24,9 @@ endif ()
 # Dependencies
 include(FetchContent)
 
-find_package(OpenCV REQUIRED imgcodecs imgproc)
+find_package(OpenCV REQUIRED imgproc)
 
-set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v0.16.0.5.tar.gz" CACHE STRING
+set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.2.0.4.tar.gz" CACHE STRING
         "Specifies the path of TLCT")
 
 set(TLCT_HEADER_ONLY ${MCA_HEADER_ONLY} CACHE BOOL "")
@@ -41,17 +38,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tlct)
 
-if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.1.tar.gz" CACHE STRING
-            "Specifies the path of argparse")
-    set(TLCT_ARGPARSE_PATH ${MCA_ARGPARSE_PATH} CACHE STRING "")
-    FetchContent_Declare(
-            argparse
-            DOWNLOAD_EXTRACT_TIMESTAMP ON
-            URL ${MCA_ARGPARSE_PATH}
-    )
-    FetchContent_MakeAvailable(argparse)
-endif ()
+set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.1.tar.gz" CACHE STRING
+        "Specifies the path of argparse")
+set(TLCT_ARGPARSE_PATH ${MCA_ARGPARSE_PATH} CACHE STRING "")
+FetchContent_Declare(
+        argparse
+        DOWNLOAD_EXTRACT_TIMESTAMP ON
+        URL ${MCA_ARGPARSE_PATH}
+)
+FetchContent_MakeAvailable(argparse)
 
 # Helper
 function(copy_dlls_if_needed name)
