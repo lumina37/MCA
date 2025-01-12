@@ -49,7 +49,7 @@ static inline void mainProc(const argparse::ArgumentParser& parser, const tlct::
     auto dst_frame = tlct::io::Yuv420Frame{dst_size};
 
     cv::Mat upsampled_uv, transposed_y, transposed_uv, processed;
-    for (int i = cli_cfg.range.begin; i <= cli_cfg.range.end; i++) {
+    for (int i = cli_cfg.range.begin; i < cli_cfg.range.end; i++) {
         yuv_reader.read_into(src_frame);
 
         constexpr int UV_UPSAMPLE = 2;
