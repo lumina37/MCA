@@ -14,8 +14,7 @@ namespace _cfg {
 
 namespace fs = std::filesystem;
 
-[[nodiscard]] static inline std::unique_ptr<argparse::ArgumentParser> makeParser() noexcept
-{
+[[nodiscard]] static inline std::unique_ptr<argparse::ArgumentParser> makeParser() noexcept {
     auto parser = std::make_unique<argparse::ArgumentParser>("mca", "v" mca_VERSION, argparse::default_arguments::all);
 
     parser->set_usage_max_line_width(120);
@@ -68,8 +67,7 @@ struct CliConfig {
     [[nodiscard]] static inline CliConfig fromParser(const argparse::ArgumentParser& parser);
 };
 
-CliConfig CliConfig::fromParser(const argparse::ArgumentParser& parser)
-{
+CliConfig CliConfig::fromParser(const argparse::ArgumentParser& parser) {
     auto path = CliConfig::Path{parser.get<std::string>("--src"), parser.get<std::string>("--dst")};
     auto range = CliConfig::Range{parser.get<int>("--begin"), parser.get<int>("--end")};
     auto proc = CliConfig::Proc{parser.get<double>("--cropRatio"), parser.get<bool>("--post")};
@@ -77,7 +75,7 @@ CliConfig CliConfig::fromParser(const argparse::ArgumentParser& parser)
     return {std::move(path), std::move(range), std::move(proc)};
 }
 
-} // namespace _cfg
+}  // namespace _cfg
 
 namespace cfg {
 
@@ -86,6 +84,6 @@ namespace _ = _cfg;
 using _::CliConfig;
 using _::makeParser;
 
-} // namespace cfg
+}  // namespace cfg
 
-} // namespace mca
+}  // namespace mca

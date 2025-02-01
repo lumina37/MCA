@@ -12,4 +12,4 @@ using _::postprocessInto;
 using _::preprocessInto;
 using _::preprocOutputSize;
 
-} // namespace mca::proc
+}  // namespace mca::proc

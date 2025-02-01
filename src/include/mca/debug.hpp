@@ -14,22 +14,19 @@ namespace mca::_dbg {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter)
-{
+static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter) {
     cv::circle(dst, static_cast<cv::Point2i>(center), static_cast<int>(diameter / 2.0), cv::Scalar(0, 255, 0), 1,
                cv::LineTypes::LINE_AA);
 }
 
-static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double diameter, const cv::Scalar& color)
-{
+static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double diameter, const cv::Scalar& color) {
     cv::circle(dst, static_cast<cv::Point2i>(center), static_cast<int>(diameter / 2.0), color, cv::LineTypes::FILLED,
                cv::LineTypes::LINE_AA);
 }
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv::Mat& dst)
-{
+inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv::Mat& dst) {
     dst = src.clone();
 
     for (const int row : rgs::views::iota(0, layout.getMIRows())) {
@@ -42,8 +39,7 @@ inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst)
-{
+inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst) {
     dst = cv::Mat::zeros(layout.getImgSize(), CV_8UC3);
 
     int view_shift = view_num / 2;
@@ -75,7 +71,7 @@ inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, in
     }
 }
 
-} // namespace mca::_dbg
+}  // namespace mca::_dbg
 
 namespace mca::dbg {
 
@@ -86,4 +82,4 @@ using _::dbgDrawMicroImageEdges;
 using _::dbgDrawSoildCircle;
 using _::dbgDrawUsedArea;
 
-} // namespace mca::dbg
+}  // namespace mca::dbg

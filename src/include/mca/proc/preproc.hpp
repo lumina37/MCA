@@ -19,8 +19,7 @@ namespace tcfg = tlct::cfg;
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline cv::Size preprocOutputSize(const TLayout& layout, const double crop_ratio)
-{
+static inline cv::Size preprocOutputSize(const TLayout& layout, const double crop_ratio) {
     const double block_width = layout.getDiameter() * crop_ratio;
     const int block_width_i = (int)std::round(block_width);
 
@@ -32,8 +31,7 @@ static inline cv::Size preprocOutputSize(const TLayout& layout, const double cro
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline void preprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
-{
+static inline void preprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio) {
     const double block_width = layout.getDiameter() * crop_ratio;
     const int block_width_i = (int)std::round(block_width);
     const auto& canvas_size = preprocOutputSize(layout, crop_ratio);
@@ -51,4 +49,4 @@ static inline void preprocessInto(const TLayout& layout, const cv::Mat& src, cv:
     }
 }
 
-} // namespace mca::_proc
+}  // namespace mca::_proc

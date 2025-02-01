@@ -16,16 +16,14 @@ namespace mca::_proc {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-static inline void genCircleMask(cv::Mat& dst, double diameter)
-{
+static inline void genCircleMask(cv::Mat& dst, double diameter) {
     cv::circle(dst, {dst.cols / 2, dst.rows / 2}, static_cast<int>(diameter / 2.0), cv::Scalar::all(255.0),
                cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
 template <typename TLayout>
     requires tcfg::concepts::CLayout<TLayout>
-static inline void postprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio)
-{
+static inline void postprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio) {
     const int border = (int)(layout.getDiameter() / 2.0);
     const cv::Point2d pos_shift{(double)border, (double)border};
     cv::Mat canvas = cv::Mat::zeros(layout.getImgSize() + cv::Size(border, border) * 2, src.type());
@@ -67,4 +65,4 @@ static inline void postprocessInto(const TLayout& layout, const cv::Mat& src, cv
     canvas_withoutborder.copyTo(dst);
 }
 
-} // namespace mca::_proc
+}  // namespace mca::_proc

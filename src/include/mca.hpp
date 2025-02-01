@@ -9,4 +9,4 @@ namespace mca {
 using cfg::CliConfig;
 using cfg::makeParser;
 
-} // namespace mca
+}  // namespace mca

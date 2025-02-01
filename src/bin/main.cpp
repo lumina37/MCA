@@ -11,8 +11,7 @@
 namespace fs = std::filesystem;
 
 template <tlct::concepts::CLayout TLayout>
-static inline void mainProc(const argparse::ArgumentParser& parser, const tlct::ConfigMap& map)
-{
+static inline void mainProc(const argparse::ArgumentParser& parser, const tlct::ConfigMap& map) {
     const auto& cli_cfg = mca::CliConfig::fromParser(parser);
     const auto layout = TLayout::fromCfgMap(map);
 
@@ -92,8 +91,7 @@ static inline void mainProc(const argparse::ArgumentParser& parser, const tlct::
     }
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     auto parser = mca::makeParser();
 
     try {

@@ -9,4 +9,4 @@ namespace _ = tlct::_cvt;
 using _::getRoiImageByCenter;
 using _::getRoiImageByLeftupCorner;
 
-} // namespace mca::_proc
+}  // namespace mca::_proc
