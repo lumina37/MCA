@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
         std::exit(1);
     }
 
-    constexpr std::array<void (*)(const argparse::ArgumentParser&, const tlct::ConfigMap&), 2> handlers{
+    constexpr std::array handlers{
         mainProc<tlct::raytrix::Layout>,
         mainProc<tlct::tspc::Layout>,
     };
