@@ -38,7 +38,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tlct)
 
-set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.1.tar.gz" CACHE STRING
+set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.2.tar.gz" CACHE STRING
         "Specifies the path of argparse")
 set(TLCT_ARGPARSE_PATH ${MCA_ARGPARSE_PATH} CACHE STRING "")
 FetchContent_Declare(
