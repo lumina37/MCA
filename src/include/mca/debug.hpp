@@ -1,6 +1,5 @@
 #pragma once
 
-#include <numbers>
 #include <ranges>
 
 #include <opencv2/core.hpp>

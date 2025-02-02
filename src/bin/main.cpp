@@ -1,6 +1,10 @@
 #include <array>
+#include <exception>
 #include <filesystem>
+#include <iostream>
 #include <sstream>
+#include <string>
+#include <utility>
 
 #include <argparse/argparse.hpp>
 #include <opencv2/core.hpp>

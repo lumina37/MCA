@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <cmath>
-#include <numbers>
 #include <ranges>
 
 #include <opencv2/core.hpp>
