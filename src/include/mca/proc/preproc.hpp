@@ -16,34 +16,34 @@ namespace mca::_proc {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-static inline cv::Size preprocOutputSize(const TLayout& layout, const double crop_ratio) {
-    const double block_width = layout.getDiameter() * crop_ratio;
-    const int block_width_i = (int)std::round(block_width);
+template <typename TArrange>
+    requires tcfg::concepts::CArrange<TArrange>
+static inline cv::Size preprocOutputSize(const TArrange& arrange, const float cropRatio) {
+    const float blockWidth = arrange.getDiameter() * cropRatio;
+    const int iBlockWidth = (int)std::round(blockWidth);
 
-    const int canvas_width = tlct::_hp::alignUp<2>(layout.getMIMaxCols() * block_width_i);
-    const int canvas_height = tlct::_hp::alignUp<2>(layout.getMIRows() * block_width_i);
+    const int canvasWidth = tlct::_hp::alignUp<2>(arrange.getMIMaxCols() * iBlockWidth);
+    const int canvasHeight = tlct::_hp::alignUp<2>(arrange.getMIRows() * iBlockWidth);
 
-    return {canvas_width, canvas_height};
+    return {canvasWidth, canvasHeight};
 }
 
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-static inline void preprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio) {
-    const double block_width = layout.getDiameter() * crop_ratio;
-    const int block_width_i = (int)std::round(block_width);
-    const auto& canvas_size = preprocOutputSize(layout, crop_ratio);
+template <typename TArrange>
+    requires tcfg::concepts::CArrange<TArrange>
+static inline void preprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
+    const float blockWidth = arrange.getDiameter() * cropRatio;
+    const int iBlockWidth = (int)std::round(blockWidth);
+    const auto& canvasSize = preprocOutputSize(arrange, cropRatio);
 
-    dst.create(canvas_size, src.type());
-    cv::Mat src_roi_image, dst_roi_image;
+    dst.create(canvasSize, src.type());
+    cv::Mat srcRoiImage, dstRoiImage;
 
-    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
-        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
-            const cv::Point2d micenter = layout.getMICenter(row, col);
-            src_roi_image = getRoiImageByCenter(src, micenter, block_width);
-            dst_roi_image = getRoiImageByLeftupCorner(dst, cv::Point(col, row) * block_width_i, block_width);
-            src_roi_image.copyTo(dst_roi_image);
+    for (const int row : rgs::views::iota(0, arrange.getMIRows())) {
+        for (const int col : rgs::views::iota(0, arrange.getMICols(row))) {
+            const cv::Point2f micenter = arrange.getMICenter(row, col);
+            srcRoiImage = getRoiImageByCenter(src, micenter, blockWidth);
+            dstRoiImage = getRoiImageByLeftupCorner(dst, cv::Point(col, row) * iBlockWidth, blockWidth);
+            srcRoiImage.copyTo(dstRoiImage);
         }
     }
 }

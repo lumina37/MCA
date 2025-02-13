@@ -14,110 +14,112 @@
 
 namespace fs = std::filesystem;
 
-template <tlct::concepts::CLayout TLayout>
-static inline void mainProc(const argparse::ArgumentParser& parser, const tlct::ConfigMap& map) {
-    const auto& cli_cfg = mca::CliConfig::fromParser(parser);
-    const auto layout = TLayout::fromCfgMap(map);
+template <tlct::concepts::CArrange TArrange>
+static inline void mainProc(const argparse::ArgumentParser &parser, const tlct::ConfigMap &map) {
+    const auto &cliCfg = mca::CliConfig::fromParser(parser);
+    const auto arrange = TArrange::fromCfgMap(map);
 
-    cv::Size src_size, dst_size;
-    decltype(mca::proc::preprocessInto<TLayout>)* proc_fn;
+    cv::Size srcSize, dstSize;
+    decltype(mca::proc::preprocessInto<TArrange>) *procFn;
 
-    if (cli_cfg.proc.is_post) {
-        dst_size = layout.getRawImgSize();
-        src_size = mca::proc::preprocOutputSize(layout, cli_cfg.proc.crop_ratio);
-        if (layout.getDirection()) {
-            std::swap(src_size.width, src_size.height);
+    if (cliCfg.proc.isPost) {
+        dstSize = arrange.getImgSize();
+        srcSize = mca::proc::preprocOutputSize(arrange, cliCfg.proc.cropRatio);
+        if (arrange.getDirection()) {
+            std::swap(srcSize.width, srcSize.height);
+            std::swap(dstSize.width, dstSize.height);
         }
-        proc_fn = mca::proc::postprocessInto<TLayout>;
+        procFn = mca::proc::postprocessInto<TArrange>;
     } else {
-        src_size = layout.getRawImgSize();
-        dst_size = mca::proc::preprocOutputSize(layout, cli_cfg.proc.crop_ratio);
-        if (layout.getDirection()) {
-            std::swap(dst_size.width, dst_size.height);
+        srcSize = arrange.getImgSize();
+        dstSize = mca::proc::preprocOutputSize(arrange, cliCfg.proc.cropRatio);
+        if (arrange.getDirection()) {
+            std::swap(srcSize.width, srcSize.height);
+            std::swap(dstSize.width, dstSize.height);
         }
-        proc_fn = mca::proc::preprocessInto<TLayout>;
+        procFn = mca::proc::preprocessInto<TArrange>;
     }
 
-    const auto& dstdir = cli_cfg.path.dst;
+    const auto &dstdir = cliCfg.path.dst;
     fs::create_directories(dstdir);
 
-    std::stringstream filename_s;
-    filename_s << "mca-" << dst_size.width << 'x' << dst_size.height << ".yuv";
-    fs::path saveto_path = dstdir / filename_s.str();
-    auto yuv_writer = tlct::io::Yuv420Writer::fromPath(saveto_path);
-    auto yuv_reader = tlct::io::Yuv420Reader::fromPath(cli_cfg.path.src, src_size.width, src_size.height);
-    yuv_reader.skip(cli_cfg.range.begin);
+    std::stringstream sFilename;
+    sFilename << "mca-" << dstSize.width << 'x' << dstSize.height << ".yuv";
+    fs::path savetoPath = dstdir / sFilename.str();
+    auto yuvWriter = tlct::io::Yuv420Writer::fromPath(savetoPath);
+    auto yuvReader = tlct::io::Yuv420Reader::fromPath(cliCfg.path.src, srcSize.width, srcSize.height);
+    yuvReader.skip(cliCfg.range.begin);
 
-    auto src_frame = tlct::io::Yuv420Frame{src_size};
-    auto dst_frame = tlct::io::Yuv420Frame{dst_size};
+    auto srcFrame = tlct::io::Yuv420Frame{srcSize};
+    auto dstFrame = tlct::io::Yuv420Frame{dstSize};
 
-    cv::Mat upsampled_uv, transposed_y, transposed_uv, processed;
-    for (int i = cli_cfg.range.begin; i < cli_cfg.range.end; i++) {
-        yuv_reader.read_into(src_frame);
+    cv::Mat upsampledUV, transposedY, transposedUV, processed;
+    for (int i = cliCfg.range.begin; i < cliCfg.range.end; i++) {
+        yuvReader.readInto(srcFrame);
 
         constexpr int UV_UPSAMPLE = 2;
 
-        if (layout.getDirection()) {
-            cv::transpose(src_frame.getY(), transposed_y);
-            proc_fn(layout, transposed_y, processed, cli_cfg.proc.crop_ratio);
-            cv::transpose(processed, dst_frame.getY());
+        if (arrange.getDirection()) {
+            cv::transpose(srcFrame.getY(), transposedY);
+            procFn(arrange, transposedY, processed, cliCfg.proc.cropRatio);
+            cv::transpose(processed, dstFrame.getY());
 
-            cv::transpose(src_frame.getU(), transposed_uv);
-            cv::resize(transposed_uv, upsampled_uv, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
-            proc_fn(layout, upsampled_uv, processed, cli_cfg.proc.crop_ratio);
-            cv::resize(processed, transposed_uv, {(int)dst_frame.getUHeight(), (int)dst_frame.getUWidth()}, 0.0, 0.0,
+            cv::transpose(srcFrame.getU(), transposedUV);
+            cv::resize(transposedUV, upsampledUV, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
+            procFn(arrange, upsampledUV, processed, cliCfg.proc.cropRatio);
+            cv::resize(processed, transposedUV, {(int)dstFrame.getUHeight(), (int)dstFrame.getUWidth()}, 0.0, 0.0,
                        cv::INTER_AREA);
-            cv::transpose(transposed_uv, dst_frame.getU());
+            cv::transpose(transposedUV, dstFrame.getU());
 
-            cv::transpose(src_frame.getV(), transposed_uv);
-            cv::resize(transposed_uv, upsampled_uv, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
-            proc_fn(layout, upsampled_uv, processed, cli_cfg.proc.crop_ratio);
-            cv::resize(processed, transposed_uv, {(int)dst_frame.getVHeight(), (int)dst_frame.getVWidth()}, 0.0, 0.0,
+            cv::transpose(srcFrame.getV(), transposedUV);
+            cv::resize(transposedUV, upsampledUV, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
+            procFn(arrange, upsampledUV, processed, cliCfg.proc.cropRatio);
+            cv::resize(processed, transposedUV, {(int)dstFrame.getVHeight(), (int)dstFrame.getVWidth()}, 0.0, 0.0,
                        cv::INTER_AREA);
-            cv::transpose(transposed_uv, dst_frame.getV());
+            cv::transpose(transposedUV, dstFrame.getV());
         } else {
-            transposed_y = src_frame.getY();
+            transposedY = srcFrame.getY();
 
-            proc_fn(layout, src_frame.getY(), dst_frame.getY(), cli_cfg.proc.crop_ratio);
+            procFn(arrange, srcFrame.getY(), dstFrame.getY(), cliCfg.proc.cropRatio);
 
-            cv::resize(src_frame.getU(), upsampled_uv, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
-            proc_fn(layout, upsampled_uv, processed, cli_cfg.proc.crop_ratio);
-            cv::resize(processed, dst_frame.getU(), {(int)dst_frame.getUWidth(), (int)dst_frame.getUHeight()}, 0.0, 0.0,
+            cv::resize(srcFrame.getU(), upsampledUV, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
+            procFn(arrange, upsampledUV, processed, cliCfg.proc.cropRatio);
+            cv::resize(processed, dstFrame.getU(), {(int)dstFrame.getUWidth(), (int)dstFrame.getUHeight()}, 0.0, 0.0,
                        cv::INTER_AREA);
 
-            cv::resize(src_frame.getV(), upsampled_uv, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
-            proc_fn(layout, upsampled_uv, processed, cli_cfg.proc.crop_ratio);
-            cv::resize(processed, dst_frame.getV(), {(int)dst_frame.getVWidth(), (int)dst_frame.getVHeight()}, 0.0, 0.0,
+            cv::resize(srcFrame.getV(), upsampledUV, {}, UV_UPSAMPLE, UV_UPSAMPLE, cv::INTER_CUBIC);
+            procFn(arrange, upsampledUV, processed, cliCfg.proc.cropRatio);
+            cv::resize(processed, dstFrame.getV(), {(int)dstFrame.getVWidth(), (int)dstFrame.getVHeight()}, 0.0, 0.0,
                        cv::INTER_AREA);
         }
 
-        yuv_writer.write(dst_frame);
+        yuvWriter.write(dstFrame);
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     auto parser = mca::makeParser();
 
     try {
         parser->parse_args(argc, argv);
-    } catch (const std::exception& err) {
+    } catch (const std::exception &err) {
         std::cerr << err.what() << std::endl;
         std::cerr << *parser;
         std::exit(1);
     }
 
     constexpr std::array handlers{
-        mainProc<tlct::raytrix::Layout>,
-        mainProc<tlct::tspc::Layout>,
+        mainProc<tlct::raytrix::Arrange>,
+        mainProc<tlct::tspc::Arrange>,
     };
 
     try {
-        const auto& calib_file_path = parser->get<std::string>("calib_file");
-        const auto& map = tlct::ConfigMap::fromPath(calib_file_path);
-        const int pipeline = ((map.get_or<"IsKepler">(0) << 1) | map.get_or<"IsMultiFocus">(0)) - 1;
-        const auto& handler = handlers[pipeline];
+        const auto &calibFilePath = parser->get<std::string>("calib_file");
+        const auto &map = tlct::ConfigMap::fromPath(calibFilePath);
+        const int pipeline = ((map.getOr<"IsKepler">(0) << 1) | map.getOr<"IsMultiFocus">(0)) - 1;
+        const auto &handler = handlers[pipeline];
         handler(*parser, map);
-    } catch (const std::exception& err) {
+    } catch (const std::exception &err) {
         std::cerr << err.what() << std::endl;
         std::exit(2);
     }

@@ -37,7 +37,7 @@ namespace fs = std::filesystem;
     parser->add_argument("--post").help("post process instead of preprocess").flag().required();
     parser->add_argument("--cropRatio")
         .help("the ratio between cropping width and the diameter of Micro Image")
-        .scan<'g', double>()
+        .scan<'g', float>()
         .default_value(1 / std::numbers::sqrt2);
 
     parser->add_epilog(MCA_COMPILE_INFO);
@@ -57,8 +57,8 @@ struct CliConfig {
     };
 
     struct Proc {
-        double crop_ratio;
-        int is_post;
+        float cropRatio;
+        int isPost;
     };
 
     Path path;
@@ -72,7 +72,7 @@ struct CliConfig {
 CliConfig CliConfig::fromParser(const argparse::ArgumentParser& parser) {
     auto path = CliConfig::Path{parser.get<std::string>("--src"), parser.get<std::string>("--dst")};
     auto range = CliConfig::Range{parser.get<int>("--begin"), parser.get<int>("--end")};
-    auto proc = CliConfig::Proc{parser.get<double>("--cropRatio"), parser.get<bool>("--post")};
+    auto proc = CliConfig::Proc{parser.get<float>("--cropRatio"), parser.get<bool>("--post")};
 
     return {std::move(path), std::move(range), std::move(proc)};
 }

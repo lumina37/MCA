@@ -15,53 +15,52 @@ namespace mca::_proc {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-static inline void genCircleMask(cv::Mat& dst, double diameter) {
-    cv::circle(dst, {dst.cols / 2, dst.rows / 2}, static_cast<int>(diameter / 2.0), cv::Scalar::all(255.0),
-               cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
+static inline void genCircleMask(cv::Mat& dst, float diameter) {
+    cv::circle(dst, {dst.cols / 2, dst.rows / 2}, (int)(diameter / 2.0), cv::Scalar::all(255.0), cv::LineTypes::FILLED,
+               cv::LineTypes::LINE_AA);
 }
 
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-static inline void postprocessInto(const TLayout& layout, const cv::Mat& src, cv::Mat& dst, const double crop_ratio) {
-    const int border = (int)(layout.getDiameter() / 2.0);
-    const cv::Point2d pos_shift{(double)border, (double)border};
-    cv::Mat canvas = cv::Mat::zeros(layout.getImgSize() + cv::Size(border, border) * 2, src.type());
+template <typename TArrange>
+    requires tcfg::concepts::CArrange<TArrange>
+static inline void postprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
+    const int border = (int)(arrange.getDiameter() / 2.0);
+    const cv::Point2f posShift{(float)border, (float)border};
+    cv::Mat canvas = cv::Mat::zeros(arrange.getImgSize() + cv::Size(border, border) * 2, src.type());
 
-    const double src_block_width = layout.getDiameter() * crop_ratio;
-    const int src_block_width_i = (int)std::round(src_block_width);
-    const int dst_block_width_i = (int)std::round(layout.getDiameter());
+    const float srcBlockWidth = arrange.getDiameter() * cropRatio;
+    const int iSrcBlockWidth = (int)std::round(srcBlockWidth);
+    const int iDstBlockWidth = (int)std::round(arrange.getDiameter());
 
-    cv::Mat src_roi_image, dst_roi_image, src_roi_image_with_border;
-    cv::Mat mask_image = cv::Mat::zeros(dst_block_width_i, dst_block_width_i, src.type());
-    genCircleMask(mask_image, layout.getDiameter());
+    cv::Mat srcRoiImage, dstRoiImage, srcRoiImageWithBorder;
+    cv::Mat maskImage = cv::Mat::zeros(iDstBlockWidth, iDstBlockWidth, src.type());
+    genCircleMask(maskImage, arrange.getDiameter());
 
-    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
-        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
-            const cv::Point2d micenter = layout.getMICenter(row, col) + pos_shift;
+    for (const int row : rgs::views::iota(0, arrange.getMIRows())) {
+        for (const int col : rgs::views::iota(0, arrange.getMICols(row))) {
+            const cv::Point2f micenter = arrange.getMICenter(row, col) + posShift;
 
-            src_roi_image = getRoiImageByLeftupCorner(src, cv::Point(col, row) * src_block_width_i, src_block_width);
-            dst_roi_image = getRoiImageByCenter(canvas, micenter, layout.getDiameter());
+            srcRoiImage = getRoiImageByLeftupCorner(src, cv::Point(col, row) * iSrcBlockWidth, srcBlockWidth);
+            dstRoiImage = getRoiImageByCenter(canvas, micenter, arrange.getDiameter());
 
-            const int dst_ltop_x = (int)std::round(micenter.x - layout.getDiameter() / 2.0);
-            const int dst_ltop_y = (int)std::round(micenter.y - layout.getDiameter() / 2.0);
-            const int src_ltop_x = (int)std::round(micenter.x - src_block_width / 2.0);
-            const int src_ltop_y = (int)std::round(micenter.y - src_block_width / 2.0);
+            const int dstLTopX = (int)std::round(micenter.x - arrange.getDiameter() / 2.0);
+            const int dstLTopY = (int)std::round(micenter.y - arrange.getDiameter() / 2.0);
+            const int srcLTopX = (int)std::round(micenter.x - srcBlockWidth / 2.0);
+            const int srcLTopY = (int)std::round(micenter.y - srcBlockWidth / 2.0);
 
-            const int left_border_width = src_ltop_x - dst_ltop_x;
-            const int top_border_width = src_ltop_y - dst_ltop_y;
-            const int right_border_width = dst_block_width_i - src_block_width_i - left_border_width;
-            const int bot_border_width = dst_block_width_i - src_block_width_i - top_border_width;
+            const int leftBorderWidth = srcLTopX - dstLTopX;
+            const int topBorderY = srcLTopY - dstLTopY;
+            const int rightBorderWidth = iDstBlockWidth - iSrcBlockWidth - leftBorderWidth;
+            const int botBorderWidth = iDstBlockWidth - iSrcBlockWidth - topBorderY;
 
-            cv::copyMakeBorder(src_roi_image, src_roi_image_with_border, top_border_width, bot_border_width,
-                               left_border_width, right_border_width,
-                               cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
+            cv::copyMakeBorder(srcRoiImage, srcRoiImageWithBorder, topBorderY, botBorderWidth, leftBorderWidth,
+                               rightBorderWidth, cv::BorderTypes::BORDER_REPLICATE | cv::BorderTypes::BORDER_ISOLATED);
 
-            src_roi_image_with_border.copyTo(dst_roi_image, mask_image);
+            srcRoiImageWithBorder.copyTo(dstRoiImage, maskImage);
         }
     }
 
-    const cv::Mat canvas_withoutborder = canvas({border, canvas.rows - border}, {border, canvas.cols - border});
-    canvas_withoutborder.copyTo(dst);
+    const cv::Mat canvasWithoutBorder = canvas({border, canvas.rows - border}, {border, canvas.cols - border});
+    canvasWithoutBorder.copyTo(dst);
 }
 
 }  // namespace mca::_proc

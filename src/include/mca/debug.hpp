@@ -13,57 +13,55 @@ namespace mca::_dbg {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2d center, double diameter) {
-    cv::circle(dst, static_cast<cv::Point2i>(center), static_cast<int>(diameter / 2.0), cv::Scalar(0, 255, 0), 1,
-               cv::LineTypes::LINE_AA);
+static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2f center, float diameter) {
+    cv::circle(dst, (cv::Point2i)center, (int)(diameter / 2.0), cv::Scalar(0, 255, 0), 1, cv::LineTypes::LINE_AA);
 }
 
-static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2d center, double diameter, const cv::Scalar& color) {
-    cv::circle(dst, static_cast<cv::Point2i>(center), static_cast<int>(diameter / 2.0), color, cv::LineTypes::FILLED,
-               cv::LineTypes::LINE_AA);
+static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2f center, float diameter, const cv::Scalar& color) {
+    cv::circle(dst, (cv::Point2i)center, (int)(diameter / 2.0), color, cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-inline void dbgDrawMicroImageEdges(const TLayout& layout, const cv::Mat& src, cv::Mat& dst) {
+template <typename TArrange>
+    requires tcfg::concepts::CArrange<TArrange>
+inline void dbgDrawMicroImageEdges(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst) {
     dst = src.clone();
 
-    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
-        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
-            const cv::Point2d micenter = layout.getMICenter(row, col);
-            dbgDrawCircle(dst, micenter, layout.getDiameter());
+    for (const int row : rgs::views::iota(0, arrange.getMIRows())) {
+        for (const int col : rgs::views::iota(0, arrange.getMICols(row))) {
+            const cv::Point2f micenter = arrange.getMICenter(row, col);
+            dbgDrawCircle(dst, micenter, arrange.getDiameter());
         }
     }
 }
 
-template <typename TLayout>
-    requires tcfg::concepts::CLayout<TLayout>
-inline void dbgDrawUsedArea(const TLayout& layout, const cv::Mat& patchsizes, int view_num, cv::Mat& dst) {
-    dst = cv::Mat::zeros(layout.getImgSize(), CV_8UC3);
+template <typename TArrange>
+    requires tcfg::concepts::CArrange<TArrange>
+inline void dbgDrawUsedArea(const TArrange& arrange, const cv::Mat& patchsizes, int viewNum, cv::Mat& dst) {
+    dst = cv::Mat::zeros(arrange.getImgSize(), CV_8UC3);
 
-    int view_shift = view_num / 2;
+    int viewShift = viewNum / 2;
 
-    for (const int row : rgs::views::iota(0, layout.getMIRows())) {
-        for (const int col : rgs::views::iota(0, layout.getMICols(row))) {
+    for (const int row : rgs::views::iota(0, arrange.getMIRows())) {
+        for (const int col : rgs::views::iota(0, arrange.getMICols(row))) {
             if (col >= patchsizes.cols || row >= patchsizes.rows) {
                 continue;
             }
 
-            double patch_size = static_cast<double>(patchsizes.at<uchar>(row, col));
+            float patchSize = (float)patchsizes.at<uchar>(row, col);
             cv::Scalar color;
-            if (patch_size + static_cast<double>(view_num) > layout.getDiameter()) {
+            if (patchSize + (float)viewNum > arrange.getDiameter()) {
                 color = cv::Scalar(0, 0, 160);
             } else {
                 color = cv::Scalar::all(255);
             }
 
-            const cv::Point2d micenter = layout.getMICenter(row, col);
-            dbgDrawCircle(dst, micenter, layout.getDiameter());
+            const cv::Point2f micenter = arrange.getMICenter(row, col);
+            dbgDrawCircle(dst, micenter, arrange.getDiameter());
 
-            for (int view_shift_x = -view_shift; view_shift_x <= view_shift; view_shift_x++) {
-                for (int view_shift_y = -view_shift; view_shift_y <= view_shift; view_shift_y++) {
-                    cv::Point2i shift{view_shift_x, view_shift_y};
-                    dbgDrawSoildCircle(dst, micenter + static_cast<cv::Point2d>(shift), patch_size, color);
+            for (int viewShiftX = -viewShift; viewShiftX <= viewShift; viewShiftX++) {
+                for (int viewShiftY = -viewShift; viewShiftY <= viewShift; viewShiftY++) {
+                    cv::Point2i shift{viewShiftX, viewShiftY};
+                    dbgDrawSoildCircle(dst, micenter + (cv::Point2f)shift, patchSize, color);
                 }
             }
         }
