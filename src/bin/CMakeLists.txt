@@ -2,7 +2,7 @@ function(mca_add_executable name srcs)
     add_executable(${name} ${srcs})
     target_link_libraries(${name} PRIVATE mca-lib)
 
-    if (TLCT_ENABLE_LTO)
+    if (MCA_ENABLE_LTO)
         set_target_properties(${name} PROPERTIES
                 INTERPROCEDURAL_OPTIMIZATION ON
         )

@@ -6,7 +6,7 @@ cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0091 NEW)
 
 project(mca
-        VERSION 0.4.0.4
+        VERSION 0.4.0.5
         LANGUAGES CXX
 )
 
@@ -26,11 +26,9 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED imgproc)
 
-set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.3.3.3.tar.gz" CACHE STRING
+set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.4.1.0.tar.gz" CACHE STRING
         "Specifies the path of TLCT")
 
-set(TLCT_HEADER_ONLY ${MCA_HEADER_ONLY} CACHE BOOL "")
-set(TLCT_BUILD_SHARED_LIBS ${MCA_BUILD_SHARED_LIBS} CACHE BOOL "")
 FetchContent_Declare(
         tlct
         DOWNLOAD_EXTRACT_TIMESTAMP ON
