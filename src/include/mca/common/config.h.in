@@ -1,4 +1,4 @@
 #pragma once
 
-#cmakedefine mca_VERSION "@mca_VERSION@"
+#cmakedefine MCA_VERSION "@MCA_VERSION@"
 #cmakedefine MCA_COMPILE_INFO "@MCA_COMPILE_INFO@"

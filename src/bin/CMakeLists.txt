@@ -8,7 +8,14 @@ function(mca_add_executable name srcs)
         )
     endif ()
 
-    copy_dlls_if_needed(${name})
+    if (MSVC)
+        set_target_properties(${name} PROPERTIES
+                MSVC_RUNTIME_LIBRARY ${_MCA_MSVC_RUNTIME_LIBRARY}
+        )
+        target_compile_definitions(${name} PRIVATE "_CRT_SECURE_NO_WARNINGS")
+    endif ()
+
+    tlct_copy_dlls_if_needed(${name})
 endfunction()
 
 mca_add_executable(mca-bin "main.cpp")
