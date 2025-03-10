@@ -7,6 +7,6 @@
 namespace mca {
 
 using cfg::CliConfig;
-using cfg::makeParser;
+using cfg::makeUniqArgParser;
 
 }  // namespace mca

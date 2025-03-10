@@ -1,7 +1,4 @@
 #pragma once
 
-#cmakedefine mca_VERSION_MAJOR @mca_VERSION_MAJOR@
-#cmakedefine mca_VERSION_MINOR @mca_VERSION_MINOR@
-#cmakedefine mca_VERSION_PATCH @mca_VERSION_PATCH@
 #cmakedefine mca_VERSION "@mca_VERSION@"
 #cmakedefine MCA_COMPILE_INFO "@MCA_COMPILE_INFO@"

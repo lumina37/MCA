@@ -16,7 +16,7 @@ namespace _cfg {
 
 namespace fs = std::filesystem;
 
-[[nodiscard]] static inline std::unique_ptr<argparse::ArgumentParser> makeParser() noexcept {
+[[nodiscard]] static inline std::unique_ptr<argparse::ArgumentParser> makeUniqArgParser() noexcept {
     auto parser = std::make_unique<argparse::ArgumentParser>("mca", "v" mca_VERSION, argparse::default_arguments::all);
 
     parser->set_usage_max_line_width(120);
@@ -84,7 +84,7 @@ namespace cfg {
 namespace _ = _cfg;
 
 using _::CliConfig;
-using _::makeParser;
+using _::makeUniqArgParser;
 
 }  // namespace cfg
 

@@ -98,7 +98,7 @@ static inline void mainProc(const argparse::ArgumentParser &parser, const tlct::
 }
 
 int main(int argc, char *argv[]) {
-    auto parser = mca::makeParser();
+    auto parser = mca::makeUniqArgParser();
 
     try {
         parser->parse_args(argc, argv);

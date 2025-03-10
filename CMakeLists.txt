@@ -6,7 +6,7 @@ cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0091 NEW)
 
 project(mca
-        VERSION 0.4.0.5
+        VERSION 0.4.0.6
         LANGUAGES CXX
 )
 
