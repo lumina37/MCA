@@ -1,6 +1,9 @@
 function(mca_add_executable name srcs)
     add_executable(${name} ${srcs})
-    target_link_libraries(${name} PRIVATE mca-lib)
+    target_link_libraries(${name} PRIVATE
+            mca::lib
+            argparse::argparse
+    )
 
     if (MCA_ENABLE_LTO)
         set_target_properties(${name} PROPERTIES

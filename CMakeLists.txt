@@ -10,7 +10,7 @@ project(mca
         LANGUAGES CXX
 )
 
-set(MCA_VERSION_BETA_SUFFIX "alpha.7")
+set(MCA_VERSION_BETA_SUFFIX "")
 if (NOT MCA_VERSION_BETA_SUFFIX)
     set(MCA_VERSION ${PROJECT_VERSION})
 else ()
@@ -25,7 +25,7 @@ cmake_dependent_option(MCA_ENABLE_LTO "Enable full link-time-optimizations (LTO)
 
 if (MSVC)
     option(MCA_WITH_STATIC_CRT "Link with STATIC CRT" OFF)
-    set(_MCA_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<NOT:$<BOOL:${MCA_WITH_STATIC_CRT}>>:DLL>)
+    set(_MCA_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<NOT:$<BOOL:${TLCT_WITH_STATIC_CRT}>>:DLL>)
 endif ()
 
 # Dependencies
@@ -33,7 +33,7 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED imgproc)
 
-set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.4.3.tar.gz" CACHE STRING
+set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.4.4.tar.gz" CACHE STRING
         "Specifies the path of TLCT")
 
 FetchContent_Declare(
@@ -43,15 +43,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tlct)
 
-set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.2.tar.gz" CACHE STRING
-        "Specifies the path of argparse")
-set(TLCT_ARGPARSE_PATH ${MCA_ARGPARSE_PATH} CACHE STRING "")
-FetchContent_Declare(
-        argparse
-        DOWNLOAD_EXTRACT_TIMESTAMP ON
-        URL ${MCA_ARGPARSE_PATH}
-)
-FetchContent_MakeAvailable(argparse)
+if (DEFINED PROJECT_NAME)
+    set(MCA_ARGPARSE_PATH "https://github.com/p-ranav/argparse/archive/refs/tags/v3.2.tar.gz" CACHE STRING
+            "Specifies the path of argparse")
+    set(TLCT_ARGPARSE_PATH ${MCA_ARGPARSE_PATH} CACHE STRING "")
+    FetchContent_Declare(
+            argparse
+            DOWNLOAD_EXTRACT_TIMESTAMP ON
+            URL ${MCA_ARGPARSE_PATH}
+    )
+    FetchContent_MakeAvailable(argparse)
+endif ()
 
 # Helper
 set(MCA_COMPILE_INFO "[MCA v${MCA_VERSION}] [OpenCV v${OpenCV_VERSION}] by [${CMAKE_CXX_COMPILER_ID} v${CMAKE_CXX_COMPILER_VERSION} (${CMAKE_SYSTEM_PROCESSOR})]")

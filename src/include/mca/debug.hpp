@@ -6,8 +6,6 @@
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 
-#include "mca/common/defines.h"
-
 namespace mca::_dbg {
 
 namespace rgs = std::ranges;

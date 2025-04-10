@@ -11,12 +11,12 @@
 #include <tlct.hpp>
 
 #include "mca.hpp"
+#include "mca_bin_helper.hpp"
 
 namespace fs = std::filesystem;
 
 template <tlct::concepts::CArrange TArrange>
-static inline void mainProc(const argparse::ArgumentParser &parser, const tlct::ConfigMap &map) {
-    const auto &cliCfg = mca::CliConfig::fromParser(parser);
+static inline void mainProc(const mca::CliConfig &cliCfg, const tlct::ConfigMap &map) {
     const auto arrange = TArrange::fromCfgMap(map);
 
     cv::Size srcSize, dstSize;
@@ -98,7 +98,7 @@ static inline void mainProc(const argparse::ArgumentParser &parser, const tlct::
 }
 
 int main(int argc, char *argv[]) {
-    auto parser = mca::makeUniqArgParser();
+    auto parser = makeUniqArgParser();
 
     try {
         parser->parse_args(argc, argv);
@@ -115,10 +115,11 @@ int main(int argc, char *argv[]) {
 
     try {
         const auto &calibFilePath = parser->get<std::string>("calib_file");
+        const auto &cliCfg = cfgFromCliParser(*parser);
         const auto &map = tlct::ConfigMap::fromPath(calibFilePath);
         const int pipeline = ((map.getOr<"IsKepler">(0) << 1) | map.getOr<"IsMultiFocus">(0)) - 1;
         const auto &handler = handlers[pipeline];
-        handler(*parser, map);
+        handler(cliCfg, map);
     } catch (const std::exception &err) {
         std::cerr << err.what() << std::endl;
         std::exit(2);

@@ -7,7 +7,6 @@
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 
-#include "mca/common/defines.h"
 #include "mca/proc/helper.hpp"
 
 namespace mca::_proc {

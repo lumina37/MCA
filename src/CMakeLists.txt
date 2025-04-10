@@ -7,7 +7,6 @@ target_include_directories(mca-lib INTERFACE
 )
 target_link_libraries(mca-lib INTERFACE
         ${OpenCV_LIBS}
-        argparse
         tlct::lib::static
 )
 

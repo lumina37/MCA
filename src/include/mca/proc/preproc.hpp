@@ -8,7 +8,6 @@
 #include <tlct/config.hpp>
 #include <tlct/helper/constexpr/math.hpp>
 
-#include "mca/common/defines.h"
 #include "mca/proc/helper.hpp"
 
 namespace mca::_proc {
