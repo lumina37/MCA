@@ -14,14 +14,14 @@ namespace mca::_proc {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-static inline void genCircleMask(cv::Mat& dst, float diameter) {
+static void genCircleMask(cv::Mat& dst, float diameter) {
     cv::circle(dst, {dst.cols / 2, dst.rows / 2}, (int)(diameter / 2.0), cv::Scalar::all(255.0), cv::LineTypes::FILLED,
                cv::LineTypes::LINE_AA);
 }
 
 template <typename TArrange>
     requires tcfg::concepts::CArrange<TArrange>
-static inline void postprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
+static void postprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
     const int border = (int)(arrange.getDiameter() / 2.0);
     const cv::Point2f posShift{(float)border, (float)border};
     cv::Mat canvas = cv::Mat::zeros(arrange.getImgSize() + cv::Size(border, border) * 2, src.type());

@@ -4,7 +4,6 @@
 #include <ranges>
 
 #include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 #include <tlct/helper/constexpr/math.hpp>
 
@@ -17,7 +16,7 @@ namespace tcfg = tlct::cfg;
 
 template <typename TArrange>
     requires tcfg::concepts::CArrange<TArrange>
-static inline cv::Size preprocOutputSize(const TArrange& arrange, const float cropRatio) {
+static cv::Size preprocOutputSize(const TArrange& arrange, const float cropRatio) {
     const float blockWidth = arrange.getDiameter() * cropRatio;
     const int iBlockWidth = (int)std::round(blockWidth);
 
@@ -29,7 +28,7 @@ static inline cv::Size preprocOutputSize(const TArrange& arrange, const float cr
 
 template <typename TArrange>
     requires tcfg::concepts::CArrange<TArrange>
-static inline void preprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
+static void preprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
     const float blockWidth = arrange.getDiameter() * cropRatio;
     const int iBlockWidth = (int)std::round(blockWidth);
     const auto& canvasSize = preprocOutputSize(arrange, cropRatio);

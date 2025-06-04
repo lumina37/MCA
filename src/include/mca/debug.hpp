@@ -2,7 +2,6 @@
 
 #include <ranges>
 
-#include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 
@@ -11,17 +10,17 @@ namespace mca::_dbg {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-static inline void dbgDrawCircle(cv::Mat& dst, cv::Point2f center, float diameter) {
-    cv::circle(dst, (cv::Point2i)center, (int)(diameter / 2.0), cv::Scalar(0, 255, 0), 1, cv::LineTypes::LINE_AA);
+static void dbgDrawCircle(cv::Mat& dst, cv::Point2f center, float diameter) {
+    cv::circle(dst, center, (int)(diameter / 2.0), cv::Scalar(0, 255, 0), 1, cv::LineTypes::LINE_AA);
 }
 
-static inline void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2f center, float diameter, const cv::Scalar& color) {
-    cv::circle(dst, (cv::Point2i)center, (int)(diameter / 2.0), color, cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
+static void dbgDrawSoildCircle(cv::Mat& dst, cv::Point2f center, float diameter, const cv::Scalar& color) {
+    cv::circle(dst, center, (int)(diameter / 2.0), color, cv::LineTypes::FILLED, cv::LineTypes::LINE_AA);
 }
 
 template <typename TArrange>
     requires tcfg::concepts::CArrange<TArrange>
-inline void dbgDrawMicroImageEdges(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst) {
+void dbgDrawMicroImageEdges(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst) {
     dst = src.clone();
 
     for (const int row : rgs::views::iota(0, arrange.getMIRows())) {
@@ -34,7 +33,7 @@ inline void dbgDrawMicroImageEdges(const TArrange& arrange, const cv::Mat& src, 
 
 template <typename TArrange>
     requires tcfg::concepts::CArrange<TArrange>
-inline void dbgDrawUsedArea(const TArrange& arrange, const cv::Mat& patchsizes, int viewNum, cv::Mat& dst) {
+void dbgDrawUsedArea(const TArrange& arrange, const cv::Mat& patchsizes, int viewNum, cv::Mat& dst) {
     dst = cv::Mat::zeros(arrange.getImgSize(), CV_8UC3);
 
     int viewShift = viewNum / 2;
@@ -45,7 +44,7 @@ inline void dbgDrawUsedArea(const TArrange& arrange, const cv::Mat& patchsizes, 
                 continue;
             }
 
-            float patchSize = (float)patchsizes.at<uchar>(row, col);
+            float patchSize = patchsizes.at<uchar>(row, col);
             cv::Scalar color;
             if (patchSize + (float)viewNum > arrange.getDiameter()) {
                 color = cv::Scalar(0, 0, 160);

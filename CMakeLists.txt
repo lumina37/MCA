@@ -10,7 +10,7 @@ project(mca
         LANGUAGES CXX
 )
 
-set(MCA_VERSION_BETA_SUFFIX "alpha.0")
+set(MCA_VERSION_BETA_SUFFIX "alpha.1")
 if (NOT MCA_VERSION_BETA_SUFFIX)
     set(MCA_VERSION ${PROJECT_VERSION})
 else ()
