@@ -6,11 +6,11 @@ cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0091 NEW)
 
 project(mca
-        VERSION 0.4.1
+        VERSION 0.4.2
         LANGUAGES CXX
 )
 
-set(MCA_VERSION_BETA_SUFFIX "")
+set(MCA_VERSION_BETA_SUFFIX "alpha.0")
 if (NOT MCA_VERSION_BETA_SUFFIX)
     set(MCA_VERSION ${PROJECT_VERSION})
 else ()
@@ -33,7 +33,7 @@ include(FetchContent)
 
 find_package(OpenCV REQUIRED imgproc)
 
-set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.4.4.tar.gz" CACHE STRING
+set(MCA_TLCT_PATH "https://github.com/lumina37/TLCT/archive/refs/tags/v1.4.5.tar.gz" CACHE STRING
         "Specifies the path of TLCT")
 
 FetchContent_Declare(
