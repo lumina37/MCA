@@ -3,7 +3,6 @@
 #include <cmath>
 #include <ranges>
 
-#include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <tlct/config.hpp>
 
@@ -19,8 +18,7 @@ static void genCircleMask(cv::Mat& dst, float diameter) {
                cv::LineTypes::LINE_AA);
 }
 
-template <typename TArrange>
-    requires tcfg::concepts::CArrange<TArrange>
+template <tcfg::concepts::CArrange TArrange>
 static void postprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
     const int border = (int)(arrange.getDiameter() / 2.0);
     const cv::Point2f posShift{(float)border, (float)border};

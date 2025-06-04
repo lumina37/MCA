@@ -14,8 +14,7 @@ namespace mca::_proc {
 namespace rgs = std::ranges;
 namespace tcfg = tlct::cfg;
 
-template <typename TArrange>
-    requires tcfg::concepts::CArrange<TArrange>
+template <tcfg::concepts::CArrange TArrange>
 static cv::Size preprocOutputSize(const TArrange& arrange, const float cropRatio) {
     const float blockWidth = arrange.getDiameter() * cropRatio;
     const int iBlockWidth = (int)std::round(blockWidth);
@@ -26,8 +25,7 @@ static cv::Size preprocOutputSize(const TArrange& arrange, const float cropRatio
     return {canvasWidth, canvasHeight};
 }
 
-template <typename TArrange>
-    requires tcfg::concepts::CArrange<TArrange>
+template <tcfg::concepts::CArrange TArrange>
 static void preprocessInto(const TArrange& arrange, const cv::Mat& src, cv::Mat& dst, const float cropRatio) {
     const float blockWidth = arrange.getDiameter() * cropRatio;
     const int iBlockWidth = (int)std::round(blockWidth);
